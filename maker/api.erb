@@ -1,4 +1,5 @@
-use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
+<% if yml[:params].filter{|it| it[:type] == "date" }.present? %>use chrono::prelude::*;
+<% end %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
 use std::collections::HashSet;
@@ -8,6 +9,7 @@ const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
 
+#[derive(Debug, Default)]
 pub struct Api {<% yml[:params].each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
 }
@@ -21,14 +23,14 @@ impl Api {
     }
     <% others.each do |it| %>
     pub fn <%= it[:name].make_field %>(mut self, value: <%= make_field_type(it) %>) -> Self {
-        self.<%= it[:name].make_field %> = Some(value);
+        self.<%= it[:name].make_field %> = Some(value<%= it[:type] == "string" ? ".to_owned()" : "" %>);
         self
     }
     <% end %>
 
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];<% required_queries.each do |it| %>
-        query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %>.to_string()));<% end %><% others_queries.each do |it| %>
+        query_parameters.push(("<%= it[:name].make_field %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% others_queries.each do |it| %>
         if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
             query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
         }<% end %>

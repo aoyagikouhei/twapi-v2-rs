@@ -1,19 +1,17 @@
-use std::collections::HashSet;
-
-use reqwest::RequestBuilder;
+use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields, };
 use itertools::Itertools;
-
-use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
-
+use reqwest::RequestBuilder;
+use std::collections::HashSet;
 use super::{TwitterResult, execute_twitter};
+
 const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
 
 #[derive(Debug, Eq, Hash, PartialEq, Clone)]
-pub enum Expantions {
-    PinnedTweetId
+pub enum Expansions {
+    PinnedTweetId,
 }
 
-impl Expantions {
+impl Expansions {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
         result.insert(Self::PinnedTweetId);
@@ -21,22 +19,22 @@ impl Expantions {
     }
 }
 
-impl std::fmt::Display for Expantions {
+impl std::fmt::Display for Expansions {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Expantions::PinnedTweetId => write!(f, "pinned_tweet_id"),
+            Self::PinnedTweetId => write!(f, "pinned_tweet_id"),
         }
     }
 }
 
 #[derive(Debug, Default)]
 pub struct Api {
+    id: String,
     max_results: Option<usize>,
+    expansions: Option<HashSet<Expansions>>,
     pagination_token: Option<String>,
-    expansions: Option<HashSet<Expantions>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
-    id: String,
 }
 
 impl Api {
@@ -46,48 +44,49 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-
+    
+    pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
+        self.expansions = Some(value);
+        self
+    }
+    
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-
-    pub fn expansions(mut self, value: HashSet<Expantions>) -> Self {
-        self.expansions = Some(value);
-        self
-    }
-
+    
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-
+    
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
     }
+    
 
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(max_results) = self.max_results {
             query_parameters.push(("max_results", max_results.to_string()));
         }
-        if let Some(pagination_token) = self.pagination_token {
-            query_parameters.push(("pagination_token", pagination_token.to_owned()));
-        }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
         }
+        if let Some(pagination_token) = self.pagination_token {
+            query_parameters.push(("pagination_token", pagination_token));
+        }
         if let Some(tweet_fields) = self.tweet_fields {
-            query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
+            query_parameters.push(("tweet_fields", tweet_fields.iter().join(",")));
         }
         if let Some(user_fields) = self.user_fields {
-            query_parameters.push(("user.fields", user_fields.iter().join(",")));
+            query_parameters.push(("user_fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
         client
