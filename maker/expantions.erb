@@ -1,0 +1,20 @@
+#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+pub enum <%= class_name %> {<% ary.each do |it| %>
+    <%= it.ucc %>,<% end %>
+}
+
+impl <%= class_name %> {
+    pub fn all() -> HashSet<Self> {
+        let mut result = HashSet::new();<% ary.each do |it| %>
+        result.insert(Self::<%= it.ucc %>);<% end %>
+        result
+    }
+}
+
+impl std::fmt::Display for <%= class_name %> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {<% ary.each do |it| %>
+            Self::<%= it.ucc %> => write!(f, "<%= it %>"),<% end %>
+        }
+    }
+}

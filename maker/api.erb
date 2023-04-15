@@ -1,0 +1,4 @@
+use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
+
+const URL: &str = "<%= yml[:url] %>";
+
