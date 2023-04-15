@@ -1,7 +1,7 @@
 pub mod api;
-pub mod rate_limit;
 pub mod error;
 pub mod fields;
+pub mod rate_limit;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -16,6 +16,7 @@ mod tests {
         let _res = api::get_2_tweets_id_liking_users::Api::new("123")
             .max_results(10)
             .pagination_token("xxxx")
-            .execute("xxx").await;
+            .execute("xxx")
+            .await;
     }
 }

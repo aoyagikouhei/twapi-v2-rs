@@ -1,4 +1,4 @@
-use crate::{rate_limit::RateLimit, error::Error, error::TwitterError};
+use crate::{error::Error, error::TwitterError, rate_limit::RateLimit};
 
 pub mod get_2_tweets_id_liking_users;
 pub mod get_2_tweets_search_recent;

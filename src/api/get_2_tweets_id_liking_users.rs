@@ -1,8 +1,8 @@
-use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields, };
+use super::{execute_twitter, TwitterResult};
+use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
 use std::collections::HashSet;
-use super::{TwitterResult, execute_twitter};
 
 const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
 
@@ -44,32 +44,31 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
     }
-    
 
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];

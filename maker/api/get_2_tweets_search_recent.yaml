@@ -17,6 +17,8 @@ params:
   - name: max_results
     type: integer
     place: query
+    min: 10
+    max: 100
   - name: media.fields
     type: enum
     place: query

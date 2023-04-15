@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use crate::rate_limit::RateLimit;
@@ -12,10 +12,10 @@ pub enum Error {
     Json(#[from] serde_json::Error),
 
     #[error("Twitter {0}")]
-    Twitter(
-        TwitterError,
-        Option<RateLimit>,
-    ),
+    Twitter(TwitterError, Option<RateLimit>),
+
+    #[error("Invalid Parameter {0}")]
+    InvalidParameter(String),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -29,10 +29,7 @@ pub struct TwitterError {
 }
 
 impl TwitterError {
-    pub fn new(
-        status_code: reqwest::StatusCode,
-        value: serde_json::Value,
-    ) -> Self {
+    pub fn new(status_code: reqwest::StatusCode, value: serde_json::Value) -> Self {
         let title = match value["title"].as_str() {
             Some(res) => res.to_owned(),
             None => match value["error"].as_str() {
@@ -60,8 +57,6 @@ impl TwitterError {
             value,
         }
     }
-
-    
 }
 
 impl std::fmt::Display for TwitterError {
