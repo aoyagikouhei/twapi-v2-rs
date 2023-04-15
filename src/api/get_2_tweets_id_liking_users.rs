@@ -29,7 +29,7 @@ impl std::fmt::Display for Expantions {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Api {
     max_results: Option<usize>,
     pagination_token: Option<String>,
@@ -43,11 +43,7 @@ impl Api {
     pub fn new(id: &str) -> Self {
         Self {
             id: id.to_owned(),
-            expansions: None,
-            max_results: None,
-            pagination_token: None,
-            tweet_fields: None,
-            user_fields: None
+            ..Default::default()
         }
     }
 

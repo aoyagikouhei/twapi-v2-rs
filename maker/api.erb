@@ -1,4 +1,45 @@
 use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
+use itertools::Itertools;
+use reqwest::RequestBuilder;
+use std::collections::HashSet;
+use super::{TwitterResult, execute_twitter};
 
 const URL: &str = "<%= yml[:url] %>";
 
+<%= expantions.join("\n\n") %>
+
+pub struct Api {<% yml[:params].each do |it| %>
+    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
+}
+
+impl Api {
+    pub fn new(<%= required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}.join(", ") %>) -> Self {
+        Self {<% required.each do |it| %>
+            <%= required_new(it) %>,<% end %>
+            ..Default::default()
+        }
+    }
+    <% others.each do |it| %>
+    pub fn <%= it[:name].make_field %>(mut self, value: <%= make_field_type(it) %>) -> Self {
+        self.<%= it[:name].make_field %> = Some(value);
+        self
+    }
+    <% end %>
+
+    pub fn build(self, bearer_code: &str) -> RequestBuilder {
+        let mut query_parameters = vec![];<% required_queries.each do |it| %>
+        query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %>.to_string()));<% end %><% others_queries.each do |it| %>
+        if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
+            query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
+        }<% end %>
+        let client = reqwest::Client::new();
+        client
+            .<%= yml[:method] %>(URL<%= paths.join("") %>)
+            .query(&query_parameters)
+            .bearer_auth(bearer_code)
+    }
+
+    pub async fn execute(self, bearer_code: &str) -> TwitterResult {
+        execute_twitter(self.build(bearer_code)).await
+    }
+}
