@@ -83,6 +83,8 @@ def execute(path)
 
   yml = YAML.load_file(path).deep_symbolize_keys
   paths = yml[:params].filter{|it| it[:place] == "path" }.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
+  enum_flag = yml[:params].filter{|it| it[:type] == "enum"}.present?
+
 
   fields = yml[:params].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
   required = yml[:params].filter{|it| it[:required] }

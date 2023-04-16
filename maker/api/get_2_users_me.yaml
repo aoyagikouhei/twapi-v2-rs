@@ -1,0 +1,15 @@
+---
+
+url: https://api.twitter.com/2/users/me
+method: get
+params:
+  - name: expansions
+    type: enum
+    place: query
+    value: pinned_tweet_id
+  - name: tweet.fields
+    type: enum
+    place: query
+  - name: user.fields
+    type: enum
+    place: query

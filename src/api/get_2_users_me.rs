@@ -4,7 +4,7 @@ use itertools::Itertools;
 use reqwest::RequestBuilder;
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
+const URL: &str = "https://api.twitter.com/2/users/me";
 
 #[derive(Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -28,34 +28,20 @@ impl std::fmt::Display for Expansions {
 }
 #[derive(Debug, Default)]
 pub struct Api {
-    id: String,
-    max_results: Option<usize>,
     expansions: Option<HashSet<Expansions>>,
-    pagination_token: Option<String>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
 }
 
 impl Api {
-    pub fn new(id: &str) -> Self {
+    pub fn new() -> Self {
         Self {
-            id: id.to_owned(),
             ..Default::default()
         }
     }
 
-    pub fn max_results(mut self, value: usize) -> Self {
-        self.max_results = Some(value);
-        self
-    }
-
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
-        self
-    }
-
-    pub fn pagination_token(mut self, value: &str) -> Self {
-        self.pagination_token = Some(value.to_owned());
         self
     }
 
@@ -71,14 +57,8 @@ impl Api {
 
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];
-        if let Some(max_results) = self.max_results {
-            query_parameters.push(("max_results", max_results.to_string()));
-        }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
-        }
-        if let Some(pagination_token) = self.pagination_token {
-            query_parameters.push(("pagination_token", pagination_token));
         }
         if let Some(tweet_fields) = self.tweet_fields {
             query_parameters.push(("tweet_fields", tweet_fields.iter().join(",")));
@@ -88,7 +68,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         client
-            .get(URL.replace(":id", &self.id))
+            .get(URL)
             .query(&query_parameters)
             .bearer_auth(bearer_code)
     }

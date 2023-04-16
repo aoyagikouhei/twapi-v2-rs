@@ -1,15 +1,13 @@
 <% if yml[:params].filter{|it| it[:type] == "date" }.present? %>use chrono::prelude::*;
-<% end %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
-use crate::error::Error;
-use itertools::Itertools;
-use reqwest::RequestBuilder;
+<% end %><% if fields.present? %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
+<% end %><% if enum_flag %>use itertools::Itertools;
 use std::collections::HashSet;
+<% end %>use reqwest::RequestBuilder;
 use super::{TwitterResult, execute_twitter};
 
 const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
-
 #[derive(Debug, Default)]
 pub struct Api {<% yml[:params].each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
@@ -29,17 +27,17 @@ impl Api {
     }
     <% end %>
 
-    pub fn build(self, bearer_code: &str) -> Result<RequestBuilder, Error> {
+    pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];<% required_queries.each do |it| %>
         query_parameters.push(("<%= it[:name].make_field %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% others_queries.each do |it| %>
         if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
             query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
         }<% end %>
         let client = reqwest::Client::new();
-        Ok(client
+        client
             .<%= yml[:method] %>(URL<%= paths.join("") %>)
             .query(&query_parameters)
-            .bearer_auth(bearer_code))
+            .bearer_auth(bearer_code)
     }
 
     pub async fn execute(self, bearer_code: &str) -> TwitterResult {

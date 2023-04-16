@@ -1,6 +1,6 @@
 ---
 
-url: https://api.twitter.com/2/tweets/:id/liking_users
+url: https://api.twitter.com/2/tweets/:id/retweeted_by
 method: get
 params:
   - name: id

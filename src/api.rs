@@ -1,7 +1,13 @@
 use crate::{error::Error, error::TwitterError, rate_limit::RateLimit};
 
+pub mod get_2_tweets;
+pub mod get_2_tweets_id;
 pub mod get_2_tweets_id_liking_users;
+pub mod get_2_tweets_id_retweeted_by;
 pub mod get_2_tweets_search_recent;
+pub mod get_2_tweets_search_stream;
+pub mod get_2_tweets_search_stream_rules;
+pub mod get_2_users_me;
 
 pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
 

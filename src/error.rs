@@ -13,9 +13,6 @@ pub enum Error {
 
     #[error("Twitter {0}")]
     Twitter(TwitterError, Option<RateLimit>),
-
-    #[error("Invalid Parameter {0}")]
-    InvalidParameter(String),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

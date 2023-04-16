@@ -1,11 +1,10 @@
 ---
 
-url: https://api.twitter.com/2/tweets/search/recent
+url: https://api.twitter.com/2/tweets/search/stream
 method: get
 params:
-  - name: query
-    type: string
-    required: true
+  - name: backfill_minutes
+    type: integer
     place: query
   - name: end_time
     type: date
@@ -14,14 +13,8 @@ params:
     type: enum
     place: query
     value: attachments.poll_ids, attachments.media_keys, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id
-  - name: max_results
-    type: integer
-    place: query
   - name: media.fields
     type: enum
-    place: query
-  - name: next_token
-    type: string
     place: query
   - name: place.fields
     type: enum
@@ -29,21 +22,11 @@ params:
   - name: poll.fields
     type: enum
     place: query
-  - name: since_id
-    type: string
-    place: query
-  - name: sort_order
-    type: enum_single
-    place: query
-    value: recency, relevancy
   - name: start_time
     type: date
     place: query
   - name: tweet.fields
     type: enum
-    place: query
-  - name: until_id
-    type: string
     place: query
   - name: user.fields
     type: enum

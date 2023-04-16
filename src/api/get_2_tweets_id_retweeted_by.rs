@@ -4,7 +4,7 @@ use itertools::Itertools;
 use reqwest::RequestBuilder;
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
+const URL: &str = "https://api.twitter.com/2/tweets/:id/retweeted_by";
 
 #[derive(Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
