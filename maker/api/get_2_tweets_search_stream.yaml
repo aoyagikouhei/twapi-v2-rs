@@ -5,29 +5,20 @@ method: get
 params:
   - name: backfill_minutes
     type: integer
-    place: query
   - name: end_time
     type: date
-    place: query
   - name: expansions
     type: enum
-    place: query
     value: attachments.poll_ids, attachments.media_keys, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id
   - name: media.fields
     type: enum
-    place: query
   - name: place.fields
     type: enum
-    place: query
   - name: poll.fields
     type: enum
-    place: query
   - name: start_time
     type: date
-    place: query
   - name: tweet.fields
     type: enum
-    place: query
   - name: user.fields
     type: enum
-    place: query

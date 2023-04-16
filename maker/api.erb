@@ -9,7 +9,7 @@ const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
 #[derive(Debug, Default)]
-pub struct Api {<% yml[:params].each do |it| %>
+pub struct Api {<% (yml[:params] + paths).each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
 }
 
@@ -35,7 +35,7 @@ impl Api {
         }<% end %>
         let client = reqwest::Client::new();
         client
-            .<%= yml[:method] %>(URL<%= paths.join("") %>)
+            .<%= yml[:method] %>(URL<%= path_parameters.join("") %>)
             .query(&query_parameters)
             .bearer_auth(bearer_code)
     }

@@ -2,24 +2,18 @@
 
 url: https://api.twitter.com/2/tweets/:id/liking_users
 method: get
-params:
+paths:
   - name: id
     type: string
-    required: true
-    place: path
+params:
   - name: max_results
     type: integer
-    place: query
   - name: expansions
     type: enum
-    place: query
     value: pinned_tweet_id
   - name: pagination_token
     type: string
-    place: query
   - name: tweet.fields
     type: enum
-    place: query
   - name: user.fields
     type: enum
-    place: query

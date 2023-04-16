@@ -5,4 +5,3 @@ method: get
 params:
   - name: ids
     type: string
-    place: query

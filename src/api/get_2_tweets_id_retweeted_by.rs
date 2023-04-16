@@ -28,12 +28,12 @@ impl std::fmt::Display for Expansions {
 }
 #[derive(Debug, Default)]
 pub struct Api {
-    id: String,
     max_results: Option<usize>,
     expansions: Option<HashSet<Expansions>>,
     pagination_token: Option<String>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
+    id: String,
 }
 
 impl Api {

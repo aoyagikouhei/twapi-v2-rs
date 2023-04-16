@@ -55,13 +55,13 @@ impl std::fmt::Display for Expansions {
 }
 #[derive(Debug, Default)]
 pub struct Api {
-    id: String,
     expansions: Option<HashSet<Expansions>>,
     media_fields: Option<HashSet<MediaFields>>,
     place_fields: Option<HashSet<PlaceFields>>,
     poll_fields: Option<HashSet<PollFields>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
+    id: String,
 }
 
 impl Api {

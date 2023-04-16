@@ -21,6 +21,8 @@ def make_type(it)
     "#{it[:name].ucc}"
   when "date" then
     "DateTime<Utc>"
+  when "bool" then
+    "bool"
   else
     "String"
   end
@@ -41,6 +43,8 @@ def make_field_type(it)
     "#{it[:name].ucc}"
   when "date" then
     "DateTime<Utc>"
+  when "bool" then
+    "bool"
   else
     "&str"
   end
@@ -49,7 +53,9 @@ end
 def make_new_type(it)
   case it[:type]
   when "integer" then
-    usize
+    "usize"
+  when "bool" then
+    "bool"
   else
     "&str"
   end
@@ -81,16 +87,19 @@ def execute(path)
   m = /api\/(.+)\.yaml/.match(path)
   name = m[1]
 
+  
+
   yml = YAML.load_file(path).deep_symbolize_keys
-  paths = yml[:params].filter{|it| it[:place] == "path" }.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
+  paths = (yml[:paths] || []).map{|it| it[:required] = "true"; it }
+  path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
   enum_flag = yml[:params].filter{|it| it[:type] == "enum"}.present?
 
 
   fields = yml[:params].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
-  required = yml[:params].filter{|it| it[:required] }
+  required = yml[:params].filter{|it| it[:required] } + paths
   others = yml[:params].filter{|it| !it[:required] }
-  required_queries = yml[:params].filter{|it| it[:place] == "query" && it[:required] }
-  others_queries = yml[:params].filter{|it| it[:place] == "query" && !it[:required] }
+  required_queries = yml[:params].filter{|it| it[:required] }
+  others_queries = yml[:params].filter{|it| !it[:required] }
   expantions = yml[:params].filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
     class_name = it[:name].make_field.ucc
     src = it[:value]

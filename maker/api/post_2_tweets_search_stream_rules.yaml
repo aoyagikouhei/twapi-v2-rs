@@ -1,0 +1,25 @@
+---
+
+url: https://api.twitter.com/2/tweets/search/stream/rules
+method: post
+params:
+  - name: dry_run
+    type: bool
+body:
+  type: object
+  params:
+    - name: add
+      type: object
+      params:
+        - name: value
+          type: string
+          required: true
+        - name: tag
+          type: string
+    - name: delete
+      type: object
+      params:
+        - name: ids
+          type: array
+          item: string
+          required: true
