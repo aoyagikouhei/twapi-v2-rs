@@ -1,4 +1,4 @@
-<% if yml[:params].filter{|it| it[:type] == "date" }.present? %>use chrono::prelude::*;
+<% if date_flag %>use chrono::prelude::*;
 <% end %><% if fields.present? %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
 <% end %><% if enum_flag %>use itertools::Itertools;
 use std::collections::HashSet;
@@ -9,7 +9,7 @@ const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
 #[derive(Debug, Default)]
-pub struct Api {<% (yml[:params] + paths).each do |it| %>
+pub struct Api {<% (yml[:queries] + paths).each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
 }
 

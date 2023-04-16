@@ -2,7 +2,7 @@
 
 url: https://api.twitter.com/2/tweets/search/recent
 method: get
-params:
+queries:
   - name: query
     type: string
     required: true

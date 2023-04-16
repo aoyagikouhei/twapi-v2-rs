@@ -5,7 +5,7 @@ method: get
 paths:
   - name: id
     type: string
-params:
+queries:
   - name: max_results
     type: integer
   - name: expansions

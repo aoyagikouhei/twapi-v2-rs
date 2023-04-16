@@ -92,15 +92,15 @@ def execute(path)
   yml = YAML.load_file(path).deep_symbolize_keys
   paths = (yml[:paths] || []).map{|it| it[:required] = "true"; it }
   path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
-  enum_flag = yml[:params].filter{|it| it[:type] == "enum"}.present?
+  enum_flag = yml[:queries].filter{|it| it[:type] == "enum"}.present?
+  date_flag = yml[:queries].filter{|it| it[:type] == "date" }.present?
 
-
-  fields = yml[:params].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
-  required = yml[:params].filter{|it| it[:required] } + paths
-  others = yml[:params].filter{|it| !it[:required] }
-  required_queries = yml[:params].filter{|it| it[:required] }
-  others_queries = yml[:params].filter{|it| !it[:required] }
-  expantions = yml[:params].filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
+  fields = yml[:queries].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
+  required = yml[:queries].filter{|it| it[:required] } + paths
+  others = yml[:queries].filter{|it| !it[:required] }
+  required_queries = yml[:queries].filter{|it| it[:required] }
+  others_queries = yml[:queries].filter{|it| !it[:required] }
+  expantions = yml[:queries].filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
     class_name = it[:name].make_field.ucc
     src = it[:value]
     ary = src.split(", ")

@@ -2,7 +2,7 @@
 
 url: https://api.twitter.com/2/tweets
 method: get
-params:
+queries:
   - name: ids
     type: string
     required: true

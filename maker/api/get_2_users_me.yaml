@@ -2,7 +2,7 @@
 
 url: https://api.twitter.com/2/users/me
 method: get
-params:
+queries:
   - name: expansions
     type: enum
     value: pinned_tweet_id
