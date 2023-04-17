@@ -1,9 +1,10 @@
 use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/oauth2/token";
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum GrantType {
     RefreshToken,
 }
@@ -21,6 +22,7 @@ impl Default for GrantType {
         Self::RefreshToken
     }
 }
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     api_key_code: String,

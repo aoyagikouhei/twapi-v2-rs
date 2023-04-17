@@ -6,11 +6,12 @@ use crate::fields::{
 use chrono::prelude::*;
 use itertools::Itertools;
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/tweets/search/recent";
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     AttachmentsPollIds,
     AttachmentsMediaKeys,
@@ -61,7 +62,7 @@ impl Default for Expansions {
     }
 }
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum SortOrder {
     Recency,
     Relevancy,
@@ -81,6 +82,7 @@ impl Default for SortOrder {
         Self::Recency
     }
 }
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,

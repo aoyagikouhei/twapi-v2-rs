@@ -13,10 +13,10 @@ mod tests {
 
     #[tokio::test]
     async fn it_works() {
-        let _res = api::get_2_tweets_id_liking_users::Api::new("123")
+        let _res = api::get_2_tweets_id_liking_users::Api::new("bearer_code", "id")
             .max_results(10)
             .pagination_token("xxxx")
-            .execute("xxx")
+            .execute()
             .await;
     }
 }

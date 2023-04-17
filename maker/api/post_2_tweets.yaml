@@ -1,0 +1,58 @@
+---
+
+url: https://api.twitter.com/2/tweets
+method: post
+body:
+  type: object
+  properties:
+    - name: direct_message_deep_link
+      type: string
+    - name: for_super_followers_only
+      type: bool
+    - name: geo
+      type: object
+      properties:
+        - name: place_id
+          type: string
+          required: true
+    - name: media
+      type: object
+      properties:
+        - name: media_ids
+          type: array
+          items:
+            type: string
+          required: true
+        - name: tagged_user_ids
+          type: array
+          items:
+            type: string
+          required: true
+    - name: poll
+      type: object
+      properties:
+        - name: duration_minutes
+          type: integer
+          required: true
+        - name: options
+          type: array
+          items:
+            type: string
+          required: true
+    - name: quote_tweet_id
+      type: string
+    - name: reply
+      type: object
+      properties:
+        - name: exclude_reply_user_ids
+          type: array
+          items:
+            type: string
+        - name: in_reply_to_tweet_id
+          type: string
+          required: true
+    - name: reply_settings
+      type: enum_single
+      value: mentioned_users, following
+    - name: text
+      type: string

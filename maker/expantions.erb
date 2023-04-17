@@ -1,4 +1,4 @@
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum <%= class_name %> {<% ary.each do |it| %>
     <%= it.ucc %>,<% end %>
 }

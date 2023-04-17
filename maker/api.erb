@@ -2,7 +2,7 @@
 <% end %><% if fields.present? %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
 <% end %><% if enum_flag %>use itertools::Itertools;
 use std::collections::HashSet;
-<% end %><% if body_flag %>use serde::{Serialize, Deserialize};
+<% end %><% if serde_flag %>use serde::{Serialize, Deserialize};
 <% end %>use reqwest::RequestBuilder;
 use super::{TwitterResult, execute_twitter};
 
@@ -15,15 +15,17 @@ const URL: &str = "<%= yml[:url] %>";
 #[derive(Debug, Clone, Default)]
 pub struct Api {<% auth[:keys].each do |it| %>
     <%= it %>: String,<% end %><% (paths + queries + form).each do |it| %>
-    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
+    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
+    body: Body,<% end %>
 }
 
 impl Api {
     pub fn new(<%= new_array.join(", ") %>) -> Self {
         Self {<% auth[:keys].each do |it| %>
             <%= it %>: <%= it %>.to_owned(),<% end %><% required.each do |it| %>
-            <%= required_new(it) %>,<% end %>
-            <% if others_queries.present? %>..Default::default()<% end %>
+            <%= required_new(it) %>,<% end %><% if bodies.present? %>
+            body,<% end %><% if others_queries.present? %>
+            ..Default::default()<% end %>
         }
     }
     <% others.each do |it| %>
@@ -32,9 +34,7 @@ impl Api {
         self
     }
     <% end %>
-
-    pub fn build(self<%= bodies.present? ? ", body: &Body" : "" %>) -> RequestBuilder {
-        <% if form.present? %>
+    pub fn build(self) -> RequestBuilder {<% if form.present? %>
         let form_paramters = vec![
             <% form.each do |it| %>
             ("<%= it[:name].make_field %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>),<% end %>
@@ -50,10 +50,10 @@ impl Api {
             .query(&query_parameters)<% end %><% if form.present? %>
             .form(&form_paramters)<% end %>
             <%= auth[:method] %><% if bodies.present? %>
-            .json(&serde_json::to_value(body).unwrap())<% end %>
+            .json(&serde_json::to_value(&self.body).unwrap())<% end %>
     }
 
-    pub async fn execute(self<%= bodies.present? ? ", body: &Body" : "" %>) -> TwitterResult {
-        execute_twitter(self.build(<%= bodies.present? ? "body, " : "" %><%= auth[:build] %>)).await
+    pub async fn execute(self) -> TwitterResult {
+        execute_twitter(self.build()).await
     }
 }

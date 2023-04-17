@@ -96,6 +96,8 @@ end
 
 def make_body_type(src)
   res = case src[:type]
+  when "enum_single" then
+    src[:name].ucc
   when "string" then
     "String"
   when "object" then
@@ -117,6 +119,8 @@ def make_body(body, results)
   body[:properties].each do |it|
     if it[:type] == "object"
       make_body(it, results)
+    elsif it[:type] == "enum_single"
+      results << make_expantions(it)
     end
   end
   name = body[:name] || "body"
@@ -125,7 +129,18 @@ def make_body(body, results)
   results << erb.result(binding)
 end
 
+def make_expantions(it)
+  @expantion_flag = true
+  class_name = it[:name].make_field.ucc
+  src = it[:value]
+  ary = src.split(", ")
+  all_flag = it[:type] == "enum"
+  erb = ERB.new(File.read("expantions.erb"))
+  erb.result(binding)
+end
+
 def execute(path)
+  @expantion_flag = false
   m = /api\/(.+)\.yaml/.match(path)
   name = m[1]
 
@@ -136,7 +151,6 @@ def execute(path)
   path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
   enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
   date_flag = queries.filter{|it| it[:type] == "date" }.present?
-  body_flag = yml[:body].present?
 
   fields = queries.filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
   required = (queries + form).filter{|it| it[:required] } + paths
@@ -156,18 +170,17 @@ def execute(path)
     }
   end
 
-  new_array = auth[:keys].map{|it| "#{it}: &str"} + required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+  
 
   expantions = (queries + form).filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
-    class_name = it[:name].make_field.ucc
-    src = it[:value]
-    ary = src.split(", ")
-    all_flag = it[:type] == "enum"
-    erb = ERB.new(File.read("expantions.erb"))
-    erb.result(binding)
+    make_expantions(it)
   end
   bodies = []
   make_body(yml[:body], bodies) if yml[:body].present?
+  new_array = auth[:keys].map{|it| "#{it}: &str"} + required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+  serde_flag = @expantion_flag || bodies.present?
+  new_array << "body: Body" if bodies.present?
+
   erb = ERB.new(File.read("api.erb"))
   File.write("../src/api/#{name}.rs", erb.result(binding))
 end

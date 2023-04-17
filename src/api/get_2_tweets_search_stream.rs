@@ -6,11 +6,12 @@ use crate::fields::{
 use chrono::prelude::*;
 use itertools::Itertools;
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/tweets/search/stream";
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     AttachmentsPollIds,
     AttachmentsMediaKeys,
@@ -60,6 +61,7 @@ impl Default for Expansions {
         Self::AttachmentsPollIds
     }
 }
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,

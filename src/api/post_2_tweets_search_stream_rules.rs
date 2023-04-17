@@ -25,12 +25,14 @@ pub struct Body {
 pub struct Api {
     bearer_code: String,
     dry_run: Option<bool>,
+    body: Body,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str) -> Self {
+    pub fn new(bearer_code: &str, body: Body) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
+            body,
             ..Default::default()
         }
     }
@@ -40,7 +42,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, body: &Body) -> RequestBuilder {
+    pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(dry_run) = self.dry_run {
             query_parameters.push(("dry_run", dry_run.to_string()));
@@ -50,10 +52,10 @@ impl Api {
             .post(URL)
             .query(&query_parameters)
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(body).unwrap())
+            .json(&serde_json::to_value(&self.body).unwrap())
     }
 
-    pub async fn execute(self, body: &Body) -> TwitterResult {
-        execute_twitter(self.build(body)).await
+    pub async fn execute(self) -> TwitterResult {
+        execute_twitter(self.build()).await
     }
 }

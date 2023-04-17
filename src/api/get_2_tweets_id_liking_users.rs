@@ -2,11 +2,12 @@ use super::{execute_twitter, TwitterResult};
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     PinnedTweetId,
 }
@@ -32,6 +33,7 @@ impl Default for Expansions {
         Self::PinnedTweetId
     }
 }
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,

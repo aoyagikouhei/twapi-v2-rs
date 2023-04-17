@@ -9,6 +9,7 @@ pub mod get_2_tweets_search_stream;
 pub mod get_2_tweets_search_stream_rules;
 pub mod get_2_users_me;
 pub mod post_2_oauth2_token;
+pub mod post_2_tweets;
 pub mod post_2_tweets_search_stream_rules;
 
 pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
