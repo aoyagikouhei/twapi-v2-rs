@@ -83,17 +83,56 @@ def required_new(it)
   end
 end
 
+def make_type_simple(src)
+  case src[:type]
+  when "integer" then
+    "usize"
+  else
+    "String"
+  end
+end
+
+def make_body_type(src)
+  res = case src[:type]
+  when "string" then
+    "String"
+  when "object" then
+    src[:name].ucc
+  when "array" then
+    "Vec<#{src[:type] == "object" ? src[:name].ucc + "Item" : make_type_simple(src)}>"
+  else
+    "String"
+  end
+  if !src[:required]
+    "Option<#{res}>"
+  else
+    res
+  end
+end
+
+# only object
+def make_body(body, results)
+  body[:properties].each do |it|
+    if it[:type] == "object"
+      make_body(it, results)
+    end
+  end
+  name = body[:name] || "body"
+  properties = body[:properties]
+  erb = ERB.new(File.read("body.erb"))
+  results << erb.result(binding)
+end
+
 def execute(path)
   m = /api\/(.+)\.yaml/.match(path)
   name = m[1]
-
-  
 
   yml = YAML.load_file(path).deep_symbolize_keys
   paths = (yml[:paths] || []).map{|it| it[:required] = "true"; it }
   path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
   enum_flag = yml[:queries].filter{|it| it[:type] == "enum"}.present?
   date_flag = yml[:queries].filter{|it| it[:type] == "date" }.present?
+  body_flag = yml[:body].present?
 
   fields = yml[:queries].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
   required = yml[:queries].filter{|it| it[:required] } + paths
@@ -108,7 +147,8 @@ def execute(path)
     erb = ERB.new(File.read("expantions.erb"))
     erb.result(binding)
   end
-
+  bodies = []
+  make_body(yml[:body], bodies) if yml[:body].present?
   erb = ERB.new(File.read("api.erb"))
   File.write("../src/api/#{name}.rs", erb.result(binding))
 end
@@ -116,3 +156,4 @@ end
 Dir.glob('api/*.yaml').each do |path|
   execute(path)
 end
+
