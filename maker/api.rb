@@ -56,6 +56,8 @@ def make_new_type(it)
     "usize"
   when "bool" then
     "bool"
+  when "enum_single" then
+    "#{it[:name].ucc}"
   else
     "&str"
   end
@@ -76,10 +78,10 @@ end
 
 def required_new(it)
   case it[:type]
-  when "integer" then
-    "#{it[:name].make_field}"
+  when "string" then
+    "#{it[:name].make_field}: #{it[:name].make_field}.to_owned()"    
   else
-    "#{it[:name].make_field}: #{it[:name].make_field}.to_owned()"
+    "#{it[:name].make_field}"
   end
 end
 
@@ -144,19 +146,19 @@ def execute(path)
 
   auth = if yml[:auth] == "basic" 
     {
-      params: "api_key_code: &str, api_secret_code: &str",
-      method: ".basic_auth(api_key_code, Some(api_secret_code))",
-      build: "api_key_code, api_secret_code",
+      method: ".basic_auth(self.api_key_code, Some(self.api_secret_code))",
+      keys: ["api_key_code", "api_secret_code"],
     }
   else
     {
-      params: "bearer_code: &str",
-      method: ".bearer_auth(bearer_code)",
-      build: "bearer_code",
+      method: ".bearer_auth(self.bearer_code)",
+      keys: ["bearer_code"],
     }
   end
 
-  expantions = queries.filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
+  new_array = auth[:keys].map{|it| "#{it}: &str"} + required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+
+  expantions = (queries + form).filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
     class_name = it[:name].make_field.ucc
     src = it[:value]
     ary = src.split(", ")

@@ -11,14 +11,17 @@ const URL: &str = "<%= yml[:url] %>";
 <% if bodies.present? %><%= bodies.join("\n\n") %><% end %>
 
 <%= expantions.join("\n\n") %>
-#[derive(Debug, Default)]
-pub struct Api {<% (queries + paths + form).each do |it| %>
+
+#[derive(Debug, Clone, Default)]
+pub struct Api {<% auth[:keys].each do |it| %>
+    <%= it %>: String,<% end %><% (paths + queries + form).each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
 }
 
 impl Api {
-    pub fn new(<%= required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}.join(", ") %>) -> Self {
-        Self {<% required.each do |it| %>
+    pub fn new(<%= new_array.join(", ") %>) -> Self {
+        Self {<% auth[:keys].each do |it| %>
+            <%= it %>: <%= it %>.to_owned(),<% end %><% required.each do |it| %>
             <%= required_new(it) %>,<% end %>
             <% if others_queries.present? %>..Default::default()<% end %>
         }
@@ -30,7 +33,7 @@ impl Api {
     }
     <% end %>
 
-    pub fn build(self<%= bodies.present? ? ", body: &Body" : "" %>, <%= auth[:params] %>) -> RequestBuilder {
+    pub fn build(self<%= bodies.present? ? ", body: &Body" : "" %>) -> RequestBuilder {
         <% if form.present? %>
         let form_paramters = vec![
             <% form.each do |it| %>
@@ -50,7 +53,7 @@ impl Api {
             .json(&serde_json::to_value(body).unwrap())<% end %>
     }
 
-    pub async fn execute(self<%= bodies.present? ? ", body: &Body" : "" %>, <%= auth[:params] %>) -> TwitterResult {
+    pub async fn execute(self<%= bodies.present? ? ", body: &Body" : "" %>) -> TwitterResult {
         execute_twitter(self.build(<%= bodies.present? ? "body, " : "" %><%= auth[:build] %>)).await
     }
 }

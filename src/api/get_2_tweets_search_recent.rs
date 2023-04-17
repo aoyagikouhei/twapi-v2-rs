@@ -55,6 +55,12 @@ impl std::fmt::Display for Expansions {
     }
 }
 
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::AttachmentsPollIds
+    }
+}
+
 #[derive(Debug, Eq, Hash, PartialEq, Clone)]
 pub enum SortOrder {
     Recency,
@@ -69,8 +75,15 @@ impl std::fmt::Display for SortOrder {
         }
     }
 }
-#[derive(Debug, Default)]
+
+impl Default for SortOrder {
+    fn default() -> Self {
+        Self::Recency
+    }
+}
+#[derive(Debug, Clone, Default)]
 pub struct Api {
+    bearer_code: String,
     query: String,
     end_time: Option<DateTime<Utc>>,
     expansions: Option<HashSet<Expansions>>,
@@ -88,8 +101,9 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(query: &str) -> Self {
+    pub fn new(bearer_code: &str, query: &str) -> Self {
         Self {
+            bearer_code: bearer_code.to_owned(),
             query: query.to_owned(),
             ..Default::default()
         }
@@ -160,7 +174,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, bearer_code: &str) -> RequestBuilder {
+    pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
         query_parameters.push(("query", self.query));
         if let Some(end_time) = self.end_time {
@@ -209,10 +223,10 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(bearer_code)
+            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self, bearer_code: &str) -> TwitterResult {
-        execute_twitter(self.build(bearer_code)).await
+    pub async fn execute(self) -> TwitterResult {
+        execute_twitter(self.build()).await
     }
 }

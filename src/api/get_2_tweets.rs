@@ -53,8 +53,15 @@ impl std::fmt::Display for Expansions {
         }
     }
 }
-#[derive(Debug, Default)]
+
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::AttachmentsPollIds
+    }
+}
+#[derive(Debug, Clone, Default)]
 pub struct Api {
+    bearer_code: String,
     ids: String,
     expansions: Option<HashSet<Expansions>>,
     media_fields: Option<HashSet<MediaFields>>,
@@ -65,8 +72,9 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(ids: &str) -> Self {
+    pub fn new(bearer_code: &str, ids: &str) -> Self {
         Self {
+            bearer_code: bearer_code.to_owned(),
             ids: ids.to_owned(),
             ..Default::default()
         }
@@ -102,7 +110,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, bearer_code: &str) -> RequestBuilder {
+    pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
         query_parameters.push(("ids", self.ids));
         if let Some(expansions) = self.expansions {
@@ -127,10 +135,10 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(bearer_code)
+            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self, bearer_code: &str) -> TwitterResult {
-        execute_twitter(self.build(bearer_code)).await
+    pub async fn execute(self) -> TwitterResult {
+        execute_twitter(self.build()).await
     }
 }

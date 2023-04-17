@@ -18,3 +18,7 @@ impl std::fmt::Display for <%= class_name %> {
         }
     }
 }
+
+impl Default for <%= class_name %> {
+    fn default() -> Self { Self::<%= ary.first.ucc %> }
+}

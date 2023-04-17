@@ -21,14 +21,16 @@ pub struct Body {
     delete: Option<Delete>,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Default)]
 pub struct Api {
+    bearer_code: String,
     dry_run: Option<bool>,
 }
 
 impl Api {
-    pub fn new() -> Self {
+    pub fn new(bearer_code: &str) -> Self {
         Self {
+            bearer_code: bearer_code.to_owned(),
             ..Default::default()
         }
     }
@@ -38,7 +40,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, body: &Body, bearer_code: &str) -> RequestBuilder {
+    pub fn build(self, body: &Body) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(dry_run) = self.dry_run {
             query_parameters.push(("dry_run", dry_run.to_string()));
@@ -47,11 +49,11 @@ impl Api {
         client
             .post(URL)
             .query(&query_parameters)
-            .bearer_auth(bearer_code)
+            .bearer_auth(self.bearer_code)
             .json(&serde_json::to_value(body).unwrap())
     }
 
-    pub async fn execute(self, body: &Body, bearer_code: &str) -> TwitterResult {
-        execute_twitter(self.build(body, bearer_code)).await
+    pub async fn execute(self, body: &Body) -> TwitterResult {
+        execute_twitter(self.build(body)).await
     }
 }

@@ -8,7 +8,8 @@ form:
     type: string
     required: true
   - name: grant_type
-    type: string
+    type: enum_single
+    value: refresh_token
     required: true
   - name: refresh_token
     type: string

@@ -53,20 +53,28 @@ impl std::fmt::Display for Expansions {
         }
     }
 }
-#[derive(Debug, Default)]
+
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::AttachmentsPollIds
+    }
+}
+#[derive(Debug, Clone, Default)]
 pub struct Api {
+    bearer_code: String,
+    id: String,
     expansions: Option<HashSet<Expansions>>,
     media_fields: Option<HashSet<MediaFields>>,
     place_fields: Option<HashSet<PlaceFields>>,
     poll_fields: Option<HashSet<PollFields>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
-    id: String,
 }
 
 impl Api {
-    pub fn new(id: &str) -> Self {
+    pub fn new(bearer_code: &str, id: &str) -> Self {
         Self {
+            bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
             ..Default::default()
         }
@@ -102,7 +110,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, bearer_code: &str) -> RequestBuilder {
+    pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
@@ -126,10 +134,10 @@ impl Api {
         client
             .get(URL.replace(":id", &self.id))
             .query(&query_parameters)
-            .bearer_auth(bearer_code)
+            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self, bearer_code: &str) -> TwitterResult {
-        execute_twitter(self.build(bearer_code)).await
+    pub async fn execute(self) -> TwitterResult {
+        execute_twitter(self.build()).await
     }
 }
