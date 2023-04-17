@@ -1,0 +1,15 @@
+---
+
+url: https://api.twitter.com/2/oauth2/token
+method: post
+auth: basic
+form:
+  - name: client_id
+    type: string
+    required: true
+  - name: grant_type
+    type: string
+    required: true
+  - name: refresh_token
+    type: string
+    required: true

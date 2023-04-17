@@ -129,17 +129,34 @@ def execute(path)
 
   yml = YAML.load_file(path).deep_symbolize_keys
   paths = (yml[:paths] || []).map{|it| it[:required] = "true"; it }
+  queries = yml[:queries] || []
+  form = yml[:form] || []
   path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
-  enum_flag = yml[:queries].filter{|it| it[:type] == "enum"}.present?
-  date_flag = yml[:queries].filter{|it| it[:type] == "date" }.present?
+  enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
+  date_flag = queries.filter{|it| it[:type] == "date" }.present?
   body_flag = yml[:body].present?
 
-  fields = yml[:queries].filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
-  required = yml[:queries].filter{|it| it[:required] } + paths
-  others = yml[:queries].filter{|it| !it[:required] }
-  required_queries = yml[:queries].filter{|it| it[:required] }
-  others_queries = yml[:queries].filter{|it| !it[:required] }
-  expantions = yml[:queries].filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
+  fields = queries.filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
+  required = (queries + form).filter{|it| it[:required] } + paths
+  others = queries.filter{|it| !it[:required] }
+  required_queries = queries.filter{|it| it[:required] }
+  others_queries = queries.filter{|it| !it[:required] }
+
+  auth = if yml[:auth] == "basic" 
+    {
+      params: "api_key_code: &str, api_secret_code: &str",
+      method: ".basic_auth(api_key_code, Some(api_secret_code))",
+      build: "api_key_code, api_secret_code",
+    }
+  else
+    {
+      params: "bearer_code: &str",
+      method: ".bearer_auth(bearer_code)",
+      build: "bearer_code",
+    }
+  end
+
+  expantions = queries.filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
     class_name = it[:name].make_field.ucc
     src = it[:value]
     ary = src.split(", ")

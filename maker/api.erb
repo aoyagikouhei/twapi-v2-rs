@@ -12,7 +12,7 @@ const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
 #[derive(Debug, Default)]
-pub struct Api {<% (yml[:queries] + paths).each do |it| %>
+pub struct Api {<% (queries + paths + form).each do |it| %>
     <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %>
 }
 
@@ -20,7 +20,7 @@ impl Api {
     pub fn new(<%= required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}.join(", ") %>) -> Self {
         Self {<% required.each do |it| %>
             <%= required_new(it) %>,<% end %>
-            ..Default::default()
+            <% if others_queries.present? %>..Default::default()<% end %>
         }
     }
     <% others.each do |it| %>
@@ -30,21 +30,27 @@ impl Api {
     }
     <% end %>
 
-    pub fn build(self<%= bodies.present? ? ", body: &Body" : "" %>, bearer_code: &str) -> RequestBuilder {
-        let mut query_parameters = vec![];<% required_queries.each do |it| %>
+    pub fn build(self<%= bodies.present? ? ", body: &Body" : "" %>, <%= auth[:params] %>) -> RequestBuilder {
+        <% if form.present? %>
+        let form_paramters = vec![
+            <% form.each do |it| %>
+            ("<%= it[:name].make_field %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>),<% end %>
+        ];
+        <% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
         query_parameters.push(("<%= it[:name].make_field %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% others_queries.each do |it| %>
         if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
             query_parameters.push(("<%= it[:name].make_field %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
         }<% end %>
         let client = reqwest::Client::new();
         client
-            .<%= yml[:method] %>(URL<%= path_parameters.join("") %>)
-            .query(&query_parameters)
-            .bearer_auth(bearer_code)<% if bodies.present? %>
+            .<%= yml[:method] %>(URL<%= path_parameters.join("") %>)<% if queries.present? %>
+            .query(&query_parameters)<% end %><% if form.present? %>
+            .form(&form_paramters)<% end %>
+            <%= auth[:method] %><% if bodies.present? %>
             .json(&serde_json::to_value(body).unwrap())<% end %>
     }
 
-    pub async fn execute(self<%= bodies.present? ? ", body: &Body" : "" %>, bearer_code: &str) -> TwitterResult {
-        execute_twitter(self.build(<%= bodies.present? ? "body, " : "" %>bearer_code)).await
+    pub async fn execute(self<%= bodies.present? ? ", body: &Body" : "" %>, <%= auth[:params] %>) -> TwitterResult {
+        execute_twitter(self.build(<%= bodies.present? ? "body, " : "" %><%= auth[:build] %>)).await
     }
 }
