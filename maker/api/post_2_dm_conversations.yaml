@@ -1,0 +1,30 @@
+---
+
+url: https://api.twitter.com/2/dm_conversations
+method: post
+body:
+  type: object
+  properties:
+    - name: conversation_type
+      type: enum_single
+      value: Group
+      required: true
+    - name: participant_ids
+      type: array
+      required: true
+      items:
+        type: string
+    - name: message
+      type: object
+      required: true
+      properties:
+        - name: attachments
+          type: array
+          items:
+            type: object
+            properties:
+              - name: media_id
+                type: string
+                required: true
+        - name: text
+          type: string

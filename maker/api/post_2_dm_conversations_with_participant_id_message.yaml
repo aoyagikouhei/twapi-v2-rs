@@ -1,0 +1,20 @@
+---
+
+url: https://api.twitter.com/2/dm_conversations/with/:participant_id/messages
+method: post
+paths:
+  - name: participant_id
+    type: string
+body:
+  type: object
+  properties:
+    - name: attachments
+      type: array
+      items:
+        type: object
+        properties:
+          - name: media_id
+            type: string
+            required: true
+    - name: text
+      type: string

@@ -53,6 +53,6 @@ body:
           required: true
     - name: reply_settings
       type: enum_single
-      value: mentioned_users, following
+      value: mentionedUsers, following
     - name: text
       type: string

@@ -103,7 +103,7 @@ def make_body_type(src)
   when "object" then
     src[:name].ucc
   when "array" then
-    "Vec<#{src[:type] == "object" ? src[:name].ucc + "Item" : make_type_simple(src)}>"
+    "Vec<#{src[:items][:type] == "object" ? src[:name].singularize.ucc : make_type_simple(src)}>"
   else
     "String"
   end
@@ -115,15 +115,17 @@ def make_body_type(src)
 end
 
 # only object
-def make_body(body, results)
+def make_body(body, results, array_name=nil)
   body[:properties].each do |it|
     if it[:type] == "object"
       make_body(it, results)
+    elsif it[:type] == "array" && it[:items][:type] == "object"
+        make_body(it[:items], results, it[:name].singularize)
     elsif it[:type] == "enum_single"
       results << make_expantions(it)
     end
   end
-  name = body[:name] || "body"
+  name = array_name || body[:name] || "body"
   properties = body[:properties]
   erb = ERB.new(File.read("body.erb"))
   results << erb.result(binding)

@@ -29,14 +29,14 @@ pub struct Reply {
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ReplySettings {
-    MentionedUsers,
+    Mentionedusers,
     Following,
 }
 
 impl std::fmt::Display for ReplySettings {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::MentionedUsers => write!(f, "mentioned_users"),
+            Self::Mentionedusers => write!(f, "mentionedUsers"),
             Self::Following => write!(f, "following"),
         }
     }
@@ -44,7 +44,7 @@ impl std::fmt::Display for ReplySettings {
 
 impl Default for ReplySettings {
     fn default() -> Self {
-        Self::MentionedUsers
+        Self::Mentionedusers
     }
 }
 
