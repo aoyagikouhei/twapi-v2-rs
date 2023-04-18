@@ -35,6 +35,7 @@ pub mod post_2_dm_conversations_dm_conversation_id_message;
 pub mod post_2_dm_conversations_with_participant_id_message;
 pub mod post_2_oauth2_token;
 pub mod post_2_tweets;
+pub mod post_2_tweets_id_hidden;
 pub mod post_2_tweets_search_stream_rules;
 pub mod post_2_users_id_bookmarks;
 pub mod post_2_users_id_likes;
