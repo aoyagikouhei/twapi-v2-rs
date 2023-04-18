@@ -11,37 +11,13 @@ const URL: &str = "<%= yml[:url] %>";
 
 <%= expantions.join("\n\n") %>
 
-#[derive(Debug, Clone, Default)]
-pub struct Api {<% auth[:keys].each do |it| %>
-    <%= it %>: String,<% end %><% (paths + queries + form).each do |it| %>
-    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
-    body: Body,<% end %>
-}
+<%= api_struct %>
 
 impl Api {
-    pub fn new(<%= new_array.join(", ") %>) -> Self {
-        Self {
-            <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
-            <%= required_new(it) %>,<% end %><% if bodies.present? %>
-            body,<% end %><% if non_required_queries.present? %>
-            ..Default::default()<% end %>
-        }
-    }
-    <% non_required_queries.each do |it| %>
-    pub fn <%= it[:name].make_field %>(mut self, value: <%= make_field_type(it) %>) -> Self {
-        self.<%= it[:name].make_field %> = Some(value<%= it[:type] == "string" ? ".to_owned()" : "" %>);
-        self
-    }
-    <% end %>
-    pub fn build(self) -> RequestBuilder {<% if form.present? %>
-        let form_paramters = vec![<% form.each do |it| %>
-            ("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>),<% end %>
-        ];
-        <% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
-        query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>
-        if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
-            query_parameters.push(("<%= it[:name] %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
-        }<% end %>
+<%= api_new %>
+<%= setter %>
+    pub fn build(self) -> RequestBuilder {
+<%= parameters %>
         let client = reqwest::Client::new();
         client
             .<%= yml[:method] %>(URL<%= paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>)<% if queries.present? %>

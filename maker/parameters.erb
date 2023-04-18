@@ -1,0 +1,22 @@
+<%
+def make_query_value(it)
+  case it[:type]
+  when "enum" then
+    ".iter().join(\",\")"
+  when "string" then
+    ""
+  when "date" then
+    ".format(\"%Y-%m-%dT%H%M%SZ\").to_string()"
+  else
+    ".to_string()"
+  end
+end
+%><% if form.present? %>
+let form_paramters = vec![<% form.each do |it| %>
+    ("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>),<% end %>
+];
+<% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
+query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>
+if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
+    query_parameters.push(("<%= it[:name] %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
+}<% end %>

@@ -1,0 +1,28 @@
+<% 
+def make_type(it)
+    res = case it[:type]
+    when "integer" then
+      "usize"
+    when "enum" then
+      "HashSet<#{it[:name].ucc}>"
+    when "enum_single" then
+      "#{it[:name].ucc}"
+    when "date" then
+      "DateTime<Utc>"
+    when "bool" then
+      "bool"
+    else
+      "String"
+    end
+    if it[:required]
+      res
+    else
+      "Option<#{res}>"
+    end
+  end
+%>#[derive(Debug, Clone, Default)]
+pub struct Api {<% auth[:keys].each do |it| %>
+    <%= it %>: String,<% end %><% (paths + queries + form).each do |it| %>
+    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
+    body: Body,<% end %>
+}

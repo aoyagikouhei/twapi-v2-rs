@@ -1,0 +1,36 @@
+<%
+def make_new_type(it)
+  case it[:type]
+  when "integer" then
+    "usize"
+  when "enum" then
+    "HashSet<#{it[:name].ucc}>"
+  when "enum_single" then
+    "#{it[:name].ucc}"
+  when "date" then
+    "DateTime<Utc>"
+  when "bool" then
+    "bool"
+  else
+    "&str"
+  end
+end
+
+def required_new(it)
+  case it[:type]
+  when "string" then
+    "#{it[:name].make_field}: #{it[:name].make_field}.to_owned()"    
+  else
+    "#{it[:name].make_field}"
+  end
+end
+new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+new_array << "body: Body" if bodies.present?
+%>pub fn new(<%= new_array.join(", ") %>) -> Self {
+    Self {
+        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+        <%= required_new(it) %>,<% end %><% if bodies.present? %>
+        body,<% end %><% if non_required_queries.present? %>
+        ..Default::default()<% end %>
+    }
+}

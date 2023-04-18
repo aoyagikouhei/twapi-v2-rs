@@ -1,0 +1,23 @@
+<% 
+def make_field_type(it)
+  case it[:type]
+  when "integer" then
+    "usize"
+  when "enum" then
+    "HashSet<#{it[:name].ucc}>"
+  when "enum_single" then
+    "#{it[:name].ucc}"
+  when "date" then
+    "DateTime<Utc>"
+  when "bool" then
+    "bool"
+  else
+    "&str"
+  end
+end
+%><% non_required_queries.each do |it| %>
+pub fn <%= it[:name].make_field %>(mut self, value: <%= make_field_type(it) %>) -> Self {
+    self.<%= it[:name].make_field %> = Some(value<%= it[:type] == "string" ? ".to_owned()" : "" %>);
+    self
+}
+<% end %>
