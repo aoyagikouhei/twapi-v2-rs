@@ -35,6 +35,7 @@ def make_expantions(it)
   ary = src.split(", ")
   all_flag = it[:type] == "enum"
   use_flag = false
+  methods = []
   erb = ERB.new(File.read("expantions.erb"))
   erb.result(binding)
 end
@@ -55,6 +56,8 @@ def execute(path)
   required_queries = queries.filter{|it| it[:required] }
   non_required_queries = queries.filter{|it| !it[:required] }
 
+  fields = queries.filter{|it| /\.fields$/ =~ it[:name]}
+
   auth = if yml[:auth] == "basic" 
     {
       method: ".basic_auth(self.api_key_code, Some(self.api_secret_code))",
@@ -67,7 +70,7 @@ def execute(path)
     }
   end
 
-  expantions = (queries + form).filter{|it| it[:type] == "enum" || it[:type] == "enum_single" }.map do |it|
+  expantions = (queries + form).filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/\.fields$/ =~ it[:name]) }.map do |it|
     make_expantions(it)
   end
   bodies = []
@@ -83,7 +86,25 @@ def execute(path)
   File.write("../src/api/#{name}.rs", erb.result(binding))
 end
 
+def execute_expantions(path)
+  m = /fields\/(.+)\.yaml/.match(path)
+  name = m[1]
+  yml = YAML.load_file(path).deep_symbolize_keys
+
+  class_name = name.make_field.ucc + "Fields"
+  src = yml[:value]
+  ary = src.split(", ")
+  all_flag = true
+  use_flag = true
+  methods = yml[:methods] || []
+  erb = ERB.new(File.read("expantions.erb"))
+  File.write("../src/fields/#{name}_fields.rs", erb.result(binding))
+end
+
 Dir.glob('api/*.yaml').each do |path|
   execute(path)
 end
 
+Dir.glob('fields/*.yaml').each do |path|
+  execute_expantions(path)
+end

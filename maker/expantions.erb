@@ -11,7 +11,14 @@ impl <%= class_name %> {
         let mut result = HashSet::new();<% ary.each do |it| %>
         result.insert(Self::<%= it.ucc %>);<% end %>
         result
+    }<% methods.each do |it| %>
+
+    pub fn <%= it[:name] %>() -> HashSet<Self> {
+        let mut result = HashSet::new();<% it[:value].split(", ").each do |v| %>
+        result.insert(Self::<%= v.ucc %>);<% end %>
+        result
     }
+    <% end %>
 }
 <% end %>
 impl std::fmt::Display for <%= class_name %> {

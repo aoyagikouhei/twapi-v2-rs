@@ -1,0 +1,3 @@
+---
+
+value: id, text, event_type, created_at, dm_conversation_id, sender_id, participant_ids, referenced_tweets, attachments
