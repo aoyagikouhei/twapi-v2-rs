@@ -91,10 +91,10 @@ impl Api {
             query_parameters.push(("pagination_token", pagination_token));
         }
         if let Some(tweet_fields) = self.tweet_fields {
-            query_parameters.push(("tweet_fields", tweet_fields.iter().join(",")));
+            query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
         }
         if let Some(user_fields) = self.user_fields {
-            query_parameters.push(("user_fields", user_fields.iter().join(",")));
+            query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
         client

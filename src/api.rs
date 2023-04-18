@@ -1,5 +1,10 @@
-use crate::{error::Error, error::TwitterError, rate_limit::RateLimit};
+use crate::{
+    error::Error,
+    error::{FieldError, TwitterError},
+    rate_limit::RateLimit,
+};
 
+pub mod delete_2_tweets;
 pub mod get_2_tweets;
 pub mod get_2_tweets_id;
 pub mod get_2_tweets_id_liking_users;
@@ -21,7 +26,10 @@ pub async fn execute_twitter(builder: reqwest::RequestBuilder) -> TwitterResult 
     let rate_limit = RateLimit::new(header);
 
     let value: serde_json::Value = response.json().await?;
-    if status_code.is_success() {
+
+    if value["errors"].is_array() {
+        Err(FieldError::field_error(status_code, value, rate_limit))
+    } else if status_code.is_success() {
         Ok((value, rate_limit))
     } else {
         let res = TwitterError::new(status_code, value);

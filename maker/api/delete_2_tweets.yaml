@@ -1,0 +1,7 @@
+---
+
+url: https://api.twitter.com/2/tweets/:id
+method: delete
+paths:
+  - name: id
+    type: string

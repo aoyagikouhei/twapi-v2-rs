@@ -189,16 +189,16 @@ impl Api {
             query_parameters.push(("max_results", max_results.to_string()));
         }
         if let Some(media_fields) = self.media_fields {
-            query_parameters.push(("media_fields", media_fields.iter().join(",")));
+            query_parameters.push(("media.fields", media_fields.iter().join(",")));
         }
         if let Some(next_token) = self.next_token {
             query_parameters.push(("next_token", next_token));
         }
         if let Some(place_fields) = self.place_fields {
-            query_parameters.push(("place_fields", place_fields.iter().join(",")));
+            query_parameters.push(("place.fields", place_fields.iter().join(",")));
         }
         if let Some(poll_fields) = self.poll_fields {
-            query_parameters.push(("poll_fields", poll_fields.iter().join(",")));
+            query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
         }
         if let Some(since_id) = self.since_id {
             query_parameters.push(("since_id", since_id));
@@ -213,13 +213,13 @@ impl Api {
             ));
         }
         if let Some(tweet_fields) = self.tweet_fields {
-            query_parameters.push(("tweet_fields", tweet_fields.iter().join(",")));
+            query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
         }
         if let Some(until_id) = self.until_id {
             query_parameters.push(("until_id", until_id));
         }
         if let Some(user_fields) = self.user_fields {
-            query_parameters.push(("user_fields", user_fields.iter().join(",")));
+            query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
         client
