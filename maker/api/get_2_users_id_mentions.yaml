@@ -1,0 +1,41 @@
+---
+
+url: https://api.twitter.com/2/users/:id/mentions
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: end_time
+    type: date
+  - name: exclude
+    type: enum
+    value: retweets, replies
+  - name: expansions
+    type: enum
+    value: attachments.poll_ids, attachments.media_keys, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id
+  - name: max_results
+    type: integer
+  - name: media.fields
+    type: enum
+    value: duration_ms, height, media_key, preview_image_url, type, url, width, public_metrics, non_public_metrics, organic_metrics, promoted_metrics, alt_text, variants
+  - name: pagination_token
+    type: string
+  - name: place.fields
+    type: enum
+    value: contained_within, country, country_code, full_name, geo, id, name, place_type
+  - name: poll.fields
+    type: enum
+    value: duration_minutes, end_datetime, id, options, voting_status
+  - name: since_id
+    type: string
+  - name: start_time
+    type: date
+  - name: tweet.fields
+    type: enum
+    value: attachments, author_id, context_annotations, conversation_id, created_at, edit_controls, entities, geo, id, in_reply_to_user_id, lang, non_public_metrics, public_metrics, organic_metrics, promoted_metrics, possibly_sensitive, referenced_tweets, reply_settings, source, text, withheld
+  - name: until_id
+    type: string
+  - name: user.fields
+    type: enum
+    value: created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, verified_type, withheld

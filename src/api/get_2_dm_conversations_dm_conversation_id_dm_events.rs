@@ -1,12 +1,10 @@
+use super::{execute_twitter, TwitterResult};
 use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/dm_conversations/:dm_conversation_id/dm_events";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum DmEventFields {
@@ -54,7 +52,9 @@ impl std::fmt::Display for DmEventFields {
 }
 
 impl Default for DmEventFields {
-    fn default() -> Self { Self::Id }
+    fn default() -> Self {
+        Self::Id
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -75,7 +75,9 @@ impl std::fmt::Display for EventTypes {
 }
 
 impl Default for EventTypes {
-    fn default() -> Self { Self::Messagecreate }
+    fn default() -> Self {
+        Self::Messagecreate
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -109,7 +111,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::AttachmentsMediaKeys }
+    fn default() -> Self {
+        Self::AttachmentsMediaKeys
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -161,7 +165,9 @@ impl std::fmt::Display for MediaFields {
 }
 
 impl Default for MediaFields {
-    fn default() -> Self { Self::DurationMs }
+    fn default() -> Self {
+        Self::DurationMs
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -237,7 +243,9 @@ impl std::fmt::Display for TweetFields {
 }
 
 impl Default for TweetFields {
-    fn default() -> Self { Self::Attachments }
+    fn default() -> Self {
+        Self::Attachments
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -301,7 +309,9 @@ impl std::fmt::Display for UserFields {
 }
 
 impl Default for UserFields {
-    fn default() -> Self { Self::CreatedAt }
+    fn default() -> Self {
+        Self::CreatedAt
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -326,48 +336,49 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn dm_event_fields(mut self, value: HashSet<DmEventFields>) -> Self {
         self.dm_event_fields = Some(value);
         self
     }
-    
+
     pub fn event_types(mut self, value: EventTypes) -> Self {
         self.event_types = Some(value);
         self
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-    
+
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
-    
+
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
     }
-    
-    pub fn build(self) -> RequestBuilder {let mut query_parameters = vec![];
+
+    pub fn build(self) -> RequestBuilder {
+        let mut query_parameters = vec![];
         if let Some(dm_event_fields) = self.dm_event_fields {
             query_parameters.push(("dm_event.fields", dm_event_fields.iter().join(",")));
         }
