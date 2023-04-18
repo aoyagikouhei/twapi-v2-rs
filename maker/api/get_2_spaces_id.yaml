@@ -1,0 +1,17 @@
+---
+
+url: https://api.twitter.com/2/spaces/:id
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: invited_user_ids, speaker_ids, creator_id, host_ids, topics_ids
+  - name: space.fields
+    type: enum
+  - name: topic.fields
+    type: enum
+  - name: user.fields
+    type: enum
