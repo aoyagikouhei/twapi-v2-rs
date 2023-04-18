@@ -1,4 +1,7 @@
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+<% if use_flag %>use serde::{Serialize, Deserialize};
+use std::collections::HashSet;
+
+<% end %>#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum <%= class_name %> {<% ary.each do |it| %>
     <%= it.ucc %>,<% end %>
 }

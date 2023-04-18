@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum PollFields {
     DurationMinutes,
     EndDatetime,
@@ -30,5 +31,11 @@ impl std::fmt::Display for PollFields {
             Self::Options => write!(f, "options"),
             Self::VotingStatus => write!(f, "voting_status"),
         }
+    }
+}
+
+impl Default for PollFields {
+    fn default() -> Self {
+        Self::DurationMinutes
     }
 }

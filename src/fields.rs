@@ -1,3 +1,4 @@
+pub mod dm_event_fields;
 pub mod media_fields;
 pub mod place_fields;
 pub mod poll_fields;

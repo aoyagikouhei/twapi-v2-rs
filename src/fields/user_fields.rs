@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum UserFields {
     CreatedAt,
     Description,
@@ -15,7 +16,6 @@ pub enum UserFields {
     Url,
     Username,
     Verified,
-    VerifiedType,
     Withheld,
 }
 
@@ -35,7 +35,6 @@ impl UserFields {
         result.insert(Self::Url);
         result.insert(Self::Username);
         result.insert(Self::Verified);
-        result.insert(Self::VerifiedType);
         result.insert(Self::Withheld);
         result
     }
@@ -57,8 +56,13 @@ impl std::fmt::Display for UserFields {
             Self::Url => write!(f, "url"),
             Self::Username => write!(f, "username"),
             Self::Verified => write!(f, "verified"),
-            Self::VerifiedType => write!(f, "verified_type"),
             Self::Withheld => write!(f, "withheld"),
         }
+    }
+}
+
+impl Default for UserFields {
+    fn default() -> Self {
+        Self::CreatedAt
     }
 }

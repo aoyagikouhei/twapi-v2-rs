@@ -137,6 +137,7 @@ def make_expantions(it)
   src = it[:value]
   ary = src.split(", ")
   all_flag = it[:type] == "enum"
+  use_flag = false
   erb = ERB.new(File.read("expantions.erb"))
   erb.result(binding)
 end

@@ -1,12 +1,14 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum TweetFields {
     Attachments,
     AuthorId,
     ContextAnnotations,
     ConversationId,
     CreatedAt,
+    EditControls,
     Entities,
     Geo,
     Id,
@@ -32,6 +34,7 @@ impl TweetFields {
         result.insert(Self::ContextAnnotations);
         result.insert(Self::ConversationId);
         result.insert(Self::CreatedAt);
+        result.insert(Self::EditControls);
         result.insert(Self::Entities);
         result.insert(Self::Geo);
         result.insert(Self::Id);
@@ -59,6 +62,7 @@ impl std::fmt::Display for TweetFields {
             Self::ContextAnnotations => write!(f, "context_annotations"),
             Self::ConversationId => write!(f, "conversation_id"),
             Self::CreatedAt => write!(f, "created_at"),
+            Self::EditControls => write!(f, "edit_controls"),
             Self::Entities => write!(f, "entities"),
             Self::Geo => write!(f, "geo"),
             Self::Id => write!(f, "id"),
@@ -75,5 +79,11 @@ impl std::fmt::Display for TweetFields {
             Self::Text => write!(f, "text"),
             Self::Withheld => write!(f, "withheld"),
         }
+    }
+}
+
+impl Default for TweetFields {
+    fn default() -> Self {
+        Self::Attachments
     }
 }
