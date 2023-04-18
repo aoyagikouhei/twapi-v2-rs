@@ -1,0 +1,19 @@
+---
+
+url: https://api.twitter.com/2/tweets/counts/recent
+method: get
+queries:
+  - name: query
+    type: string
+    required: true
+  - name: end_time
+    type: date
+  - name: granularity
+    type: enum_single
+    value: minute, hour, day
+  - name: since_id
+    type: string
+  - name: start_time
+    type: date
+  - name: until_id
+    type: string

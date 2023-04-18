@@ -5,37 +5,7 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/users/:id/tweets";
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-pub enum Exclude {
-    Retweets,
-    Replies,
-}
-
-impl Exclude {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::Retweets);
-        result.insert(Self::Replies);
-        result
-    }
-}
-
-impl std::fmt::Display for Exclude {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Retweets => write!(f, "retweets"),
-            Self::Replies => write!(f, "replies"),
-        }
-    }
-}
-
-impl Default for Exclude {
-    fn default() -> Self {
-        Self::Retweets
-    }
-}
+const URL: &str = "https://api.twitter.com/2/tweets/sample/stream";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -98,9 +68,6 @@ pub enum MediaFields {
     Url,
     Width,
     PublicMetrics,
-    NonPublicMetrics,
-    OrganicMetrics,
-    PromotedMetrics,
     AltText,
     Variants,
 }
@@ -116,9 +83,6 @@ impl MediaFields {
         result.insert(Self::Url);
         result.insert(Self::Width);
         result.insert(Self::PublicMetrics);
-        result.insert(Self::NonPublicMetrics);
-        result.insert(Self::OrganicMetrics);
-        result.insert(Self::PromotedMetrics);
         result.insert(Self::AltText);
         result.insert(Self::Variants);
         result
@@ -136,9 +100,6 @@ impl std::fmt::Display for MediaFields {
             Self::Url => write!(f, "url"),
             Self::Width => write!(f, "width"),
             Self::PublicMetrics => write!(f, "public_metrics"),
-            Self::NonPublicMetrics => write!(f, "non_public_metrics"),
-            Self::OrganicMetrics => write!(f, "organic_metrics"),
-            Self::PromotedMetrics => write!(f, "promoted_metrics"),
             Self::AltText => write!(f, "alt_text"),
             Self::Variants => write!(f, "variants"),
         }
@@ -251,10 +212,7 @@ pub enum TweetFields {
     Id,
     InReplyToUserId,
     Lang,
-    NonPublicMetrics,
     PublicMetrics,
-    OrganicMetrics,
-    PromotedMetrics,
     PossiblySensitive,
     ReferencedTweets,
     ReplySettings,
@@ -277,10 +235,7 @@ impl TweetFields {
         result.insert(Self::Id);
         result.insert(Self::InReplyToUserId);
         result.insert(Self::Lang);
-        result.insert(Self::NonPublicMetrics);
         result.insert(Self::PublicMetrics);
-        result.insert(Self::OrganicMetrics);
-        result.insert(Self::PromotedMetrics);
         result.insert(Self::PossiblySensitive);
         result.insert(Self::ReferencedTweets);
         result.insert(Self::ReplySettings);
@@ -305,10 +260,7 @@ impl std::fmt::Display for TweetFields {
             Self::Id => write!(f, "id"),
             Self::InReplyToUserId => write!(f, "in_reply_to_user_id"),
             Self::Lang => write!(f, "lang"),
-            Self::NonPublicMetrics => write!(f, "non_public_metrics"),
             Self::PublicMetrics => write!(f, "public_metrics"),
-            Self::OrganicMetrics => write!(f, "organic_metrics"),
-            Self::PromotedMetrics => write!(f, "promoted_metrics"),
             Self::PossiblySensitive => write!(f, "possibly_sensitive"),
             Self::ReferencedTweets => write!(f, "referenced_tweets"),
             Self::ReplySettings => write!(f, "reply_settings"),
@@ -397,38 +349,32 @@ impl Default for UserFields {
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,
-    id: String,
+    backfill_minutes: Option<usize>,
     end_time: Option<DateTime<Utc>>,
-    exclude: Option<HashSet<Exclude>>,
     expansions: Option<HashSet<Expansions>>,
-    max_results: Option<usize>,
     media_fields: Option<HashSet<MediaFields>>,
-    pagination_token: Option<String>,
     place_fields: Option<HashSet<PlaceFields>>,
     poll_fields: Option<HashSet<PollFields>>,
-    since_id: Option<String>,
     start_time: Option<DateTime<Utc>>,
     tweet_fields: Option<HashSet<TweetFields>>,
-    until_id: Option<String>,
     user_fields: Option<HashSet<UserFields>>,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, id: &str) -> Self {
+    pub fn new(bearer_code: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
-            id: id.to_owned(),
             ..Default::default()
         }
     }
 
-    pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
-        self.end_time = Some(value);
+    pub fn backfill_minutes(mut self, value: usize) -> Self {
+        self.backfill_minutes = Some(value);
         self
     }
 
-    pub fn exclude(mut self, value: HashSet<Exclude>) -> Self {
-        self.exclude = Some(value);
+    pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
+        self.end_time = Some(value);
         self
     }
 
@@ -437,18 +383,8 @@ impl Api {
         self
     }
 
-    pub fn max_results(mut self, value: usize) -> Self {
-        self.max_results = Some(value);
-        self
-    }
-
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
-        self
-    }
-
-    pub fn pagination_token(mut self, value: &str) -> Self {
-        self.pagination_token = Some(value.to_owned());
         self
     }
 
@@ -462,11 +398,6 @@ impl Api {
         self
     }
 
-    pub fn since_id(mut self, value: &str) -> Self {
-        self.since_id = Some(value.to_owned());
-        self
-    }
-
     pub fn start_time(mut self, value: DateTime<Utc>) -> Self {
         self.start_time = Some(value);
         self
@@ -477,11 +408,6 @@ impl Api {
         self
     }
 
-    pub fn until_id(mut self, value: &str) -> Self {
-        self.until_id = Some(value.to_owned());
-        self
-    }
-
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -489,32 +415,23 @@ impl Api {
 
     pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
+        if let Some(backfill_minutes) = self.backfill_minutes {
+            query_parameters.push(("backfill_minutes", backfill_minutes.to_string()));
+        }
         if let Some(end_time) = self.end_time {
             query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
-        }
-        if let Some(exclude) = self.exclude {
-            query_parameters.push(("exclude", exclude.iter().join(",")));
         }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
         }
-        if let Some(max_results) = self.max_results {
-            query_parameters.push(("max_results", max_results.to_string()));
-        }
         if let Some(media_fields) = self.media_fields {
             query_parameters.push(("media.fields", media_fields.iter().join(",")));
-        }
-        if let Some(pagination_token) = self.pagination_token {
-            query_parameters.push(("pagination_token", pagination_token));
         }
         if let Some(place_fields) = self.place_fields {
             query_parameters.push(("place.fields", place_fields.iter().join(",")));
         }
         if let Some(poll_fields) = self.poll_fields {
             query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
-        }
-        if let Some(since_id) = self.since_id {
-            query_parameters.push(("since_id", since_id));
         }
         if let Some(start_time) = self.start_time {
             query_parameters.push((
@@ -525,15 +442,12 @@ impl Api {
         if let Some(tweet_fields) = self.tweet_fields {
             query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
         }
-        if let Some(until_id) = self.until_id {
-            query_parameters.push(("until_id", until_id));
-        }
         if let Some(user_fields) = self.user_fields {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
         client
-            .get(URL.replace(":id", &self.id))
+            .get(URL)
             .query(&query_parameters)
             .bearer_auth(self.bearer_code)
     }

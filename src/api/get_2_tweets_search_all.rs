@@ -5,37 +5,7 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/users/:id/tweets";
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-pub enum Exclude {
-    Retweets,
-    Replies,
-}
-
-impl Exclude {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::Retweets);
-        result.insert(Self::Replies);
-        result
-    }
-}
-
-impl std::fmt::Display for Exclude {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Retweets => write!(f, "retweets"),
-            Self::Replies => write!(f, "replies"),
-        }
-    }
-}
-
-impl Default for Exclude {
-    fn default() -> Self {
-        Self::Retweets
-    }
-}
+const URL: &str = "https://api.twitter.com/2/tweets/search/all";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -239,6 +209,27 @@ impl Default for PollFields {
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+pub enum SortOrder {
+    Recency,
+    Relevancy,
+}
+
+impl std::fmt::Display for SortOrder {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Recency => write!(f, "recency"),
+            Self::Relevancy => write!(f, "relevancy"),
+        }
+    }
+}
+
+impl Default for SortOrder {
+    fn default() -> Self {
+        Self::Recency
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum TweetFields {
     Attachments,
     AuthorId,
@@ -397,16 +388,16 @@ impl Default for UserFields {
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,
-    id: String,
+    query: String,
     end_time: Option<DateTime<Utc>>,
-    exclude: Option<HashSet<Exclude>>,
     expansions: Option<HashSet<Expansions>>,
     max_results: Option<usize>,
     media_fields: Option<HashSet<MediaFields>>,
-    pagination_token: Option<String>,
+    next_token: Option<String>,
     place_fields: Option<HashSet<PlaceFields>>,
     poll_fields: Option<HashSet<PollFields>>,
     since_id: Option<String>,
+    sort_order: Option<SortOrder>,
     start_time: Option<DateTime<Utc>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     until_id: Option<String>,
@@ -414,21 +405,16 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, id: &str) -> Self {
+    pub fn new(bearer_code: &str, query: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
-            id: id.to_owned(),
+            query: query.to_owned(),
             ..Default::default()
         }
     }
 
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
-        self
-    }
-
-    pub fn exclude(mut self, value: HashSet<Exclude>) -> Self {
-        self.exclude = Some(value);
         self
     }
 
@@ -447,8 +433,8 @@ impl Api {
         self
     }
 
-    pub fn pagination_token(mut self, value: &str) -> Self {
-        self.pagination_token = Some(value.to_owned());
+    pub fn next_token(mut self, value: &str) -> Self {
+        self.next_token = Some(value.to_owned());
         self
     }
 
@@ -464,6 +450,11 @@ impl Api {
 
     pub fn since_id(mut self, value: &str) -> Self {
         self.since_id = Some(value.to_owned());
+        self
+    }
+
+    pub fn sort_order(mut self, value: SortOrder) -> Self {
+        self.sort_order = Some(value);
         self
     }
 
@@ -489,11 +480,9 @@ impl Api {
 
     pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
+        query_parameters.push(("query", self.query));
         if let Some(end_time) = self.end_time {
             query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
-        }
-        if let Some(exclude) = self.exclude {
-            query_parameters.push(("exclude", exclude.iter().join(",")));
         }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
@@ -504,8 +493,8 @@ impl Api {
         if let Some(media_fields) = self.media_fields {
             query_parameters.push(("media.fields", media_fields.iter().join(",")));
         }
-        if let Some(pagination_token) = self.pagination_token {
-            query_parameters.push(("pagination_token", pagination_token));
+        if let Some(next_token) = self.next_token {
+            query_parameters.push(("next_token", next_token));
         }
         if let Some(place_fields) = self.place_fields {
             query_parameters.push(("place.fields", place_fields.iter().join(",")));
@@ -515,6 +504,9 @@ impl Api {
         }
         if let Some(since_id) = self.since_id {
             query_parameters.push(("since_id", since_id));
+        }
+        if let Some(sort_order) = self.sort_order {
+            query_parameters.push(("sort_order", sort_order.to_string()));
         }
         if let Some(start_time) = self.start_time {
             query_parameters.push((
@@ -533,7 +525,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         client
-            .get(URL.replace(":id", &self.id))
+            .get(URL)
             .query(&query_parameters)
             .bearer_auth(self.bearer_code)
     }

@@ -5,16 +5,27 @@ use crate::{
 };
 
 pub mod delete_2_tweets;
+pub mod delete_2_users_id_bookmarks_tweet_id;
+pub mod delete_2_users_id_likes_tweet_id;
+pub mod delete_2_users_id_retweets_source_tweet_id;
 pub mod get_2_dm_conversations_dm_conversation_id_dm_events;
 pub mod get_2_dm_conversations_with_participant_id_dm_events;
 pub mod get_2_dm_events;
-pub mod get_2_tweets_id_liking_users;
-pub mod get_2_tweets_id_retweeted_by;
-pub mod get_2_tweets_id;
-pub mod get_2_tweets_search_recent;
-pub mod get_2_tweets_search_stream_rules;
-pub mod get_2_tweets_search_stream;
 pub mod get_2_tweets;
+pub mod get_2_tweets_count_all;
+pub mod get_2_tweets_count_recent;
+pub mod get_2_tweets_id;
+pub mod get_2_tweets_id_liking_users;
+pub mod get_2_tweets_id_quote_tweets;
+pub mod get_2_tweets_id_retweeted_by;
+pub mod get_2_tweets_sample10_stream;
+pub mod get_2_tweets_sample_stream;
+pub mod get_2_tweets_search_all;
+pub mod get_2_tweets_search_recent;
+pub mod get_2_tweets_search_stream;
+pub mod get_2_tweets_search_stream_rules;
+pub mod get_2_users_id_bookmarks;
+pub mod get_2_users_id_liked_tweets;
 pub mod get_2_users_id_mentions;
 pub mod get_2_users_id_timelines_reverse_chronological;
 pub mod get_2_users_id_tweets;
@@ -25,6 +36,9 @@ pub mod post_2_dm_conversations_with_participant_id_message;
 pub mod post_2_oauth2_token;
 pub mod post_2_tweets;
 pub mod post_2_tweets_search_stream_rules;
+pub mod post_2_users_id_bookmarks;
+pub mod post_2_users_id_likes;
+pub mod post_2_users_id_retweets;
 
 pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
 

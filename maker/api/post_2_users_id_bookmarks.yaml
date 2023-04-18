@@ -1,0 +1,13 @@
+---
+
+url: https://api.twitter.com/2/users/:id/bookmarks
+method: post
+paths:
+  - name: id
+    type: string
+body:
+  type: object
+  properties:
+    - name: tweet_id
+      type: string
+      required: true
