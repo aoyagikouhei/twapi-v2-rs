@@ -155,7 +155,6 @@ def execute(path)
   enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
   date_flag = queries.filter{|it| it[:type] == "date" }.present?
 
-  fields = queries.filter{|it| /.fields$/ =~ it[:name] }.map{|it| "#{it[:name].gsub(/\./, "_")}"}
   required = (queries + form).filter{|it| it[:required] } + paths
   others = queries.filter{|it| !it[:required] }
   required_queries = queries.filter{|it| it[:required] }
@@ -175,7 +174,7 @@ def execute(path)
 
   
 
-  expantions = (queries + form).filter{|it| (it[:type] == "enum" || it[:type] == "enum_single") && !(/.fields$/ =~ it[:name]) }.map do |it|
+  expantions = (queries + form).filter{|it| it[:type] == "enum" || it[:type] == "enum_single" }.map do |it|
     make_expantions(it)
   end
   bodies = []

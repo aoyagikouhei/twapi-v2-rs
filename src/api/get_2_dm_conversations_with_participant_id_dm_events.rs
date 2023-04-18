@@ -1,37 +1,100 @@
 use super::{execute_twitter, TwitterResult};
-use chrono::prelude::*;
 use itertools::Itertools;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/tweets/search/stream";
+const URL: &str = "https://api.twitter.com/2/dm_conversations/with/:participant_id/dm_events";
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+pub enum DmEventFields {
+    Id,
+    Text,
+    EventType,
+    CreatedAt,
+    DmConversationId,
+    SenderId,
+    ParticipantIds,
+    ReferencedTweets,
+    Attachments,
+}
+
+impl DmEventFields {
+    pub fn all() -> HashSet<Self> {
+        let mut result = HashSet::new();
+        result.insert(Self::Id);
+        result.insert(Self::Text);
+        result.insert(Self::EventType);
+        result.insert(Self::CreatedAt);
+        result.insert(Self::DmConversationId);
+        result.insert(Self::SenderId);
+        result.insert(Self::ParticipantIds);
+        result.insert(Self::ReferencedTweets);
+        result.insert(Self::Attachments);
+        result
+    }
+}
+
+impl std::fmt::Display for DmEventFields {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Id => write!(f, "id"),
+            Self::Text => write!(f, "text"),
+            Self::EventType => write!(f, "event_type"),
+            Self::CreatedAt => write!(f, "created_at"),
+            Self::DmConversationId => write!(f, "dm_conversation_id"),
+            Self::SenderId => write!(f, "sender_id"),
+            Self::ParticipantIds => write!(f, "participant_ids"),
+            Self::ReferencedTweets => write!(f, "referenced_tweets"),
+            Self::Attachments => write!(f, "attachments"),
+        }
+    }
+}
+
+impl Default for DmEventFields {
+    fn default() -> Self {
+        Self::Id
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+pub enum EventTypes {
+    Messagecreate,
+    Participantsjoin,
+    Participantsleave,
+}
+
+impl std::fmt::Display for EventTypes {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Messagecreate => write!(f, "MessageCreate"),
+            Self::Participantsjoin => write!(f, "ParticipantsJoin"),
+            Self::Participantsleave => write!(f, "ParticipantsLeave"),
+        }
+    }
+}
+
+impl Default for EventTypes {
+    fn default() -> Self {
+        Self::Messagecreate
+    }
+}
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
-    AttachmentsPollIds,
     AttachmentsMediaKeys,
-    AuthorId,
-    EditHistoryTweetIds,
-    EntitiesMentionsUsername,
-    GeoPlaceId,
-    InReplyToUserId,
     ReferencedTweetsId,
-    ReferencedTweetsIdAuthorId,
+    SenderId,
+    ParticipantIds,
 }
 
 impl Expansions {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
-        result.insert(Self::AttachmentsPollIds);
         result.insert(Self::AttachmentsMediaKeys);
-        result.insert(Self::AuthorId);
-        result.insert(Self::EditHistoryTweetIds);
-        result.insert(Self::EntitiesMentionsUsername);
-        result.insert(Self::GeoPlaceId);
-        result.insert(Self::InReplyToUserId);
         result.insert(Self::ReferencedTweetsId);
-        result.insert(Self::ReferencedTweetsIdAuthorId);
+        result.insert(Self::SenderId);
+        result.insert(Self::ParticipantIds);
         result
     }
 }
@@ -39,22 +102,17 @@ impl Expansions {
 impl std::fmt::Display for Expansions {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::AttachmentsPollIds => write!(f, "attachments.poll_ids"),
             Self::AttachmentsMediaKeys => write!(f, "attachments.media_keys"),
-            Self::AuthorId => write!(f, "author_id"),
-            Self::EditHistoryTweetIds => write!(f, "edit_history_tweet_ids"),
-            Self::EntitiesMentionsUsername => write!(f, "entities.mentions.username"),
-            Self::GeoPlaceId => write!(f, "geo.place_id"),
-            Self::InReplyToUserId => write!(f, "in_reply_to_user_id"),
             Self::ReferencedTweetsId => write!(f, "referenced_tweets.id"),
-            Self::ReferencedTweetsIdAuthorId => write!(f, "referenced_tweets.id.author_id"),
+            Self::SenderId => write!(f, "sender_id"),
+            Self::ParticipantIds => write!(f, "participant_ids"),
         }
     }
 }
 
 impl Default for Expansions {
     fn default() -> Self {
-        Self::AttachmentsPollIds
+        Self::AttachmentsMediaKeys
     }
 }
 
@@ -109,93 +167,6 @@ impl std::fmt::Display for MediaFields {
 impl Default for MediaFields {
     fn default() -> Self {
         Self::DurationMs
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-pub enum PlaceFields {
-    ContainedWithin,
-    Country,
-    CountryCode,
-    FullName,
-    Geo,
-    Id,
-    Name,
-    PlaceType,
-}
-
-impl PlaceFields {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::ContainedWithin);
-        result.insert(Self::Country);
-        result.insert(Self::CountryCode);
-        result.insert(Self::FullName);
-        result.insert(Self::Geo);
-        result.insert(Self::Id);
-        result.insert(Self::Name);
-        result.insert(Self::PlaceType);
-        result
-    }
-}
-
-impl std::fmt::Display for PlaceFields {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::ContainedWithin => write!(f, "contained_within"),
-            Self::Country => write!(f, "country"),
-            Self::CountryCode => write!(f, "country_code"),
-            Self::FullName => write!(f, "full_name"),
-            Self::Geo => write!(f, "geo"),
-            Self::Id => write!(f, "id"),
-            Self::Name => write!(f, "name"),
-            Self::PlaceType => write!(f, "place_type"),
-        }
-    }
-}
-
-impl Default for PlaceFields {
-    fn default() -> Self {
-        Self::ContainedWithin
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-pub enum PollFields {
-    DurationMinutes,
-    EndDatetime,
-    Id,
-    Options,
-    VotingStatus,
-}
-
-impl PollFields {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::DurationMinutes);
-        result.insert(Self::EndDatetime);
-        result.insert(Self::Id);
-        result.insert(Self::Options);
-        result.insert(Self::VotingStatus);
-        result
-    }
-}
-
-impl std::fmt::Display for PollFields {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::DurationMinutes => write!(f, "duration_minutes"),
-            Self::EndDatetime => write!(f, "end_datetime"),
-            Self::Id => write!(f, "id"),
-            Self::Options => write!(f, "options"),
-            Self::VotingStatus => write!(f, "voting_status"),
-        }
-    }
-}
-
-impl Default for PollFields {
-    fn default() -> Self {
-        Self::DurationMinutes
     }
 }
 
@@ -292,7 +263,6 @@ pub enum UserFields {
     Url,
     Username,
     Verified,
-    VerifiedType,
     Withheld,
 }
 
@@ -312,7 +282,6 @@ impl UserFields {
         result.insert(Self::Url);
         result.insert(Self::Username);
         result.insert(Self::Verified);
-        result.insert(Self::VerifiedType);
         result.insert(Self::Withheld);
         result
     }
@@ -334,7 +303,6 @@ impl std::fmt::Display for UserFields {
             Self::Url => write!(f, "url"),
             Self::Username => write!(f, "username"),
             Self::Verified => write!(f, "verified"),
-            Self::VerifiedType => write!(f, "verified_type"),
             Self::Withheld => write!(f, "withheld"),
         }
     }
@@ -349,32 +317,33 @@ impl Default for UserFields {
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,
-    backfill_minutes: Option<usize>,
-    end_time: Option<DateTime<Utc>>,
+    participant_id: String,
+    dm_event_fields: Option<HashSet<DmEventFields>>,
+    event_types: Option<EventTypes>,
     expansions: Option<HashSet<Expansions>>,
+    max_results: Option<usize>,
     media_fields: Option<HashSet<MediaFields>>,
-    place_fields: Option<HashSet<PlaceFields>>,
-    poll_fields: Option<HashSet<PollFields>>,
-    start_time: Option<DateTime<Utc>>,
+    pagination_token: Option<String>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str) -> Self {
+    pub fn new(bearer_code: &str, participant_id: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
+            participant_id: participant_id.to_owned(),
             ..Default::default()
         }
     }
 
-    pub fn backfill_minutes(mut self, value: usize) -> Self {
-        self.backfill_minutes = Some(value);
+    pub fn dm_event_fields(mut self, value: HashSet<DmEventFields>) -> Self {
+        self.dm_event_fields = Some(value);
         self
     }
 
-    pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
-        self.end_time = Some(value);
+    pub fn event_types(mut self, value: EventTypes) -> Self {
+        self.event_types = Some(value);
         self
     }
 
@@ -383,23 +352,18 @@ impl Api {
         self
     }
 
+    pub fn max_results(mut self, value: usize) -> Self {
+        self.max_results = Some(value);
+        self
+    }
+
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
 
-    pub fn place_fields(mut self, value: HashSet<PlaceFields>) -> Self {
-        self.place_fields = Some(value);
-        self
-    }
-
-    pub fn poll_fields(mut self, value: HashSet<PollFields>) -> Self {
-        self.poll_fields = Some(value);
-        self
-    }
-
-    pub fn start_time(mut self, value: DateTime<Utc>) -> Self {
-        self.start_time = Some(value);
+    pub fn pagination_token(mut self, value: &str) -> Self {
+        self.pagination_token = Some(value.to_owned());
         self
     }
 
@@ -415,29 +379,23 @@ impl Api {
 
     pub fn build(self) -> RequestBuilder {
         let mut query_parameters = vec![];
-        if let Some(backfill_minutes) = self.backfill_minutes {
-            query_parameters.push(("backfill_minutes", backfill_minutes.to_string()));
+        if let Some(dm_event_fields) = self.dm_event_fields {
+            query_parameters.push(("dm_event.fields", dm_event_fields.iter().join(",")));
         }
-        if let Some(end_time) = self.end_time {
-            query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
+        if let Some(event_types) = self.event_types {
+            query_parameters.push(("event_types", event_types.to_string()));
         }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
         }
+        if let Some(max_results) = self.max_results {
+            query_parameters.push(("max_results", max_results.to_string()));
+        }
         if let Some(media_fields) = self.media_fields {
             query_parameters.push(("media.fields", media_fields.iter().join(",")));
         }
-        if let Some(place_fields) = self.place_fields {
-            query_parameters.push(("place.fields", place_fields.iter().join(",")));
-        }
-        if let Some(poll_fields) = self.poll_fields {
-            query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
-        }
-        if let Some(start_time) = self.start_time {
-            query_parameters.push((
-                "start_time",
-                start_time.format("%Y-%m-%dT%H%M%SZ").to_string(),
-            ));
+        if let Some(pagination_token) = self.pagination_token {
+            query_parameters.push(("pagination_token", pagination_token));
         }
         if let Some(tweet_fields) = self.tweet_fields {
             query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
@@ -447,7 +405,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         client
-            .get(URL)
+            .get(URL.replace(":participant_id", &self.participant_id))
             .query(&query_parameters)
             .bearer_auth(self.bearer_code)
     }

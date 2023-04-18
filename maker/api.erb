@@ -1,5 +1,4 @@
 <% if date_flag %>use chrono::prelude::*;
-<% end %><% if fields.present? %>use crate::fields::{<% fields.each do |it| %><%= it %>::<%= it.ucc %>, <% end %>};
 <% end %><% if enum_flag %>use itertools::Itertools;
 use std::collections::HashSet;
 <% end %><% if serde_flag %>use serde::{Serialize, Deserialize};
