@@ -5,7 +5,9 @@ use crate::{
 };
 
 pub mod delete_2_tweets;
+pub mod get_2_dm_conversations_dm_conversation_id_dm_events;
 pub mod get_2_dm_conversations_with_participant_id_dm_events;
+pub mod get_2_dm_events;
 pub mod get_2_tweets;
 pub mod get_2_tweets_id;
 pub mod get_2_tweets_id_liking_users;

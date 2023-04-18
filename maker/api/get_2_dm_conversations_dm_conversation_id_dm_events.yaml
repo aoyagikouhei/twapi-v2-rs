@@ -1,0 +1,30 @@
+---
+
+url: https://api.twitter.com/2/dm_conversations/:dm_conversation_id/dm_events
+method: get
+paths:
+  - name: dm_conversation_id
+    type: string
+queries:
+  - name: dm_event.fields
+    type: enum
+    value: id, text, event_type, created_at, dm_conversation_id, sender_id, participant_ids, referenced_tweets, attachments
+  - name: event_types
+    type: enum_single
+    value: MessageCreate, ParticipantsJoin, ParticipantsLeave
+  - name: expansions
+    type: enum
+    value: attachments.media_keys, referenced_tweets.id, sender_id, participant_ids
+  - name: max_results
+    type: integer
+  - name: media.fields
+    type: enum
+    value: duration_ms, height, media_key, preview_image_url, type, url, width, public_metrics, alt_text, variants
+  - name: pagination_token
+    type: string
+  - name: tweet.fields
+    type: enum
+    value: attachments, author_id, context_annotations, conversation_id, created_at, edit_controls, entities, geo, id, in_reply_to_user_id, lang, public_metrics, possibly_sensitive, referenced_tweets, reply_settings, source, text, withheld
+  - name: user.fields
+    type: enum
+    value: created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, withheld
