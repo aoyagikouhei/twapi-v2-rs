@@ -50,19 +50,6 @@ def make_field_type(it)
   end
 end
 
-def make_new_type(it)
-  case it[:type]
-  when "integer" then
-    "usize"
-  when "bool" then
-    "bool"
-  when "enum_single" then
-    "#{it[:name].ucc}"
-  else
-    "&str"
-  end
-end
-
 def make_query_value(it)
   case it[:type]
   when "enum" then
@@ -151,14 +138,12 @@ def execute(path)
   paths = (yml[:paths] || []).map{|it| it[:required] = "true"; it }
   queries = yml[:queries] || []
   form = yml[:form] || []
-  path_parameters = paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}
   enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
   date_flag = queries.filter{|it| it[:type] == "date" }.present?
 
-  required = (queries + form).filter{|it| it[:required] } + paths
-  others = queries.filter{|it| !it[:required] }
+  self_required = (queries + form).filter{|it| it[:required] } + paths
   required_queries = queries.filter{|it| it[:required] }
-  others_queries = queries.filter{|it| !it[:required] }
+  non_required_queries = queries.filter{|it| !it[:required] }
 
   auth = if yml[:auth] == "basic" 
     {
@@ -179,7 +164,7 @@ def execute(path)
   end
   bodies = []
   make_body(yml[:body], bodies) if yml[:body].present?
-  new_array = auth[:keys].map{|it| "#{it}: &str"} + required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+  new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_field}: #{make_field_type(it)}"}
   serde_flag = @expantion_flag || bodies.present?
   new_array << "body: Body" if bodies.present?
 
