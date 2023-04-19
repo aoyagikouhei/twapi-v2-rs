@@ -38,8 +38,9 @@ use twapi_v2::{
 #[tokio::main]
 async fn main() {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+    let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
 
-    let res = Api::new(&bearer_code, "1432976528447442945")
+    let res = Api::new(&bearer_code, &tweet_id)
         .expansions(Expansions::all())
         .tweet_fields(TweetFields::open())
         .user_fields(UserFields::all())
