@@ -6,8 +6,8 @@ Twitter v2 library.
 
 ## Features
 - Request Builder
-- Retriable
-- Timeout
+- Retriable(feature: retry)
+- Timeout(feature: retry)
 - Not Support Response Type. Use serde_json::Value.
 
 ## Changes

@@ -97,6 +97,8 @@ mod tests {
         }
     }
 
+    // BEARER_CODE=XXXXX cargo test --features retry -- --nocapture
+
     #[tokio::test]
     async fn it_works() {
         let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
