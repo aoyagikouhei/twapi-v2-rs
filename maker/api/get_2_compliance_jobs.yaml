@@ -1,0 +1,12 @@
+---
+
+url: https://api.twitter.com/2/compliance/jobs
+method: get
+queries:
+  - name: type
+    type: enum_single
+    value: tweets, users
+    required: true
+  - name: status
+    type: enum
+    value: created, in_progress, failed, complete

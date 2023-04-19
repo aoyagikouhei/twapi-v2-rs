@@ -19,12 +19,12 @@ end
 def required_new(it)
   case it[:type]
   when "string" then
-    "#{it[:name].make_field}: #{it[:name].make_field}.to_owned()"    
+    "#{it[:name].make_name.make_field}: #{it[:name].make_field}.to_owned()"    
   else
-    "#{it[:name].make_field}"
+    "#{it[:name].make_name.make_field}"
   end
 end
-new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_field}: #{make_new_type(it)}"}
+new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_name.make_field}: #{make_new_type(it)}"}
 new_array << "body: Body" if bodies.present?
 %>pub fn new(<%= new_array.join(", ") %>) -> Self {
     Self {

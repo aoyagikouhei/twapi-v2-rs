@@ -1,0 +1,7 @@
+---
+
+url: https://api.twitter.com/2/compliance/jobs/:id
+method: get
+paths:
+  - name: id
+    type: string

@@ -9,6 +9,13 @@ class String
   def make_field
     self.gsub(/\./, "_")
   end
+  def make_name
+    if self == "type"
+      "r#type"
+    else
+      self
+    end
+  end
 end
 
 # only object

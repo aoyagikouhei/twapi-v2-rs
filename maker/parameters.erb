@@ -13,10 +13,10 @@ def make_query_value(it)
 end
 %><% if form.present? %>
 let form_paramters = vec![<% form.each do |it| %>
-    ("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>),<% end %>
+    ("<%= it[:name] %>", self.<%= it[:name].make_name.make_field %><%= make_query_value(it) %>),<% end %>
 ];
 <% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
-query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>
-if let Some(<%= it[:name].make_field %>) = self.<%= it[:name].make_field %> {
-    query_parameters.push(("<%= it[:name] %>", <%= it[:name].make_field %><%= make_query_value(it) %>));
+query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_name.make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>
+if let Some(<%= it[:name].make_name.make_field %>) = self.<%= it[:name].make_name.make_field %> {
+    query_parameters.push(("<%= it[:name] %>", <%= it[:name].make_name.make_field %><%= make_query_value(it) %>));
 }<% end %>

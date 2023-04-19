@@ -23,6 +23,6 @@ def make_type(it)
 %>#[derive(Debug, Clone, Default)]
 pub struct Api {<% auth[:keys].each do |it| %>
     <%= it %>: String,<% end %><% (paths + queries + form).each do |it| %>
-    <%= it[:name].make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
+    <%= it[:name].make_name.make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
     body: Body,<% end %>
 }

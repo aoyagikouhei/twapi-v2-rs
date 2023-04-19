@@ -1,0 +1,17 @@
+---
+
+url: https://api.twitter.com/2/compliance/jobs
+method: post
+paths:
+  - name: id
+    type: string
+body:
+  type: object
+  properties:
+    - name: type
+      type: enum
+      value: tweets, users
+    - name: name
+      type: string
+    - name: resumable
+      type: bool
