@@ -1,0 +1,10 @@
+---
+
+url: https://api.twitter.com/2/users/compliance/stream
+method: get
+queries:
+  - name: partition
+    type: integer
+    required: true
+  - name: backfill_minutes
+    type: integer
