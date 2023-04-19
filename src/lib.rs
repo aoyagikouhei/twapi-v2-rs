@@ -3,10 +3,6 @@ pub mod error;
 pub mod fields;
 pub mod rate_limit;
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 #[cfg(test)]
 mod tests {
     use crate::{

@@ -1,6 +1,5 @@
 use crate::{
-    error::Error,
-    error::{FieldError, TwitterError},
+    error::{Error, TwitterError},
     rate_limit::RateLimit,
 };
 
@@ -89,11 +88,10 @@ pub async fn execute_twitter(builder: reqwest::RequestBuilder) -> TwitterResult 
     let value: serde_json::Value = response.json().await?;
 
     if value["errors"].is_array() {
-        Err(FieldError::field_error(status_code, value, rate_limit))
+        Err(Error::Twitter(TwitterError::new_vec(value), rate_limit))
     } else if status_code.is_success() {
         Ok((value, rate_limit))
     } else {
-        let res = TwitterError::new(status_code, value);
-        Err(Error::Twitter(res, rate_limit))
+        Err(Error::Other(serde_json::from_value(value)?, rate_limit))
     }
 }
