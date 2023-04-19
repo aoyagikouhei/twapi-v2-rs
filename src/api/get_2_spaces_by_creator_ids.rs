@@ -1,13 +1,13 @@
+use super::{execute_twitter, TwitterResult};
+use crate::fields::{
+    space_fields::SpaceFields, topic_fields::TopicFields, user_fields::UserFields,
+};
 use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
-use crate::fields::{space_fields::SpaceFields, topic_fields::TopicFields, user_fields::UserFields};
 use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/spaces/by/creator_ids";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -43,7 +43,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::InvitedUserIds }
+    fn default() -> Self {
+        Self::InvitedUserIds
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -64,22 +66,22 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn space_fields(mut self, value: HashSet<SpaceFields>) -> Self {
         self.space_fields = Some(value);
         self
     }
-    
+
     pub fn topic_fields(mut self, value: HashSet<TopicFields>) -> Self {
         self.topic_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self

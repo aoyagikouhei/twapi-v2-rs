@@ -1,0 +1,15 @@
+---
+
+url: https://api.twitter.com/2/users/:id/pinned_lists
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: owner_id
+  - name: list.fields
+    type: enum
+  - name: user.fields
+    type: enum

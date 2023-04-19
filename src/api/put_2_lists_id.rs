@@ -2,11 +2,13 @@ use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/users/:id/following";
+const URL: &str = "https://api.twitter.com/2/lists/:id";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    target_user_id: String,
+    name: Option<String>,
+    description: Option<String>,
+    private: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -28,7 +30,7 @@ impl Api {
     pub fn build(self) -> RequestBuilder {
         let client = reqwest::Client::new();
         client
-            .post(URL.replace(":id", &self.id))
+            .put(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
             .json(&serde_json::to_value(&self.body).unwrap())
     }

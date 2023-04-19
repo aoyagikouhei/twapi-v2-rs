@@ -1,0 +1,19 @@
+---
+
+url: https://api.twitter.com/2/lists/:id/members
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: pinned_tweet_id
+  - name: max_results
+    type: integer
+  - name: pagination_token
+    type: string
+  - name: tweet.fields
+    type: enum
+  - name: user.fields
+    type: enum

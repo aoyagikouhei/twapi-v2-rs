@@ -1,13 +1,11 @@
-use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
+use super::{execute_twitter, TwitterResult};
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
+use itertools::Itertools;
 use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/users/by";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -31,7 +29,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::PinnedTweetId }
+    fn default() -> Self {
+        Self::PinnedTweetId
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -51,17 +51,17 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self

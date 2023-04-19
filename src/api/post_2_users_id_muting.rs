@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
+use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/users/:id/muting";
 
@@ -8,8 +8,6 @@ const URL: &str = "https://api.twitter.com/2/users/:id/muting";
 pub struct Body {
     target_user_id: String,
 }
-
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -26,9 +24,8 @@ impl Api {
             body,
         }
     }
-    
+
     pub fn build(self) -> RequestBuilder {
-        
         let client = reqwest::Client::new();
         client
             .post(URL.replace(":id", &self.id))

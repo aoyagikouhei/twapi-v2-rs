@@ -2,11 +2,11 @@ use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/users/:id/following";
+const URL: &str = "https://api.twitter.com/2/users/:id/followed_lists";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    target_user_id: String,
+    list_id: String,
 }
 
 #[derive(Debug, Clone, Default)]

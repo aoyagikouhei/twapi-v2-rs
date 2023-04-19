@@ -1,0 +1,19 @@
+---
+
+url: https://api.twitter.com/2/users/:id/list_memberships
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: owner_id
+  - name: list.fields
+    type: enum
+  - name: max_results
+    type: integer
+  - name: pagination_token
+    type: string
+  - name: user.fields
+    type: enum

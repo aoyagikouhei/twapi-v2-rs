@@ -1,21 +1,21 @@
 use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
 
-const URL: &str = "https://api.twitter.com/2/users/:source_user_id/blocking/:target_user_id";
+const URL: &str = "https://api.twitter.com/2/users/:id/followed_lists/:list_id";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,
-    source_user_id: String,
-    target_user_id: String,
+    id: String,
+    list_id: String,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, source_user_id: &str, target_user_id: &str) -> Self {
+    pub fn new(bearer_code: &str, id: &str, list_id: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
-            source_user_id: source_user_id.to_owned(),
-            target_user_id: target_user_id.to_owned(),
+            id: id.to_owned(),
+            list_id: list_id.to_owned(),
         }
     }
 
@@ -23,8 +23,8 @@ impl Api {
         let client = reqwest::Client::new();
         client
             .delete(
-                URL.replace(":source_user_id", &self.source_user_id)
-                    .replace(":target_user_id", &self.target_user_id),
+                URL.replace(":id", &self.id)
+                    .replace(":list_id", &self.list_id),
             )
             .bearer_auth(self.bearer_code)
     }
