@@ -4,15 +4,25 @@ Twitter v2 library.
 
 [Documentation](https://docs.rs/twapi-v2)
 
+- Request builder
+- Retrive rate limit from response headers.
+- Not support response type. Use serde_json::Value.
+
 ## Features
-- Request Builder
-- Retriable(feature: retry)
-- Timeout(feature: retry)
-- Not Support Response Type. Use serde_json::Value.
+### default
+- reqwest/default-tls
+
+### rustls-tls
+- reqwest/rustls-tls
+
+### retry
+- Retriable
+- Timeout
+- Logging
 
 ## Changes
 
-### v0.1.0 (2023/04/19)
+### v0.1.0 (2023/04/20)
 * first release
 
 ## Example
@@ -37,7 +47,8 @@ async fn main() {
         .place_fields(PlaceFields::all())
         .poll_fields(PollFields::all())
         .build()
-        .execute().await;
+        .execute()
+        .await;
     println!("{:?}", res);
 }
 ```

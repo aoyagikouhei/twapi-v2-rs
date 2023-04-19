@@ -97,14 +97,15 @@ mod tests {
         }
     }
 
-    // BEARER_CODE=XXXXX cargo test --features retry -- --nocapture
+    // BEARER_CODE=XXXXX TWEET_ID=XXXX cargo test --features retry -- --nocapture
 
     #[tokio::test]
     async fn it_works() {
         let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+        let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
         let logger = Logger {};
 
-        let builder = Api::new(&bearer_code, "1432976528447442945")
+        let builder = Api::new(&bearer_code, &tweet_id)
             .expansions(Expansions::all())
             .tweet_fields(TweetFields::open())
             .user_fields(UserFields::all())
@@ -118,7 +119,7 @@ mod tests {
             2,
             &vec![StatusCode::UNAUTHORIZED],
             Some(&logger),
-            Some(Duration::from_secs(5)),
+            Some(Duration::from_secs(10)),
             None,
         )
         .await;
