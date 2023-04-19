@@ -24,6 +24,7 @@ use twapi_v2::{
         tweet_fields::TweetFields, user_fields::UserFields,
     },
 };
+use std::time::Duration;
 
 #[tokio::main]
 async fn main() {
@@ -38,7 +39,15 @@ async fn main() {
         .poll_fields(PollFields::all())
         .build();
 
-    let res = execute_retry(builder, 2, None, &vec![401], &|it| println!("{:?}", it)).await;
+    let res = execute_retry(
+            builder,
+            2,
+            &vec![401],
+            &|it| println!("{:?}", it),
+            Duration::from_secs(5),
+            None,
+        )
+        .await;
     println!("{:?}", res);
 }
 ```
