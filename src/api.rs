@@ -1,7 +1,4 @@
-use std::time::Duration;
-
-use reqwest::{RequestBuilder, StatusCode};
-use tokio::time::{sleep, timeout};
+use reqwest::RequestBuilder;
 
 use crate::{
     error::{Error, TwitterError},
@@ -103,69 +100,4 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
             Err(err) => Err(Error::Other(format!("{:?}", err), Some(status_code))),
         }
     }
-}
-
-pub trait RetryLogger {
-    fn log(&self, builder: &RequestBuilder);
-}
-
-pub async fn execute_retry(
-    builder: RequestBuilder,
-    retry_count: usize,
-    retryable_status_codes: &[StatusCode],
-    retry_logger: Option<&impl RetryLogger>,
-    timeout_duration: Option<Duration>,
-    retry_delay_secound_count: Option<u64>,
-) -> TwitterResult {
-    let mut count: usize = 0;
-
-    loop {
-        let target = builder
-            .try_clone()
-            .ok_or(Error::Other("builder clone fail".to_owned(), None))?;
-        if let Some(retry_logger) = retry_logger {
-            retry_logger.log(&target);
-        }
-
-        let error = if let Some(timeout_duration) = timeout_duration {
-            match timeout(timeout_duration, execute_twitter(target)).await {
-                Ok(res) => match res {
-                    Ok(res) => return Ok(res),
-                    Err(err) => match &err {
-                        Error::Twitter(twitter_error, _, _) => {
-                            if !retryable_status_codes.contains(&twitter_error.status_code) {
-                                return Err(err);
-                            }
-                            err
-                        }
-                        _ => return Err(err),
-                    },
-                },
-                Err(_) => Error::Timeout,
-            }
-        } else {
-            match execute_twitter(target).await {
-                Ok(res) => return Ok(res),
-                Err(err) => match &err {
-                    Error::Twitter(twitter_error, _, _) => {
-                        if !retryable_status_codes.contains(&twitter_error.status_code) {
-                            return Err(err);
-                        }
-                        err
-                    }
-                    _ => return Err(err),
-                },
-            }
-        };
-        if count >= retry_count {
-            return Err(error);
-        }
-        count += 1;
-        sleep_sec(retry_delay_secound_count, count).await;
-    }
-}
-
-async fn sleep_sec(retry_delay_secound_count: Option<u64>, count: usize) {
-    let seconds = retry_delay_secound_count.unwrap_or(2_i64.pow(count as u32) as u64);
-    sleep(Duration::from_secs(seconds)).await;
 }
