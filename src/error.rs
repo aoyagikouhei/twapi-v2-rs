@@ -1,3 +1,4 @@
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -64,8 +65,21 @@ impl TwitterError {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OtherError {
-    pub status: Option<u64>,
-    pub detail: Option<String>,
-    pub title: Option<String>,
-    pub r#type: Option<String>,
+    pub status: u64,
+    pub detail: String,
+    pub title: String,
+    pub r#type: String,
+}
+
+impl OtherError {
+    pub fn new(source: serde_json::Value, status_code: StatusCode) -> Self {
+        Self {
+            status: source["status"]
+                .as_u64()
+                .unwrap_or(status_code.as_u16() as u64),
+            detail: source["detail"].as_str().unwrap_or_default().to_owned(),
+            title: source["title"].as_str().unwrap_or_default().to_owned(),
+            r#type: source["type"].as_str().unwrap_or_default().to_owned(),
+        }
+    }
 }
