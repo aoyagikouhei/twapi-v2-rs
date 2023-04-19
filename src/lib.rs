@@ -38,7 +38,7 @@ mod tests {
             2,
             &vec![StatusCode::UNAUTHORIZED],
             &|it| println!("{:?}", it),
-            Duration::from_secs(5),
+            Some(Duration::from_secs(5)),
             None,
         )
         .await;

@@ -108,11 +108,10 @@ pub async fn execute_retry(
     retry_count: usize,
     retryable_status_codes: &[StatusCode],
     log: &impl Fn(&RequestBuilder),
-    timeout_duration: Duration,
+    timeout_duration: Option<Duration>,
     retry_delay_secound_count: Option<u64>,
 ) -> TwitterResult {
     let mut count: usize = 0;
-    let builder = builder.timeout(timeout_duration);
 
     loop {
         let target = builder
@@ -120,8 +119,24 @@ pub async fn execute_retry(
             .ok_or(Error::Other("builder clone fail".to_owned()))?;
         log(&target);
 
-        let error = match timeout(timeout_duration, execute_twitter(target)).await {
-            Ok(res) => match res {
+        let error = if let Some(timeout_duration) = timeout_duration {
+            match timeout(timeout_duration, execute_twitter(target)).await {
+                Ok(res) => match res {
+                    Ok(res) => return Ok(res),
+                    Err(err) => match &err {
+                        Error::Twitter(twitter_error, _, _) => {
+                            if !retryable_status_codes.contains(&twitter_error.status_code) {
+                                return Err(err);
+                            }
+                            err
+                        }
+                        _ => return Err(err),
+                    },
+                },
+                Err(_) => Error::Timeout,
+            }
+        } else {
+            match execute_twitter(target).await {
                 Ok(res) => return Ok(res),
                 Err(err) => match &err {
                     Error::Twitter(twitter_error, _, _) => {
@@ -132,10 +147,8 @@ pub async fn execute_retry(
                     }
                     _ => return Err(err),
                 },
-            },
-            Err(_) => Error::Timeout,
+            }
         };
-
         if count >= retry_count {
             return Err(error);
         }

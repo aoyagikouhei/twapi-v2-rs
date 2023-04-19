@@ -34,9 +34,7 @@ impl TwitterError {
     pub fn new(source: &serde_json::Value, status_code: StatusCode) -> Self {
         Self {
             status_code,
-            status: source["status"]
-                .as_u64()
-                .unwrap_or_default(),
+            status: source["status"].as_u64().unwrap_or_default(),
             detail: source["detail"].as_str().unwrap_or_default().to_owned(),
             title: source["title"].as_str().unwrap_or_default().to_owned(),
             r#type: source["type"].as_str().unwrap_or_default().to_owned(),
