@@ -7,12 +7,13 @@ pub mod rate_limit;
 mod tests {
     use std::time::Duration;
 
-    use reqwest::StatusCode;
+    use reqwest::{RequestBuilder, StatusCode};
 
     use crate::{
         api::{
             execute_retry,
             get_2_tweets_id::{Api, Expansions},
+            RetryLogger,
         },
         fields::{
             media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
@@ -20,9 +21,17 @@ mod tests {
         },
     };
 
+    struct Logger;
+    impl RetryLogger for Logger {
+        fn log(&self, builder: &RequestBuilder) {
+            println!("{:?}", builder);
+        }
+    }
+
     #[tokio::test]
     async fn it_works() {
         let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+        let logger = Logger {};
 
         let builder = Api::new(&bearer_code, "1432976528447442945")
             .expansions(Expansions::all())
@@ -37,7 +46,7 @@ mod tests {
             builder,
             2,
             &vec![StatusCode::UNAUTHORIZED],
-            &|it| println!("{:?}", it),
+            Some(&logger),
             Some(Duration::from_secs(5)),
             None,
         )

@@ -103,11 +103,15 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
     }
 }
 
+pub trait RetryLogger {
+    fn log(&self, builder: &RequestBuilder);
+}
+
 pub async fn execute_retry(
     builder: RequestBuilder,
     retry_count: usize,
     retryable_status_codes: &[StatusCode],
-    log: &impl Fn(&RequestBuilder),
+    retry_logger: Option<&impl RetryLogger>,
     timeout_duration: Option<Duration>,
     retry_delay_secound_count: Option<u64>,
 ) -> TwitterResult {
@@ -117,7 +121,9 @@ pub async fn execute_retry(
         let target = builder
             .try_clone()
             .ok_or(Error::Other("builder clone fail".to_owned()))?;
-        log(&target);
+        if let Some(retry_logger) = retry_logger {
+            retry_logger.log(&target);
+        }
 
         let error = if let Some(timeout_duration) = timeout_duration {
             match timeout(timeout_duration, execute_twitter(target)).await {
