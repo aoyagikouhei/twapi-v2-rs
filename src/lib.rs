@@ -7,6 +7,8 @@ pub mod rate_limit;
 mod tests {
     use std::time::Duration;
 
+    use reqwest::StatusCode;
+
     use crate::{
         api::{
             execute_retry,
@@ -34,7 +36,7 @@ mod tests {
         let res = execute_retry(
             builder,
             2,
-            &vec![401],
+            &vec![StatusCode::UNAUTHORIZED],
             &|it| println!("{:?}", it),
             Duration::from_secs(5),
             None,

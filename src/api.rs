@@ -1,10 +1,10 @@
 use std::time::Duration;
 
-use reqwest::RequestBuilder;
+use reqwest::{RequestBuilder, StatusCode};
 use tokio::time::{sleep, timeout};
 
 use crate::{
-    error::{Error, StatusError, TwitterError},
+    error::{Error, TwitterError},
     rate_limit::RateLimit,
 };
 
@@ -92,13 +92,12 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
 
     let value: serde_json::Value = response.json().await?;
 
-    if value["errors"].is_array() {
-        Err(Error::Twitter(TwitterError::new_vec(value), rate_limit))
-    } else if status_code.is_success() {
+    if status_code.is_success() {
         Ok((value, rate_limit))
     } else {
-        Err(Error::Status(
-            StatusError::new(value, status_code),
+        Err(Error::Twitter(
+            TwitterError::new(&value, status_code),
+            value,
             rate_limit,
         ))
     }
@@ -107,7 +106,7 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
 pub async fn execute_retry(
     builder: RequestBuilder,
     retry_count: usize,
-    retryable_status_codes: &[u64],
+    retryable_status_codes: &[StatusCode],
     log: &impl Fn(&RequestBuilder),
     timeout_duration: Duration,
     retry_delay_secound_count: Option<u64>,
@@ -125,8 +124,8 @@ pub async fn execute_retry(
             Ok(res) => match res {
                 Ok(res) => return Ok(res),
                 Err(err) => match &err {
-                    Error::Status(status, _) => {
-                        if !retryable_status_codes.contains(&status.status) {
+                    Error::Twitter(twitter_error, _, _) => {
+                        if !retryable_status_codes.contains(&twitter_error.status_code) {
                             return Err(err);
                         }
                         err
