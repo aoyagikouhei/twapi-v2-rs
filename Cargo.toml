@@ -1,7 +1,15 @@
 [package]
 name = "twapi-v2"
 version = "0.1.0"
+authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
+license = "MIT"
 edition = "2021"
+description = "Twitter v2 library."
+repository = "https://github.com/aoyagikouhei/twapi-v2-rs"
+keywords = ["twitter"]
+categories = ["api-bindings"]
+readme = "Readme.md"
+documentation = "https://docs.rs/twapi-v2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

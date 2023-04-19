@@ -136,10 +136,11 @@ pub async fn execute_retry(
             return Err(error);
         }
         count += 1;
-        sleep_sec(retry_delay_secound_count.unwrap_or(2_i64.pow(count as u32) as u64)).await;
+        sleep_sec(retry_delay_secound_count, count).await;
     }
 }
 
-async fn sleep_sec(seconds: u64) {
+async fn sleep_sec(retry_delay_secound_count: Option<u64>, count: usize) {
+    let seconds = retry_delay_secound_count.unwrap_or(2_i64.pow(count as u32) as u64);
     sleep(Duration::from_secs(seconds)).await;
 }

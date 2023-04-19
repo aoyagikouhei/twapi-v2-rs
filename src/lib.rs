@@ -6,7 +6,7 @@ pub mod rate_limit;
 #[cfg(test)]
 mod tests {
     use crate::{
-        api::{self, execute_retry},
+        api::{get_2_tweets_id::{Api, Expansions}, execute_retry},
         fields::{
             media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
             tweet_fields::TweetFields, user_fields::UserFields,
@@ -17,8 +17,8 @@ mod tests {
     async fn it_works() {
         let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
 
-        let builder = api::get_2_tweets_id::Api::new(&bearer_code, "1633027859752288256")
-            .expansions(api::get_2_tweets_id::Expansions::all())
+        let builder = Api::new(&bearer_code, "1432976528447442945")
+            .expansions(Expansions::all())
             .tweet_fields(TweetFields::open())
             .user_fields(UserFields::all())
             .media_fields(MediaFields::all())

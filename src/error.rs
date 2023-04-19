@@ -64,8 +64,6 @@ impl TwitterError {
     }
 }
 
-// Err(Other(401, Object {"detail": String("Unauthorized"), "status": Number(401), "title": String("Unauthorized"), "type": String("about:blank")}, None))
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StatusError {
     pub status: u64,
