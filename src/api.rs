@@ -107,12 +107,11 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
 pub async fn execute_retry(
     builder: RequestBuilder,
     retry_count: usize,
-    retry_delay_secound_count: Option<usize>,
+    retry_delay_secound_count: Option<u64>,
     retryable_status_codes: &[u64],
     log: &impl Fn(&RequestBuilder),
 ) -> TwitterResult {
     let mut count: usize = 0;
-    let mut error: Error;
 
     loop {
         let target = builder
@@ -120,28 +119,24 @@ pub async fn execute_retry(
             .ok_or(Error::Other("builder clone fail".to_owned()))?;
         log(&target);
 
-        match execute_twitter(target).await {
+        let error = match execute_twitter(target).await {
             Ok(res) => return Ok(res),
             Err(err) => match &err {
                 Error::Status(status, _) => {
                     if !retryable_status_codes.contains(&status.status) {
                         return Err(err);
                     }
-                    error = err;
+                    err
                 }
                 _ => return Err(err),
             },
-        }
+        };
 
         if count >= retry_count {
             return Err(error);
         }
         count += 1;
-
-        match retry_delay_secound_count {
-            Some(retry_delay_secound_count) => sleep_sec(retry_delay_secound_count as u64).await,
-            None => sleep_sec(2_i64.pow(count as u32) as u64).await,
-        }
+        sleep_sec(retry_delay_secound_count.unwrap_or(2_i64.pow(count as u32) as u64)).await;
     }
 }
 
