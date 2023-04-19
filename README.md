@@ -5,8 +5,9 @@ Twitter v2 library.
 [Documentation](https://docs.rs/twapi-v2)
 
 ## Features
-- request builder
-- retriable
+- Request Builder
+- Retriable
+- Not Support Response Type. Use serde_json::Value.
 
 ## Changes
 
