@@ -6,7 +6,10 @@ pub mod rate_limit;
 #[cfg(test)]
 mod tests {
     use crate::{
-        api::{get_2_tweets_id::{Api, Expansions}, execute_retry},
+        api::{
+            execute_retry,
+            get_2_tweets_id::{Api, Expansions},
+        },
         fields::{
             media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
             tweet_fields::TweetFields, user_fields::UserFields,
