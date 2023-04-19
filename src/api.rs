@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use reqwest::RequestBuilder;
-use tokio::time::sleep;
+use tokio::time::{sleep, timeout};
 
 use crate::{
     error::{Error, StatusError, TwitterError},
@@ -107,11 +107,13 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
 pub async fn execute_retry(
     builder: RequestBuilder,
     retry_count: usize,
-    retry_delay_secound_count: Option<u64>,
     retryable_status_codes: &[u64],
     log: &impl Fn(&RequestBuilder),
+    timeout_duration: Duration,
+    retry_delay_secound_count: Option<u64>,
 ) -> TwitterResult {
     let mut count: usize = 0;
+    let builder = builder.timeout(timeout_duration);
 
     loop {
         let target = builder
@@ -119,17 +121,20 @@ pub async fn execute_retry(
             .ok_or(Error::Other("builder clone fail".to_owned()))?;
         log(&target);
 
-        let error = match execute_twitter(target).await {
-            Ok(res) => return Ok(res),
-            Err(err) => match &err {
-                Error::Status(status, _) => {
-                    if !retryable_status_codes.contains(&status.status) {
-                        return Err(err);
+        let error = match timeout(timeout_duration, execute_twitter(target)).await {
+            Ok(res) => match res {
+                Ok(res) => return Ok(res),
+                Err(err) => match &err {
+                    Error::Status(status, _) => {
+                        if !retryable_status_codes.contains(&status.status) {
+                            return Err(err);
+                        }
+                        err
                     }
-                    err
-                }
-                _ => return Err(err),
+                    _ => return Err(err),
+                },
             },
+            Err(_) => Error::Timeout,
         };
 
         if count >= retry_count {

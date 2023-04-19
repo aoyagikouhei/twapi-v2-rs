@@ -5,6 +5,8 @@ pub mod rate_limit;
 
 #[cfg(test)]
 mod tests {
+    use std::time::Duration;
+
     use crate::{
         api::{
             execute_retry,
@@ -29,7 +31,15 @@ mod tests {
             .poll_fields(PollFields::all())
             .build();
 
-        let res = execute_retry(builder, 2, None, &vec![401], &|it| println!("{:?}", it)).await;
+        let res = execute_retry(
+            builder,
+            2,
+            &vec![401],
+            &|it| println!("{:?}", it),
+            Duration::from_secs(5),
+            None,
+        )
+        .await;
         println!("{:?}", res);
     }
 }

@@ -7,6 +7,7 @@ Twitter v2 library.
 ## Features
 - Request Builder
 - Retriable
+- Timeout
 - Not Support Response Type. Use serde_json::Value.
 
 ## Changes

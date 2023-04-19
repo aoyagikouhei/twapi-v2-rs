@@ -6,6 +6,9 @@ use crate::rate_limit::RateLimit;
 
 #[derive(Error, Debug)]
 pub enum Error {
+    #[error("Timeout")]
+    Timeout,
+
     #[error("Other {0}")]
     Other(String),
 
