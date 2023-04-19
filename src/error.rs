@@ -6,6 +6,9 @@ use crate::rate_limit::RateLimit;
 
 #[derive(Error, Debug)]
 pub enum Error {
+    #[error("Other {0}")]
+    Other(String),
+
     #[error("reqwest {0}")]
     Reqwest(#[from] reqwest::Error),
 
@@ -15,8 +18,8 @@ pub enum Error {
     #[error("Twitter {0:?}")]
     Twitter(Vec<TwitterError>, Option<RateLimit>),
 
-    #[error("Other {0:?}")]
-    Other(OtherError, Option<RateLimit>),
+    #[error("StatusError {0:?}")]
+    Status(StatusError, Option<RateLimit>),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -64,14 +67,14 @@ impl TwitterError {
 // Err(Other(401, Object {"detail": String("Unauthorized"), "status": Number(401), "title": String("Unauthorized"), "type": String("about:blank")}, None))
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OtherError {
+pub struct StatusError {
     pub status: u64,
     pub detail: String,
     pub title: String,
     pub r#type: String,
 }
 
-impl OtherError {
+impl StatusError {
     pub fn new(source: serde_json::Value, status_code: StatusCode) -> Self {
         Self {
             status: source["status"]

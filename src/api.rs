@@ -1,5 +1,10 @@
+use std::time::Duration;
+
+use reqwest::RequestBuilder;
+use tokio::time::sleep;
+
 use crate::{
-    error::{Error, OtherError, TwitterError},
+    error::{Error, StatusError, TwitterError},
     rate_limit::RateLimit,
 };
 
@@ -79,7 +84,7 @@ pub mod put_2_lists_id;
 
 pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
 
-pub async fn execute_twitter(builder: reqwest::RequestBuilder) -> TwitterResult {
+pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
     let response = builder.send().await?;
     let status_code = response.status();
     let header = response.headers();
@@ -92,9 +97,54 @@ pub async fn execute_twitter(builder: reqwest::RequestBuilder) -> TwitterResult 
     } else if status_code.is_success() {
         Ok((value, rate_limit))
     } else {
-        Err(Error::Other(
-            OtherError::new(value, status_code),
+        Err(Error::Status(
+            StatusError::new(value, status_code),
             rate_limit,
         ))
     }
+}
+
+pub async fn execute_retry(
+    builder: RequestBuilder,
+    retry_count: usize,
+    retry_delay_secound_count: Option<usize>,
+    retryable_status_codes: &[u64],
+    log: &impl Fn(&RequestBuilder),
+) -> TwitterResult {
+    let mut count: usize = 0;
+    let mut error: Error;
+
+    loop {
+        let target = builder
+            .try_clone()
+            .ok_or(Error::Other("builder clone fail".to_owned()))?;
+        log(&target);
+
+        match execute_twitter(target).await {
+            Ok(res) => return Ok(res),
+            Err(err) => match &err {
+                Error::Status(status, _) => {
+                    if !retryable_status_codes.contains(&status.status) {
+                        return Err(err);
+                    }
+                    error = err;
+                }
+                _ => return Err(err),
+            },
+        }
+
+        if count >= retry_count {
+            return Err(error);
+        }
+        count += 1;
+
+        match retry_delay_secound_count {
+            Some(retry_delay_secound_count) => sleep_sec(retry_delay_secound_count as u64).await,
+            None => sleep_sec(2_i64.pow(count as u32) as u64).await,
+        }
+    }
+}
+
+async fn sleep_sec(seconds: u64) {
+    sleep(Duration::from_secs(seconds)).await;
 }
