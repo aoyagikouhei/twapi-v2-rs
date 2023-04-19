@@ -18,36 +18,26 @@ Twitter v2 library.
 ## Example
 ```rust
 use twapi_v2::{
-    api::{get_2_tweets_id::{Api, Expansions}, execute_retry},
+    api::{get_2_tweets_id::{Api, Expansions}, execute_twitter},
     fields::{
         media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
         tweet_fields::TweetFields, user_fields::UserFields,
     },
 };
-use std::time::Duration;
 
 #[tokio::main]
 async fn main() {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
 
-    let builder = Api::new(&bearer_code, "1432976528447442945")
+    let res = Api::new(&bearer_code, "1432976528447442945")
         .expansions(Expansions::all())
         .tweet_fields(TweetFields::open())
         .user_fields(UserFields::all())
         .media_fields(MediaFields::all())
         .place_fields(PlaceFields::all())
         .poll_fields(PollFields::all())
-        .build();
-
-    let res = execute_retry(
-            builder,
-            2,
-            &vec![401],
-            &|it| println!("{:?}", it),
-            Duration::from_secs(5),
-            None,
-        )
-        .await;
+        .build()
+        .execute().await;
     println!("{:?}", res);
 }
 ```

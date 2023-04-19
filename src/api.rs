@@ -89,17 +89,19 @@ pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
     let status_code = response.status();
     let header = response.headers();
     let rate_limit = RateLimit::new(header);
-
-    let value: serde_json::Value = response.json().await?;
+    let value = response.json::<serde_json::Value>().await;
 
     if status_code.is_success() {
-        Ok((value, rate_limit))
+        Ok((value?, rate_limit))
     } else {
-        Err(Error::Twitter(
-            TwitterError::new(&value, status_code),
-            value,
-            rate_limit,
-        ))
+        match value {
+            Ok(value) => Err(Error::Twitter(
+                TwitterError::new(&value, status_code),
+                value,
+                rate_limit,
+            )),
+            Err(err) => Err(Error::Other(format!("{:?}", err), Some(status_code))),
+        }
     }
 }
 
@@ -120,7 +122,7 @@ pub async fn execute_retry(
     loop {
         let target = builder
             .try_clone()
-            .ok_or(Error::Other("builder clone fail".to_owned()))?;
+            .ok_or(Error::Other("builder clone fail".to_owned(), None))?;
         if let Some(retry_logger) = retry_logger {
             retry_logger.log(&target);
         }

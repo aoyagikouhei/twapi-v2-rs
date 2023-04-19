@@ -9,7 +9,7 @@ pub enum Error {
     Timeout,
 
     #[error("Other {0}")]
-    Other(String),
+    Other(String, Option<StatusCode>),
 
     #[error("reqwest {0}")]
     Reqwest(#[from] reqwest::Error),
