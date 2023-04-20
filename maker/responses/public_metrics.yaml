@@ -1,0 +1,15 @@
+---
+
+response:
+  type: object
+  properties:
+    impression_count: 
+      type: integer
+    like_count: 
+      type: integer
+    quote_count: 
+      type: integer
+    reply_count: 
+      type: integer
+    retweet_count: 
+      type: integer

@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    editable_until: 
+      type: date
+    edits_remaining:
+      type: string
+    is_edit_eligible:
+      type: bool

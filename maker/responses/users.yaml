@@ -1,0 +1,33 @@
+---
+
+response:
+  type: object
+  properties:
+    created_at: 
+      type: stirng
+    description:
+      type: string
+    entities:
+      type: object
+      ref: entities
+    id:
+      type: string
+    location: 
+      type: string
+    name:
+      type: string
+    pinned_tweet_id:
+      type: string
+    profile_image_url:
+      type: string
+    protected:
+      type: bool
+    public_metrics:
+      type: object
+      ref: public_metrics
+    username:
+      type: string
+    verified:
+      type: bool
+    verified_type:
+      type: string

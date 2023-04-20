@@ -1,0 +1,17 @@
+---
+
+response:
+  type: object
+  properties:
+    display_url: 
+      type: string
+    end: 
+      type: integer
+    expanded_url: 
+      type: string
+    media_key: 
+      type: string
+    start: 
+      type: integer
+    url: 
+      type: string

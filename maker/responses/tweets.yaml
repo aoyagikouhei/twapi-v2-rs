@@ -1,0 +1,37 @@
+---
+
+response:
+  type: object
+  properties:
+    attachments: 
+      type: object
+      ref: attachments
+    author_id:
+      type: string
+    conversation_id:
+      type: string
+    created_at:
+      type: date
+    edit_controls: 
+      type: object
+      ref: attachments
+    edit_history_tweet_ids: 
+      type: array
+      items:
+        type: string
+    entities:
+      type: object
+      ref: entities
+    id:
+      type: string
+    lang:
+      type: string
+    possibly_sensitive:
+      type: bool
+    public_metrics:
+      type: object
+      ref: public_metrics
+    reply_settings:
+      type: string
+    text:
+      type: string

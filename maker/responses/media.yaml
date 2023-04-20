@@ -1,0 +1,15 @@
+---
+
+response:
+  type: object
+  properties:
+    height: 
+      type: integer
+    media_key: 
+      type: string
+    type: 
+      type: string
+    url: 
+      type: string
+    width: 
+      type: integer

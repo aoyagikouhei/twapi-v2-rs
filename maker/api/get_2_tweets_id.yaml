@@ -19,3 +19,28 @@ queries:
     type: enum
   - name: user.fields
     type: enum
+response:
+  type: object
+  properties:
+    data: 
+      type: object
+      ref: tweets
+    includets:
+      type: object
+      properties:
+        media:
+          type: array
+          items: 
+            type: object
+            ref: media
+        tweets:
+          type: array
+          items: 
+            type: object
+            ref: tweets
+        users:
+          type: array
+          items: 
+            type: object
+            ref: users
+        
