@@ -13,7 +13,7 @@ def make_items_type(items)
   end
 end
 
-def make_response_type(value)
+def make_response_type(key, value)
   res = case value[:type]
   when "integer" then
     "i64"
@@ -25,7 +25,12 @@ def make_response_type(value)
   when "bool" then
     "bool"
   when "object" then
-    value[:ref].ucc
+    if value[:ref].present?
+      value[:ref].ucc
+    else
+      @inner_map[key] = value
+      key.to_s.ucc
+    end
   else
     "String"
   end
@@ -40,7 +45,7 @@ end
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
-    pub <%= key.to_s.make_name %>: <%= make_response_type(value) %>, <% end %>
+    pub <%= key.to_s.make_name %>: <%= make_response_type(key, value) %>, <% end %>
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }

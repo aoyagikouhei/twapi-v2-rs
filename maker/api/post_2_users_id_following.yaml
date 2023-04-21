@@ -11,3 +11,18 @@ body:
     - name: target_user_id
       type: string
       required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        following:
+          type: bool
+        pending_follow:
+          type: bool
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors

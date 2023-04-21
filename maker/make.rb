@@ -82,15 +82,22 @@ def execute(path)
   end
   bodies = []
   make_body(yml[:body], bodies) if yml[:body].present?
-  serde_flag = @expantion_flag || bodies.present?
 
-  responses, refs = make_response("response", yml.dig(:response, :properties), false)
+  response_list = []
+  responses, refs, map = make_response("response", yml.dig(:response, :properties), false)
+  response_list << responses if responses.present?
+  if map.present?
+    map.each_pair do |key, value|
+      responses, _, _ = make_response(key.to_s, value.dig(:properties), false)
+      response_list << responses
+    end
+  end
 
+  serde_flag = @expantion_flag || bodies.present? || response_list.present?
   api_struct = ERB.new(File.read("api_struct.erb")).result(binding)
   api_new = ERB.new(File.read("api_new.erb")).result(binding).gsub(/^/, "    ")
   setter = ERB.new(File.read("setter.erb")).result(binding).gsub(/^/, "    ")
   parameters = ERB.new(File.read("parameters.erb")).result(binding).gsub(/^/, "        ")
-
   erb = ERB.new(File.read("api.erb"))
   File.write("../src/api/#{name}.rs", erb.result(binding))
 end
@@ -111,10 +118,11 @@ def execute_expantions(path)
 end
 
 def make_response(name, properties, use_flag)
-  return ["", []] if properties.blank?
+  return ["", [], {}] if properties.blank?
   refs = []
+  @inner_map = {}
   properties.each_pair do |key, value|
-    if value[:type] == "object"
+    if value[:type] == "object" && value[:ref].present?
       refs << value[:ref]
     elsif value[:type] == "array" && value[:items][:type] == "object"
       refs << value[:items][:ref]
@@ -123,7 +131,7 @@ def make_response(name, properties, use_flag)
   refs.uniq!
   class_name = name.make_field.ucc
   erb = ERB.new(File.read("responses.erb"))
-  [erb.result(binding), refs]
+  [erb.result(binding), refs, @inner_map]
 end
 
 def execute_responses(path)
@@ -133,7 +141,7 @@ def execute_responses(path)
   yml = YAML.load_file(path).deep_symbolize_keys
   properties = yml[:response][:properties]
   use_flag = true
-  res, refs = make_response(name, properties, use_flag)
+  res, refs, map = make_response(name, properties, use_flag)
   File.write("../src/responses/#{name}.rs", res.gsub(/USE_DATE/, @date_flag ? "\nuse chrono::prelude::*;" : ""))
 end
 

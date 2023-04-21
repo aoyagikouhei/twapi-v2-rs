@@ -1,5 +1,7 @@
 use super::{execute_twitter, TwitterResult};
+use crate::responses::errors::Errors;
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/users/:source_user_id/following/:target_user_id";
 
@@ -32,4 +34,19 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Data>,
+    pub errors: Option<Vec<Errors>>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Data {
+    pub following: Option<bool>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

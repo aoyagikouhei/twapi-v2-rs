@@ -7,3 +7,16 @@ paths:
     type: string
   - name: target_user_id
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        following:
+          type: bool
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
