@@ -19,4 +19,6 @@ pub struct Tweets {
     pub public_metrics: Option<PublicMetrics>,
     pub reply_settings: Option<String>,
     pub text: Option<String>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -40,5 +40,7 @@ end
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
-      pub <%= key.to_s.make_name %>: <%= make_response_type(value) %>, <% end %>
+    pub <%= key.to_s.make_name %>: <%= make_response_type(value) %>, <% end %>
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

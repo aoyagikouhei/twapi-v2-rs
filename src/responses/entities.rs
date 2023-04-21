@@ -5,4 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct Entities {
     pub urls: Option<Vec<Urls>>,
     pub description: Option<Description>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

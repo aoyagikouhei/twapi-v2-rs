@@ -7,4 +7,6 @@ pub struct PublicMetrics {
     pub quote_count: Option<i64>,
     pub reply_count: Option<i64>,
     pub retweet_count: Option<i64>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

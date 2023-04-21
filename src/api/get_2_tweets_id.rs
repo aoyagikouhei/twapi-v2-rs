@@ -150,4 +150,6 @@ pub struct Response {
     pub data: Option<Tweets>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -6,4 +6,6 @@ pub struct Includes {
     pub media: Option<Vec<Media>>,
     pub tweets: Option<Vec<Tweets>>,
     pub users: Option<Vec<Users>>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

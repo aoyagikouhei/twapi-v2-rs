@@ -9,4 +9,6 @@ pub struct Errors {
     pub title: Option<String>,
     pub r#type: Option<String>,
     pub value: Option<String>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

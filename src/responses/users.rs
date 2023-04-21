@@ -16,4 +16,6 @@ pub struct Users {
     pub username: Option<String>,
     pub verified: Option<bool>,
     pub verified_type: Option<String>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }
