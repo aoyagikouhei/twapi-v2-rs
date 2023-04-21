@@ -1,8 +1,9 @@
-<% if date_flag %>use chrono::prelude::*;
+<% if @date_flag %>use chrono::prelude::*;
 <% end %><% if enum_flag %>use itertools::Itertools;
 use std::collections::HashSet;
 <% end %><% if serde_flag %>use serde::{Serialize, Deserialize};
 <% end %><% if fields.present? %>use crate::fields::{<%= fields.map{|it| "#{it[:name].make_field()}::#{it[:name].ucc}"}.join(", ") %>};
+<% end %><% if refs.present? %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use reqwest::RequestBuilder;
 use super::{TwitterResult, execute_twitter};
 
@@ -32,3 +33,5 @@ impl Api {
         execute_twitter(self.build()).await
     }
 }
+
+<%= responses %>

@@ -1,0 +1,20 @@
+---
+
+response:
+  type: object
+  properties:
+    media:
+      type: array
+      items:
+        type: object
+        ref: media
+    tweets:
+      type: array
+      items:
+        type: object
+        ref: tweets
+    users:
+      type: array
+      items:
+        type: object
+        ref: users

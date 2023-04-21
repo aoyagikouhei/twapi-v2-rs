@@ -2,6 +2,8 @@ pub mod attachments;
 pub mod description;
 pub mod edit_controls;
 pub mod entities;
+pub mod errors;
+pub mod includes;
 pub mod media;
 pub mod public_metrics;
 pub mod tweets;

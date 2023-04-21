@@ -22,25 +22,14 @@ queries:
 response:
   type: object
   properties:
-    data: 
+    data:
       type: object
       ref: tweets
-    includets:
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
       type: object
-      properties:
-        media:
-          type: array
-          items: 
-            type: object
-            ref: media
-        tweets:
-          type: array
-          items: 
-            type: object
-            ref: tweets
-        users:
-          type: array
-          items: 
-            type: object
-            ref: users
-        
+      ref: includes

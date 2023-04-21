@@ -1,0 +1,19 @@
+---
+
+response:
+  type: object
+  properties:
+    detail:
+      type: string
+    parameter:
+      type: string
+    resource_id:
+      type: string
+    resource_type:
+      type: string
+    title:
+      type: string
+    type:
+      type: string
+    value:
+      type: string

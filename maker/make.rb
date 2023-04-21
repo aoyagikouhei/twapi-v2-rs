@@ -57,7 +57,7 @@ def execute(path)
   queries = yml[:queries] || []
   form = yml[:form] || []
   enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
-  date_flag = queries.filter{|it| it[:type] == "date" }.present?
+  @date_flag = queries.filter{|it| it[:type] == "date" }.present?
 
   self_required = (queries + form).filter{|it| it[:required] } + paths
   required_queries = queries.filter{|it| it[:required] }
@@ -84,6 +84,8 @@ def execute(path)
   make_body(yml[:body], bodies) if yml[:body].present?
   serde_flag = @expantion_flag || bodies.present?
 
+  responses, refs = make_response("response", yml.dig(:response, :properties), false)
+
   api_struct = ERB.new(File.read("api_struct.erb")).result(binding)
   api_new = ERB.new(File.read("api_new.erb")).result(binding).gsub(/^/, "    ")
   setter = ERB.new(File.read("setter.erb")).result(binding).gsub(/^/, "    ")
@@ -109,7 +111,7 @@ def execute_expantions(path)
 end
 
 def make_response(name, properties, use_flag)
-  @response_date_flag = false
+  return ["", []] if properties.blank?
   refs = []
   properties.each_pair do |key, value|
     if value[:type] == "object"
@@ -118,26 +120,21 @@ def make_response(name, properties, use_flag)
       refs << value[:items][:ref]
     end
   end
-
   refs.uniq!
-
   class_name = name.make_field.ucc
   erb = ERB.new(File.read("responses.erb"))
-  res = erb.result(binding)
-  if @response_date_flag && use_flag
-    res.gsub(/USE_DATE/, "\nuse chrono::prelude::*;")
-  else
-    res.gsub(/USE_DATE/, "")
-  end
+  [erb.result(binding), refs]
 end
 
 def execute_responses(path)
+  @date_flag = false
   m = /responses\/(.+)\.yaml/.match(path)
   name = m[1]
   yml = YAML.load_file(path).deep_symbolize_keys
   properties = yml[:response][:properties]
   use_flag = true
-  File.write("../src/responses/#{name}.rs", make_response(name, properties, use_flag))
+  res, refs = make_response(name, properties, use_flag)
+  File.write("../src/responses/#{name}.rs", res.gsub(/USE_DATE/, @date_flag ? "\nuse chrono::prelude::*;" : ""))
 end
 
 Dir.glob('api/*.yaml').each do |path|
