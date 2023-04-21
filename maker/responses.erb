@@ -1,0 +1,44 @@
+<%
+def make_items_type(items)
+  case items[:type]
+  when "integer" then
+    "i64"
+  when "object" then
+    items[:ref].ucc
+  when "date" then
+    @response_date_flag = true
+    "DateTime<Utc>"
+  else
+    "String"
+  end
+end
+
+def make_response_type(value)
+  res = case value[:type]
+  when "integer" then
+    "i64"
+  when "array" then
+    "Vec<#{make_items_type(value[:items])}>"
+  when "date" then
+    @response_date_flag = true
+    "DateTime<Utc>"
+  when "bool" then
+    "bool"
+  when "object" then
+    value[:ref].ucc
+  else
+    "String"
+  end
+  if value[:required] == true
+    res
+  else
+    "Option<#{res}>"
+  end
+end
+%><% if refs.present?  %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
+<% end %>use serde::{Serialize, Deserialize};USE_DATE
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
+      pub <%= key.to_s.make_name %>: <%= make_response_type(value) %>, <% end %>
+}

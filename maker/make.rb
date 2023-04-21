@@ -65,7 +65,7 @@ def execute(path)
 
   fields = queries.filter{|it| /\.fields$/ =~ it[:name]}
 
-  auth = if yml[:auth] == "basic" 
+  auth = if yml[:auth] == "basic"
     {
       method: ".basic_auth(self.api_key_code, Some(self.api_secret_code))",
       keys: ["api_key_code", "api_secret_code"],
@@ -108,10 +108,46 @@ def execute_expantions(path)
   File.write("../src/fields/#{name}_fields.rs", erb.result(binding))
 end
 
+def make_response(name, properties, use_flag)
+  @response_date_flag = false
+  refs = []
+  properties.each_pair do |key, value|
+    if value[:type] == "object"
+      refs << value[:ref]
+    elsif value[:type] == "array" && value[:items][:type] == "object"
+      refs << value[:items][:ref]
+    end
+  end
+
+  refs.uniq!
+
+  class_name = name.make_field.ucc
+  erb = ERB.new(File.read("responses.erb"))
+  res = erb.result(binding)
+  if @response_date_flag && use_flag
+    res.gsub(/USE_DATE/, "\nuse chrono::prelude::*;")
+  else
+    res.gsub(/USE_DATE/, "")
+  end
+end
+
+def execute_responses(path)
+  m = /responses\/(.+)\.yaml/.match(path)
+  name = m[1]
+  yml = YAML.load_file(path).deep_symbolize_keys
+  properties = yml[:response][:properties]
+  use_flag = true
+  File.write("../src/responses/#{name}.rs", make_response(name, properties, use_flag))
+end
+
 Dir.glob('api/*.yaml').each do |path|
   execute(path)
 end
 
 Dir.glob('fields/*.yaml').each do |path|
   execute_expantions(path)
+end
+
+Dir.glob('responses/*.yaml').each do |path|
+  execute_responses(path)
 end

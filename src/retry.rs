@@ -126,9 +126,8 @@ mod tests {
         match res {
             Ok(res) => {
                 println!("{}", res.0.to_string());
-            },
+            }
             _ => {}
         }
-        
     }
 }
