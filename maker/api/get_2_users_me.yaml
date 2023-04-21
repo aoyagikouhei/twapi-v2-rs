@@ -10,3 +10,17 @@ queries:
     type: enum
   - name: user.fields
     type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: users
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes

@@ -3,7 +3,7 @@
 response:
   type: object
   properties:
-    created_at: 
+    created_at:
       type: stirng
     description:
       type: string
@@ -12,10 +12,12 @@ response:
       ref: entities
     id:
       type: string
-    location: 
+      required: true
+    location:
       type: string
     name:
       type: string
+      required: true
     pinned_tweet_id:
       type: string
     profile_image_url:
@@ -27,6 +29,7 @@ response:
       ref: public_metrics
     username:
       type: string
+      required: true
     verified:
       type: bool
     verified_type:

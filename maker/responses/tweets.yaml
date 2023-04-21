@@ -3,7 +3,7 @@
 response:
   type: object
   properties:
-    attachments: 
+    attachments:
       type: object
       ref: attachments
     author_id:
@@ -12,11 +12,12 @@ response:
       type: string
     created_at:
       type: date
-    edit_controls: 
+    edit_controls:
       type: object
       ref: attachments
-    edit_history_tweet_ids: 
+    edit_history_tweet_ids:
       type: array
+      required: true
       items:
         type: string
     entities:
@@ -24,6 +25,7 @@ response:
       ref: entities
     id:
       type: string
+      required: true
     lang:
       type: string
     possibly_sensitive:
@@ -35,3 +37,4 @@ response:
       type: string
     text:
       type: string
+      required: true
