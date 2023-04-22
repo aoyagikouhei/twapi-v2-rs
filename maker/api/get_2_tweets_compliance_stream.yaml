@@ -8,3 +8,21 @@ queries:
     required: true
   - name: backfill_minutes
     type: integer
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        delete:
+          type: object
+          ref: compliance
+        withheld:
+          type: object
+          ref: compliance
+        drop:
+          type: object
+          ref: compliance
+        undrop:
+          type: object
+          ref: compliance

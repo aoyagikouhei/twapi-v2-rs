@@ -6,7 +6,6 @@ use crate::{
 };
 
 pub mod delete_2_lists_id;
-pub mod delete_2_lists_id_followed_lists;
 pub mod delete_2_lists_id_members_user_id;
 pub mod delete_2_tweets_id;
 pub mod delete_2_users_id_bookmarks_tweet_id;
@@ -68,7 +67,6 @@ pub mod post_2_lists;
 pub mod post_2_lists_id_members;
 pub mod post_2_oauth2_token;
 pub mod post_2_tweets;
-pub mod post_2_tweets_id_hidden;
 pub mod post_2_tweets_search_stream_rules;
 pub mod post_2_users_id_blocking;
 pub mod post_2_users_id_bookmarks;

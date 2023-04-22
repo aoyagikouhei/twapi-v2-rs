@@ -1,3 +1,5 @@
+use serde::{Serialize, Deserialize};
+use crate::responses::{compliance::Compliance};
 use reqwest::RequestBuilder;
 use super::{TwitterResult, execute_twitter};
 
@@ -46,3 +48,23 @@ impl Api {
     }
 }
 
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Data>, 
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Data {
+    pub delete: Option<Compliance>, 
+    pub withheld: Option<Compliance>, 
+    pub drop: Option<Compliance>, 
+    pub undrop: Option<Compliance>, 
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}

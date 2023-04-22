@@ -10,3 +10,11 @@ queries:
   - name: status
     type: enum
     value: created, in_progress, failed, complete
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: jobs

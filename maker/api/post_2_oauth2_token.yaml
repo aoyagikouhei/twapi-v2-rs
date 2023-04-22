@@ -14,3 +14,15 @@ form:
   - name: refresh_token
     type: string
     required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer

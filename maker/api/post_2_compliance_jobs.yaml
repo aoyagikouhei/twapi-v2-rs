@@ -15,3 +15,9 @@ body:
       type: string
     - name: resumable
       type: bool
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: jobs

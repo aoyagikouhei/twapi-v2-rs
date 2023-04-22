@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use std::collections::HashSet;
 use serde::{Serialize, Deserialize};
+use crate::responses::{jobs::Jobs};
 use reqwest::RequestBuilder;
 use super::{TwitterResult, execute_twitter};
 
@@ -100,3 +101,11 @@ impl Api {
     }
 }
 
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Vec<Jobs>>, 
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}

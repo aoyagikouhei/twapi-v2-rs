@@ -1,0 +1,29 @@
+---
+
+response:
+  type: object
+  properties:
+    id: 
+      type: string
+    created_at: 
+      type: date
+    type: 
+      type: enum_string
+      value: tweets, users
+    name: 
+      type: string
+    upload_url: 
+      type: string
+    upload_expires_at: 
+      type: date
+    download_url: 
+      type: string
+    download_expires_at: 
+      type: date
+    url: 
+      type: string
+    status: 
+      type: enum_single
+      value: in_progress, failed, complete
+    error: 
+      type: string

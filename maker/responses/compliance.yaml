@@ -1,0 +1,13 @@
+---
+
+response:
+  type: object
+  properties:
+    tweet: 
+      type: object
+      ref: compliance_tweet
+    user:
+      type: object
+      ref: compliance_user
+    event_at:
+      type: date

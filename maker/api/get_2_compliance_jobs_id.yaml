@@ -5,3 +5,9 @@ method: get
 paths:
   - name: id
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: jobs

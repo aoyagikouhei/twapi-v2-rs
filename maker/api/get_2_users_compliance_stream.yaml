@@ -8,3 +8,36 @@ queries:
     required: true
   - name: backfill_minutes
     type: integer
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        user_delete:
+          type: object
+          ref: compliance
+        user_undelete:
+          type: object
+          ref: compliance
+        user_withheld:
+          type: object
+          ref: compliance
+        user_protect:
+          type: object
+          ref: compliance
+        user_unprotect:
+          type: object
+          ref: compliance
+        user_suspend:
+          type: object
+          ref: compliance
+        user_unsuspend:
+          type: object
+          ref: compliance
+        scrub_geo:
+          type: object
+          ref: compliance
+        user_profile_modification:
+          type: object
+          ref: compliance
