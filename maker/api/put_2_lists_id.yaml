@@ -14,3 +14,11 @@ body:
       type: string
     - name: private
       type: bool
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        hidden:
+          type: bool

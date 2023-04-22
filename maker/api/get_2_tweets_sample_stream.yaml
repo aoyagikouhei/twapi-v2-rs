@@ -22,3 +22,19 @@ queries:
     type: enum
   - name: user.fields
     type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: tweets
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes

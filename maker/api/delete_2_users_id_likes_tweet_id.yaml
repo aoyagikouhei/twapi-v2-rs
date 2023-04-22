@@ -7,3 +7,11 @@ paths:
     type: string
   - name: tweet_id
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        liked:
+          type: bool

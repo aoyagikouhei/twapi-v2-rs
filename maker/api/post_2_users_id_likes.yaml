@@ -11,3 +11,11 @@ body:
     - name: tweet_id
       type: string
       required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        liked:
+          type: bool
