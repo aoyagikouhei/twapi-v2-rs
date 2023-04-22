@@ -1,0 +1,26 @@
+---
+
+response:
+  type: object
+  properties:
+    id: 
+      type: string
+    text: 
+      type: string
+    event_type: 
+      type: string
+    created_at: 
+      type: date
+    sender_id: 
+      type: string
+    dm_conversation_id: 
+      type: string
+    attachments:
+      type: object
+      ref: attachments
+    referenced_tweets:
+      type: array
+      items:
+        type: object
+        ref: referenced_tweets
+    

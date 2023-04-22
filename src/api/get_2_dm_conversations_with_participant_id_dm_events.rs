@@ -3,6 +3,7 @@ use crate::fields::{
     dm_event_fields::DmEventFields, media_fields::MediaFields, tweet_fields::TweetFields,
     user_fields::UserFields,
 };
+use crate::responses::{dm_events::DmEvents, errors::Errors, includes::Includes};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -168,4 +169,23 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Vec<DmEvents>>,
+    pub errors: Option<Vec<Errors>>,
+    pub includes: Option<Includes>,
+    pub meta: Option<Meta>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Meta {
+    pub next_token: Option<String>,
+    pub previous_token: Option<String>,
+    pub result_count: Option<i64>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

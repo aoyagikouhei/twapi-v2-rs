@@ -28,3 +28,13 @@ body:
                 required: true
         - name: text
           type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        dm_conversation_id:
+          type: string
+        dm_event_id:
+          type: string
