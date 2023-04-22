@@ -1,4 +1,5 @@
 use super::{execute_twitter, TwitterResult};
+use crate::responses::{counts::Counts, errors::Errors};
 use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -104,4 +105,21 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Vec<Counts>>,
+    pub errors: Option<Vec<Errors>>,
+    pub meta: Option<Meta>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Meta {
+    pub total_tweet_count: Option<i64>,
+    pub next_token: Option<String>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

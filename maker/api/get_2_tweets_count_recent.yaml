@@ -17,3 +17,21 @@ queries:
     type: date
   - name: until_id
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: counts
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    meta:
+      type: object
+      properties:
+        total_tweet_count:
+          type: integer

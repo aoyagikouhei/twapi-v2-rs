@@ -3,7 +3,7 @@ use crate::fields::{
     media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
     tweet_fields::TweetFields, user_fields::UserFields,
 };
-use crate::responses::{errors::Errors, includes::Includes, meta::Meta, tweets::Tweets};
+use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
 use chrono::prelude::*;
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -248,6 +248,17 @@ pub struct Response {
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
     pub meta: Meta,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Meta {
+    pub count: i64,
+    pub newest_id: String,
+    pub oldest_id: String,
+    pub next_token: Option<String>,
+    pub previous_token: Option<String>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }

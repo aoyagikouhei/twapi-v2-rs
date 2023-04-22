@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    start: 
+      type: date
+    end: 
+      type: date
+    tweet_count: 
+      type: integer
