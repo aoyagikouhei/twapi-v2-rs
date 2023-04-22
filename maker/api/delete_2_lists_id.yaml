@@ -5,3 +5,16 @@ method: delete
 paths:
   - name: id
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        deleted:
+          type: bool
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors

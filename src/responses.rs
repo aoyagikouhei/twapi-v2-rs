@@ -7,6 +7,7 @@ pub mod entities;
 pub mod errors;
 pub mod geo;
 pub mod includes;
+pub mod lists;
 pub mod media;
 pub mod options;
 pub mod places;

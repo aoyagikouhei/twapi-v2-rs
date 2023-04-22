@@ -17,3 +17,30 @@ queries:
     type: string
   - name: user.fields
     type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: users
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
+    meta:
+      type: object
+      required: true
+      properties:
+        result_count:
+          type: integer
+          required: true
+        previous_token:
+          type: string
+        next_token:
+          type: string

@@ -2,13 +2,11 @@ use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/lists";
+const URL: &str = "https://api.twitter.com/2/tweets/:id/hidden";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    name: String,
-    description: Option<String>,
-    private: Option<String>,
+    hidden: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -30,7 +28,7 @@ impl Api {
     pub fn build(self) -> RequestBuilder {
         let client = reqwest::Client::new();
         client
-            .post(URL.replace(":id", &self.id))
+            .put(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
             .json(&serde_json::to_value(&self.body).unwrap())
     }
@@ -49,8 +47,7 @@ pub struct Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
-    pub id: Option<String>,
-    pub name: Option<String>,
+    pub hidden: Option<bool>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }

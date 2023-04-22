@@ -15,3 +15,13 @@ body:
       type: string
     - name: private
       type: bool
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string

@@ -11,3 +11,11 @@ body:
     - name: list_id
       type: string
       required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        following:
+          type: bool

@@ -10,6 +10,7 @@ pub mod delete_2_lists_id_followed_lists;
 pub mod delete_2_lists_id_members_user_id;
 pub mod delete_2_tweets_id;
 pub mod delete_2_users_id_bookmarks_tweet_id;
+pub mod delete_2_users_id_followed_lists_list_id;
 pub mod delete_2_users_id_likes_tweet_id;
 pub mod delete_2_users_id_pinned_lists;
 pub mod delete_2_users_id_retweets_source_tweet_id;
@@ -78,6 +79,7 @@ pub mod post_2_users_id_muting;
 pub mod post_2_users_id_pinned_lists;
 pub mod post_2_users_id_retweets;
 pub mod put_2_lists_id;
+pub mod put_2_tweets_id_hidden;
 
 pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
 

@@ -1,5 +1,6 @@
 use super::{execute_twitter, TwitterResult};
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/users/:id/pinned_lists/:list_id";
 
@@ -32,4 +33,18 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Data>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Data {
+    pub pinned: Option<bool>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

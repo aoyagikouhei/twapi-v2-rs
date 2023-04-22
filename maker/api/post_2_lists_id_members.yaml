@@ -11,3 +11,11 @@ body:
     - name: user_id
       type: string
       required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        is_member:
+          type: bool

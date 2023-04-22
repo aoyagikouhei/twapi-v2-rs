@@ -20,5 +20,5 @@ response:
     data:
       type: object
       properties:
-        hidden:
+        updated:
           type: bool

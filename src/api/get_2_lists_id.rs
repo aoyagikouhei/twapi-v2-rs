@@ -1,5 +1,6 @@
 use super::{execute_twitter, TwitterResult};
 use crate::fields::{list_fields::ListFields, user_fields::UserFields};
+use crate::responses::{errors::Errors, includes::Includes, lists::Lists};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -88,4 +89,13 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Vec<Lists>>,
+    pub errors: Option<Vec<Errors>>,
+    pub includes: Option<Includes>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }

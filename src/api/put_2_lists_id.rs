@@ -49,7 +49,7 @@ pub struct Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
-    pub hidden: Option<bool>,
+    pub updated: Option<bool>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }
