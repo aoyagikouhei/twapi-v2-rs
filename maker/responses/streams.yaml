@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    id: 
+      type: string
+    value: 
+      type: string
+    tag: 
+      type: string

@@ -1,0 +1,13 @@
+---
+
+response:
+  type: object
+  properties:
+    created: 
+      type: integer
+    not_created: 
+      type: integer
+    deleted: 
+      type: integer
+    not_deleted: 
+      type: integer

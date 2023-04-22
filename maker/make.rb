@@ -117,17 +117,25 @@ def execute_expantions(path)
   File.write("../src/fields/#{name}_fields.rs", erb.result(binding))
 end
 
-def make_response(name, properties, use_flag)
-  return ["", [], {}] if properties.blank?
-  refs = []
-  @inner_map = {}
+def calc_refs(properties, refs)
   properties.each_pair do |key, value|
-    if value[:type] == "object" && value[:ref].present?
-      refs << value[:ref]
+    if value[:type] == "object"
+      if value[:ref].present?
+        refs << value[:ref]
+      elsif value[:properties].present?
+        calc_refs(value[:properties], refs)
+      end
     elsif value[:type] == "array" && value[:items][:type] == "object"
       refs << value[:items][:ref]
     end
   end
+end
+
+def make_response(name, properties, use_flag)
+  return ["", [], {}] if properties.blank?
+  refs = []
+  @inner_map = {}
+  calc_refs(properties, refs)
   refs.uniq!
   class_name = name.make_field.ucc
   erb = ERB.new(File.read("responses.erb"))

@@ -5,3 +5,23 @@ method: get
 queries:
   - name: ids
     type: string
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: streams
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    meta:
+      type: object
+      required: true
+      properties:
+        sent:
+          type: integer
+          required: true

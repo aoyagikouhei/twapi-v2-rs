@@ -11,6 +11,8 @@ pub mod options;
 pub mod places;
 pub mod polls;
 pub mod public_metrics;
+pub mod streams;
+pub mod summary;
 pub mod tweets;
 pub mod urls;
 pub mod users;

@@ -24,3 +24,27 @@ body:
           items:
             type: string
           required: true
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: streams
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    meta:
+      type: object
+      required: true
+      properties:
+        sent:
+          type: integer
+          required: true
+        summary:
+          type: object
+          required: true
+          ref: summary

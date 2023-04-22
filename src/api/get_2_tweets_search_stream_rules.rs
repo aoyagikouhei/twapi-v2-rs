@@ -1,5 +1,7 @@
 use super::{execute_twitter, TwitterResult};
+use crate::responses::{errors::Errors, streams::Streams};
 use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/tweets/search/stream/rules";
 
@@ -37,4 +39,20 @@ impl Api {
     pub async fn execute(self) -> TwitterResult {
         execute_twitter(self.build()).await
     }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Response {
+    pub data: Option<Vec<Streams>>,
+    pub errors: Option<Vec<Errors>>,
+    pub meta: Meta,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Meta {
+    pub sent: i64,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
 }
