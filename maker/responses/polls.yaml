@@ -1,0 +1,20 @@
+---
+
+response:
+  type: object
+  properties:
+    id: 
+      type: string
+      required: true
+    options : 
+      type: array
+      required: true
+      items:
+        type: object
+        ref: options
+    duration_minutes: 
+      type: integer
+    end_datetime: 
+      type: date
+    voting_status: 
+      type: string

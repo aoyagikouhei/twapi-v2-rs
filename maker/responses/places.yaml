@@ -1,0 +1,26 @@
+---
+
+response:
+  type: object
+  properties:
+    full_name: 
+      type: string
+      required: true
+    id: 
+      type: string
+      required: true
+    contained_within: 
+      type: array
+      items:
+        type: string
+    country: 
+      type: string
+    country_code: 
+      type: integer
+    geo: 
+      type: object
+      ref: geo
+    name: 
+      type: string
+    place_type: 
+      type: string

@@ -5,6 +5,8 @@ def make_items_type(items)
     "i64"
   when "object" then
     items[:ref].ucc
+  when "float" then
+    "f64"
   when "date" then
     @date_flag = true
     "DateTime<Utc>"
@@ -24,6 +26,8 @@ def make_response_type(key, value)
     "DateTime<Utc>"
   when "bool" then
     "bool"
+  when "json" then
+    "serde_json::Value"
   when "object" then
     if value[:ref].present?
       value[:ref].ucc

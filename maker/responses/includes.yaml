@@ -8,6 +8,16 @@ response:
       items:
         type: object
         ref: media
+    places:
+      type: array
+      items:
+        type: object
+        ref: places
+    polls:
+      type: array
+      items:
+        type: object
+        ref: polls
     tweets:
       type: array
       items:
