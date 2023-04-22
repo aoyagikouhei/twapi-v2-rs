@@ -1,0 +1,53 @@
+---
+
+response:
+  type: object
+  properties:
+    id: 
+      type: string
+      required: true
+    host_ids: 
+      type: array
+      items:
+        type: string
+    created_at: 
+      type: date
+    creator_id: 
+      type: string
+    ended_at: 
+      type: date
+    lang: 
+      type: string
+    is_ticketed: 
+      type: bool
+    invited_user_ids: 
+      type: array
+      items:
+        type: string
+    participant_count: 
+      type: integer
+    scheduled_start: 
+      type: date
+    speaker_ids: 
+      type: array
+      items:
+        type: string
+    started_at: 
+      type: date
+    state: 
+      type: enum_single
+      value: live, scheduled
+      required: true
+    subscriber_count: 
+      type: integer
+    topic_ids: 
+      type: string
+    topics: 
+      type: array
+      items:
+        type: object
+        ref: topics
+    title: 
+      type: string
+    updated_at: 
+      type: date

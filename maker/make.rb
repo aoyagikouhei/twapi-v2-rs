@@ -134,6 +134,7 @@ end
 def make_response(name, properties, use_flag)
   return ["", [], {}] if properties.blank?
   refs = []
+  @enums = {}
   @inner_map = {}
   calc_refs(properties, refs)
   refs.uniq!
