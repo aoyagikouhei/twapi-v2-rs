@@ -1,9 +1,9 @@
-use super::{execute_twitter, TwitterResult};
 use crate::fields::{
     media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
     tweet_fields::TweetFields, user_fields::UserFields,
 };
 use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -172,7 +172,7 @@ impl Api {
             .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> TwitterResult {
+    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
         execute_twitter(self.build()).await
     }
 }

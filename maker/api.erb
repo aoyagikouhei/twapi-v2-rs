@@ -5,7 +5,7 @@ use std::collections::HashSet;
 <% end %><% if fields.present? %>use crate::fields::{<%= fields.map{|it| "#{it[:name].make_field()}::#{it[:name].ucc}"}.join(", ") %>};
 <% end %><% if refs.present? %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use crate::{error::Error, rate_limit::RateLimit, api::execute_twitter};
 
 const URL: &str = "<%= yml[:url] %>";
 
@@ -29,7 +29,7 @@ impl Api {
             .json(&serde_json::to_value(&self.body).unwrap())<% end %>
     }
 
-    pub async fn execute(self) -> TwitterResult {
+    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
         execute_twitter(self.build()).await
     }
 }

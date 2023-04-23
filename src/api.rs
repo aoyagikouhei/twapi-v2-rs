@@ -1,4 +1,5 @@
 use reqwest::RequestBuilder;
+use serde::de::DeserializeOwned;
 
 use crate::{
     error::{Error, TwitterError},
@@ -79,19 +80,19 @@ pub mod post_2_users_id_retweets;
 pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
-pub type TwitterResult = Result<(serde_json::Value, Option<RateLimit>), Error>;
-
-pub async fn execute_twitter(builder: RequestBuilder) -> TwitterResult {
+pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Option<RateLimit>), Error>
+where
+    T: DeserializeOwned,
+{
     let response = builder.send().await?;
     let status_code = response.status();
     let header = response.headers();
     let rate_limit = RateLimit::new(header);
-    let value = response.json::<serde_json::Value>().await;
 
     if status_code.is_success() {
-        Ok((value?, rate_limit))
+        Ok((response.json::<T>().await?, rate_limit))
     } else {
-        match value {
+        match response.json::<serde_json::Value>().await {
             Ok(value) => Err(Error::Twitter(
                 TwitterError::new(&value, status_code),
                 value,

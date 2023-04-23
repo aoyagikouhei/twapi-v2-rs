@@ -1,25 +1,25 @@
-use std::time::Duration;
-
 use reqwest::{RequestBuilder, StatusCode};
+use serde::de::DeserializeOwned;
+use std::time::Duration;
 use tokio::time::{sleep, timeout};
 
-use crate::{
-    api::{execute_twitter, TwitterResult},
-    error::Error,
-};
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 
 pub trait RetryLogger {
     fn log(&self, builder: &RequestBuilder);
 }
 
-pub async fn execute_retry(
+pub async fn execute_retry<T>(
     builder: RequestBuilder,
     retry_count: usize,
     retryable_status_codes: &[StatusCode],
     retry_logger: Option<&impl RetryLogger>,
     timeout_duration: Option<Duration>,
     retry_delay_secound_count: Option<u64>,
-) -> TwitterResult {
+) -> Result<(T, Option<RateLimit>), Error>
+where
+    T: DeserializeOwned,
+{
     let mut count: usize = 0;
 
     loop {
@@ -114,7 +114,7 @@ mod tests {
             .poll_fields(PollFields::all())
             .build();
 
-        let res = execute_retry(
+        let res = execute_retry::<Response>(
             builder,
             2,
             &vec![StatusCode::UNAUTHORIZED],
@@ -125,9 +125,7 @@ mod tests {
         .await;
         match res {
             Ok(res) => {
-                println!("{}", res.0.to_string());
-                let val = serde_json::from_value::<Response>(res.0);
-                println!("{:?}", val);
+                println!("{:?}", res);
             }
             _ => {}
         }

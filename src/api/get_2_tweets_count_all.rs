@@ -1,5 +1,5 @@
-use super::{execute_twitter, TwitterResult};
 use crate::responses::{counts::Counts, errors::Errors};
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -102,7 +102,7 @@ impl Api {
             .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> TwitterResult {
+    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
         execute_twitter(self.build()).await
     }
 }

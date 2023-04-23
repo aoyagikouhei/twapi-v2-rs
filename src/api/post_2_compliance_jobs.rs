@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use crate::responses::{jobs::Jobs};
 use reqwest::RequestBuilder;
-use super::{TwitterResult, execute_twitter};
+use crate::{error::Error, rate_limit::RateLimit, api::execute_twitter};
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
 
@@ -39,7 +39,7 @@ impl Api {
             .json(&serde_json::to_value(&self.body).unwrap())
     }
 
-    pub async fn execute(self) -> TwitterResult {
+    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
         execute_twitter(self.build()).await
     }
 }
