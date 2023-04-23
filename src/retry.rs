@@ -125,8 +125,8 @@ mod tests {
         .await;
         match res {
             Ok(res) => {
+                println!("{}", res.0.to_string());
                 let val = serde_json::from_value::<Response>(res.0);
-                //println!("{:?}", res.0.to_string());
                 println!("{:?}", val);
             }
             _ => {}

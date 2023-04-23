@@ -6,7 +6,8 @@ Twitter v2 library.
 
 - Request builder
 - Retrive rate limit from response headers.
-- Not support response type. Use serde_json::Value.
+- Default response type is serde_json::Value.
+- Experimental type support.
 
 ## Features
 ### default
@@ -22,13 +23,16 @@ Twitter v2 library.
 
 ## Changes
 
+### v0.2.0 (2023/04/23)
+* Experimental type support.
+
 ### v0.1.0 (2023/04/20)
-* first release
+* First release.
 
 ## Example
 ```rust
 use twapi_v2::{
-    api::{get_2_tweets_id::{Api, Expansions}, execute_twitter},
+    api::{get_2_tweets_id::{Api, Expansions, Response}, execute_twitter},
     fields::{
         media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
         tweet_fields::TweetFields, user_fields::UserFields,
@@ -50,6 +54,9 @@ async fn main() {
         .build()
         .execute()
         .await;
-    println!("{:?}", res);
+    if let Some((val, rate_limit)) = res {
+        let res = serde_json::from_value::<Response>(val);
+        println!("{:?}", res);
+    }
 }
 ```
