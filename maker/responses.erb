@@ -47,7 +47,7 @@ def make_response_type(key, value)
     "Option<#{res}>"
   end
 end
-%><% if use_flag %><% if refs.present?  %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
+%><% if independence_flag %><% if refs.present?  %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use serde::{Serialize, Deserialize};USE_DATE<% end %>
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -56,7 +56,7 @@ pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }
-<% @enums.each_pair do |key, value| 
+<% @enums.each_pair do |key, value|
   ary = value[:value].split(/, /) %>
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum <%= key.to_s.ucc %> {<% ary.each do |it| %>

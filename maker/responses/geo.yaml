@@ -3,16 +3,18 @@
 response:
   type: object
   properties:
-    type: 
+    type:
       type: string
       required: true
-    bbox: 
+    bbox:
       type: array
       items:
         type: float
-    contained_within: 
+    contained_within:
       type: array
       items:
         type: string
-    properties: 
+    place_id:
+      type: string
+    properties:
       type: json

@@ -1,0 +1,23 @@
+---
+
+response:
+  type: object
+  properties:
+    domain:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    entry:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string

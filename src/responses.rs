@@ -2,6 +2,7 @@ pub mod attachments;
 pub mod compliance;
 pub mod compliance_tweet;
 pub mod compliance_user;
+pub mod context_annotations;
 pub mod counts;
 pub mod description;
 pub mod dm_events;

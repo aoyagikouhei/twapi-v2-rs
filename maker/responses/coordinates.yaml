@@ -1,0 +1,12 @@
+---
+
+response:
+  type: object
+  properties:
+    type:
+      type: string
+      required: true
+    coordinates:
+      type: array
+      items:
+        type: float

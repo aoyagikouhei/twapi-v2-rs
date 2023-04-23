@@ -8,13 +8,18 @@ response:
       ref: attachments
     author_id:
       type: string
+    context_annotations:
+      type: array
+      items:
+        type: object
+        ref: context_annotations
     conversation_id:
       type: string
     created_at:
       type: date
     edit_controls:
       type: object
-      ref: attachments
+      ref: edit_controls
     edit_history_tweet_ids:
       type: array
       required: true
@@ -23,9 +28,14 @@ response:
     entities:
       type: object
       ref: entities
+    geo:
+      type: object
+      ref: geo
     id:
       type: string
       required: true
+    in_reply_to_user_id:
+      type: string
     lang:
       type: string
     possibly_sensitive:
@@ -35,6 +45,11 @@ response:
       ref: public_metrics
     reply_settings:
       type: string
+    referenced_tweets:
+      type: array
+      items:
+        type: object
+        ref: referenced_tweets
     text:
       type: string
       required: true
