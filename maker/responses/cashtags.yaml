@@ -7,5 +7,7 @@ response:
       type: integre
     end:
       type: integre
+    cashtag:
+      type: string
     tag:
       type: string

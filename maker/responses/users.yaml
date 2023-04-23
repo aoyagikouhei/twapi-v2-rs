@@ -26,7 +26,17 @@ response:
       type: bool
     public_metrics:
       type: object
-      ref: public_metrics
+      properties:
+        followers_count:
+          type: integer
+        following_count:
+          type: integer
+        tweet_count:
+          type: integer
+        listed_count:
+          type: integer
+    url:
+      type: string
     username:
       type: string
       required: true
@@ -34,3 +44,6 @@ response:
       type: bool
     verified_type:
       type: string
+    withheld:
+      type: object
+      ref: withheld

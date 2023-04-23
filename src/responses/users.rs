@@ -1,4 +1,4 @@
-use crate::responses::{entities::Entities, public_metrics::PublicMetrics};
+use crate::responses::{entities::Entities, withheld::Withheld};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -13,9 +13,21 @@ pub struct Users {
     pub profile_image_url: Option<String>,
     pub protected: Option<bool>,
     pub public_metrics: Option<PublicMetrics>,
+    pub url: Option<String>,
     pub username: String,
     pub verified: Option<bool>,
     pub verified_type: Option<String>,
+    pub withheld: Option<Withheld>,
+    #[serde(flatten)]
+    extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct PublicMetrics {
+    pub followers_count: Option<i64>,
+    pub following_count: Option<i64>,
+    pub tweet_count: Option<i64>,
+    pub listed_count: Option<i64>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }
