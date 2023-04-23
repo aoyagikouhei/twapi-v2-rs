@@ -1,0 +1,15 @@
+---
+
+response:
+  type: object
+  properties:
+    start:
+      type: integre
+    end:
+      type: integre
+    probability:
+      type: integre
+    type:
+      type: string
+    normalized_text:
+      type: string

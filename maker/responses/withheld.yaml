@@ -1,0 +1,14 @@
+---
+
+response:
+  type: object
+  properties:
+    copyright:
+      type: bool
+    country_codes:
+      type: array
+      items:
+        type: string
+    scope:
+      type: enum_single
+      value: tweet, user

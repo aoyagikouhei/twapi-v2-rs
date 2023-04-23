@@ -3,15 +3,17 @@
 response:
   type: object
   properties:
-    display_url: 
+    display_url:
       type: string
-    end: 
+    end:
       type: integer
-    expanded_url: 
+    expanded_url:
       type: string
-    media_key: 
+    media_key:
       type: string
-    start: 
+    start:
       type: integer
-    url: 
+    url:
+      type: string
+    unwound_url:
       type: string

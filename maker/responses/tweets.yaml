@@ -43,6 +43,15 @@ response:
     public_metrics:
       type: object
       ref: public_metrics
+    non_public_metrics:
+      type: object
+      ref: non_public_metrics
+    organic_metrics:
+      type: object
+      ref: organic_metrics
+    promoted_metrics:
+      type: object
+      ref: promoted_metrics
     reply_settings:
       type: string
     referenced_tweets:
@@ -53,3 +62,8 @@ response:
     text:
       type: string
       required: true
+    withheld:
+      type: object
+      ref: withheld
+    source:
+      type: string

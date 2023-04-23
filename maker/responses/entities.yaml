@@ -3,7 +3,27 @@
 response:
   type: object
   properties:
-    urls: 
+    annotations:
+      type: array
+      items:
+        type: object
+        ref: annotations
+    cashtags:
+      type: array
+      items:
+        type: object
+        ref: cashtags
+    hashtags:
+      type: array
+      items:
+        type: object
+        ref: hashtags
+    mentions:
+      type: array
+      items:
+        type: object
+        ref: mentions
+    urls:
       type: array
       items:
         type: object

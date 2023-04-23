@@ -8,6 +8,7 @@ pub struct Urls {
     pub media_key: Option<String>,
     pub start: Option<i64>,
     pub url: Option<String>,
+    pub unwound_url: Option<String>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }
