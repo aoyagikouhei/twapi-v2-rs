@@ -62,6 +62,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             list_fields: Some(ListFields::all()),
             user_fields: Some(UserFields::all()),
+            max_results: Some(100),
             ..Default::default()
         }
     }
@@ -73,6 +74,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             list_fields: Some(ListFields::all()),
             user_fields: Some(UserFields::open()),
+            max_results: Some(100),
             ..Default::default()
         }
     }

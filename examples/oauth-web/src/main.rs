@@ -8,7 +8,6 @@ use std::{collections::HashMap, net::SocketAddr};
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use twapi_v2::{
     api::get_2_users_me,
-    fields::{tweet_fields::TweetFields, user_fields::UserFields},
     oauth::{TwitterOauth, TwitterScope},
 };
 use url::Url;
@@ -56,10 +55,7 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
         .await
         .unwrap();
     println!("{:?}", res);
-    let me = get_2_users_me::Api::new(&res.access_token)
-        .expansions(get_2_users_me::Expansions::all())
-        .tweet_fields(TweetFields::all())
-        .user_fields(UserFields::all())
+    let me = get_2_users_me::Api::all(&res.access_token)
         .execute()
         .await
         .unwrap();

@@ -1,13 +1,9 @@
-use serde::{Serialize, Deserialize};
-use crate::responses::{compliance::Compliance};
+use crate::responses::compliance::Compliance;
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::execute_twitter};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/users/compliance/stream";
-
-
-
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -24,7 +20,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn backfill_minutes(mut self, value: usize) -> Self {
         self.backfill_minutes = Some(value);
         self
@@ -48,28 +44,24 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Data>, 
+    pub data: Option<Data>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
-    pub user_delete: Option<Compliance>, 
-    pub user_undelete: Option<Compliance>, 
-    pub user_withheld: Option<Compliance>, 
-    pub user_protect: Option<Compliance>, 
-    pub user_unprotect: Option<Compliance>, 
-    pub user_suspend: Option<Compliance>, 
-    pub user_unsuspend: Option<Compliance>, 
-    pub scrub_geo: Option<Compliance>, 
-    pub user_profile_modification: Option<Compliance>, 
+    pub user_delete: Option<Compliance>,
+    pub user_undelete: Option<Compliance>,
+    pub user_withheld: Option<Compliance>,
+    pub user_protect: Option<Compliance>,
+    pub user_unprotect: Option<Compliance>,
+    pub user_suspend: Option<Compliance>,
+    pub user_unsuspend: Option<Compliance>,
+    pub scrub_geo: Option<Compliance>,
+    pub user_profile_modification: Option<Compliance>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }

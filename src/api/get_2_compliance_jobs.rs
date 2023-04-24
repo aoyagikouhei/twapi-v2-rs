@@ -1,13 +1,11 @@
+use crate::responses::jobs::Jobs;
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
-use crate::responses::{jobs::Jobs};
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::execute_twitter};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
@@ -25,7 +23,9 @@ impl std::fmt::Display for Type {
 }
 
 impl Default for Type {
-    fn default() -> Self { Self::Tweets }
+    fn default() -> Self {
+        Self::Tweets
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -59,7 +59,9 @@ impl std::fmt::Display for Status {
 }
 
 impl Default for Status {
-    fn default() -> Self { Self::Created }
+    fn default() -> Self {
+        Self::Created
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -77,7 +79,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn all(bearer_code: &str, r#type: Type) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
@@ -85,7 +87,7 @@ impl Api {
             status: Some(Status::all()),
         }
     }
-    
+
     pub fn status(mut self, value: HashSet<Status>) -> Self {
         self.status = Some(value);
         self
@@ -109,11 +111,9 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Jobs>>, 
+    pub data: Option<Vec<Jobs>>,
     #[serde(flatten)]
     extra: std::collections::HashMap<String, serde_json::Value>,
 }

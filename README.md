@@ -5,8 +5,10 @@ Twitter v2 library.
 [Documentation](https://docs.rs/twapi-v2)
 
 - Request builder
-- Retrive rate limit from response headers.
-- Default response type is serde_json::Value.
+- Retrive rate limit from response headers
+- Convenience setted parameter methods
+- Optional retriable and timeout and logging
+- Optional OAuth with web sample
 - Experimental type support.
 
 ## Features
@@ -26,6 +28,10 @@ Twitter v2 library.
 
 ## Changes
 
+### v0.5.0 (2023/04/26)
+* Add Api::all, Api::open methods. It's all enum parameter setted.
+* In Api::all and Api::open methods, max_results is max value.
+
 ### v0.4.0 (2023/04/25)
 * Twitter OAuth
 * oauth-web example
@@ -44,26 +50,13 @@ Twitter v2 library.
 
 ### API
 ```rust
-use twapi_v2::{
-    api::{get_2_tweets_id::{Api, Expansions}, execute_twitter},
-    fields::{
-        media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
-        tweet_fields::TweetFields, user_fields::UserFields,
-    },
-};
+use twapi_v2::api::get_2_tweets_id;
 
 #[tokio::main]
 async fn main() {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
-
-    let res = Api::new(&bearer_code, &tweet_id)
-        .expansions(Expansions::all())
-        .tweet_fields(TweetFields::open())
-        .user_fields(UserFields::all())
-        .media_fields(MediaFields::all())
-        .place_fields(PlaceFields::all())
-        .poll_fields(PollFields::all())
+    let res = get_2_tweets_id::Api::open(&bearer_code, &tweet_id)
         .execute()
         .await;
     if let Some((val, rate_limit)) = res {

@@ -11,6 +11,8 @@ queries:
     value: pinned_tweet_id
   - name: max_results
     type: integer
+    max: 1000
+    min: 1
   - name: pagination_token
     type: string
   - name: tweet.fields

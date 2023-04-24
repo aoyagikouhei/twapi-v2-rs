@@ -13,6 +13,8 @@ queries:
     type: enum
   - name: max_results
     type: integer
+    max: 100
+    min: 1
   - name: pagination_token
     type: string
   - name: user.fields

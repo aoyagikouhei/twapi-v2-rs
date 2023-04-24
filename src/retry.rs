@@ -80,11 +80,7 @@ mod tests {
     use reqwest::{RequestBuilder, StatusCode};
 
     use crate::{
-        api::get_2_tweets_id::{Api, Expansions, Response},
-        fields::{
-            media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
-            tweet_fields::TweetFields, user_fields::UserFields,
-        },
+        api::get_2_tweets_id::{Api, Response},
         retry::execute_retry,
     };
 
@@ -105,14 +101,7 @@ mod tests {
         let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
         let logger = Logger {};
 
-        let builder = Api::new(&bearer_code, &tweet_id)
-            .expansions(Expansions::all())
-            .tweet_fields(TweetFields::open())
-            .user_fields(UserFields::all())
-            .media_fields(MediaFields::all())
-            .place_fields(PlaceFields::all())
-            .poll_fields(PollFields::all())
-            .build();
+        let builder: RequestBuilder = Api::open(&bearer_code, &tweet_id).build();
 
         let res = execute_retry::<Response>(
             builder,

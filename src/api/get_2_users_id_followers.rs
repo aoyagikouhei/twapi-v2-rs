@@ -62,6 +62,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             tweet_fields: Some(TweetFields::all()),
             user_fields: Some(UserFields::all()),
+            max_results: Some(1000),
             ..Default::default()
         }
     }
@@ -73,6 +74,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::open()),
+            max_results: Some(1000),
             ..Default::default()
         }
     }

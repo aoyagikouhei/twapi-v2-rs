@@ -102,6 +102,7 @@ impl Api {
             media_fields: Some(MediaFields::all()),
             tweet_fields: Some(TweetFields::all()),
             user_fields: Some(UserFields::all()),
+            max_results: Some(100),
             ..Default::default()
         }
     }
@@ -115,6 +116,7 @@ impl Api {
             media_fields: Some(MediaFields::open()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::open()),
+            max_results: Some(100),
             ..Default::default()
         }
     }

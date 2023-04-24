@@ -127,6 +127,7 @@ impl Api {
             poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::all()),
             user_fields: Some(UserFields::all()),
+            max_results: Some(100),
             ..Default::default()
         }
     }
@@ -142,6 +143,7 @@ impl Api {
             poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::open()),
+            max_results: Some(100),
             ..Default::default()
         }
     }
