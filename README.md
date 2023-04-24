@@ -28,6 +28,7 @@ Twitter v2 library.
 
 ### v0.4.0 (2023/04/25)
 * Twitter OAuth
+* oauth-web example
 
 ### v0.3.0 (2023/04/24)
 * Support api::execute_twitter generics parameter
@@ -39,7 +40,9 @@ Twitter v2 library.
 ### v0.1.0 (2023/04/20)
 * First release.
 
-## Example
+## Examples
+
+### API
 ```rust
 use twapi_v2::{
     api::{get_2_tweets_id::{Api, Expansions}, execute_twitter},
@@ -61,7 +64,6 @@ async fn main() {
         .media_fields(MediaFields::all())
         .place_fields(PlaceFields::all())
         .poll_fields(PollFields::all())
-        .build()
         .execute()
         .await;
     if let Some((val, rate_limit)) = res {
@@ -69,3 +71,10 @@ async fn main() {
     }
 }
 ```
+
+### Twitter OAuth Web
+```
+cd examples/oauth-web
+API_KEY_CODE=XXXX API_SECRET_CODE=XXXX cargo run
+```
+http://localhost:3000/

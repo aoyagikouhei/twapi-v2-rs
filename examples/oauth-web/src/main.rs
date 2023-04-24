@@ -41,9 +41,8 @@ fn oauth_client() -> TwitterOauth {
 async fn root(cookies: Cookies) -> impl IntoResponse {
     let oauth = oauth_client();
     let res = oauth.oauth_url();
-    let url = res.oauth_url.clone();
-    cookies.add(Cookie::new(PKCE_VERIFIER, res.pkce_verifier));
-    Html(format!("<a href='{}'>oauth<a>", url)).into_response()
+    cookies.add(Cookie::new(PKCE_VERIFIER, res.pkce_verifier.clone()));
+    Html(format!("<a href='{}'>oauth<a>", res.oauth_url)).into_response()
 }
 
 async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
