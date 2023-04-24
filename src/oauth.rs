@@ -5,24 +5,51 @@ use oauth2::{
 use std::time::Duration;
 use thiserror::Error;
 
-pub const TWEET_READ: &str = "tweet.read";
-pub const TWEET_WRITE: &str = "tweet.write";
-pub const TWEET_MODERATE_WRITE: &str = "tweet.moderate.write";
-pub const USERS_READ: &str = "users.read";
-pub const FOLLOWS_READ: &str = "follows.read";
-pub const FOLLOWS_WRITE: &str = "follows.write";
-pub const OFFLINE_ACCESS: &str = "offline.access";
-pub const SPACE_READ: &str = "space.read";
-pub const MUTE_READ: &str = "mute.read";
-pub const MUTE_WRITE: &str = "mute.write";
-pub const LIKE_READ: &str = "like.read";
-pub const LIKE_WRITE: &str = "like.write";
-pub const LIST_READ: &str = "list.read";
-pub const LIST_WRITE: &str = "list.write";
-pub const BLOCK_READ: &str = "block.read";
-pub const BLOCK_WRITE: &str = "block.write";
-pub const BOOKMARK_READ: &str = "bookmark.read";
-pub const BOOKMARK_WRITE: &str = "bookmark.write";
+pub enum TwitterScope {
+    TweetRead,
+    TweetWrite,
+    TweetModerateWrite,
+    UsersRead,
+    FollowsRead,
+    FollowsWrite,
+    OfflineAccess,
+    SpaceRead,
+    MuteRead,
+    MuteWrite,
+    LikeRead,
+    LikeWrite,
+    ListRead,
+    ListWrite,
+    BlockRead,
+    BlockWrite,
+    BookmarkRead,
+    BookmarkWrite,
+}
+
+impl std::fmt::Display for TwitterScope {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::TweetRead => write!(f, "tweet.read"),
+            Self::TweetWrite => write!(f, "tweet.write"),
+            Self::TweetModerateWrite => write!(f, "tweet.moderate.write"),
+            Self::UsersRead => write!(f, "users.read"),
+            Self::FollowsRead => write!(f, "follows.read"),
+            Self::FollowsWrite => write!(f, "follows.write"),
+            Self::OfflineAccess => write!(f, "offline.access"),
+            Self::SpaceRead => write!(f, "space.read"),
+            Self::MuteRead => write!(f, "mute.read"),
+            Self::MuteWrite => write!(f, "mute.write"),
+            Self::LikeRead => write!(f, "like.read"),
+            Self::LikeWrite => write!(f, "like.write"),
+            Self::ListRead => write!(f, "list.read"),
+            Self::ListWrite => write!(f, "list.write"),
+            Self::BlockRead => write!(f, "block.read"),
+            Self::BlockWrite => write!(f, "block.write"),
+            Self::BookmarkRead => write!(f, "bookmark.read"),
+            Self::BookmarkWrite => write!(f, "bookmark.write"),
+        }
+    }
+}
 
 const AUTH_URL: &str = "https://twitter.com/i/oauth2/authorize";
 const TOKEN_URL: &str = "https://api.twitter.com/2/oauth2/token";
@@ -58,7 +85,7 @@ impl TwitterOauth {
         api_key_code: &str,
         api_secret_code: &str,
         callback_url: &str,
-        scopes: Vec<&str>,
+        scopes: Vec<TwitterScope>,
     ) -> Result<Self, OAuthError> {
         let basic_client = BasicClient::new(
             ClientId::new(api_key_code.to_owned()),
@@ -69,7 +96,7 @@ impl TwitterOauth {
         let redirect_url = RedirectUrl::new(callback_url.to_string())?;
         let scopes: Vec<Scope> = scopes
             .into_iter()
-            .map(|it| Scope::new(it.to_owned()))
+            .map(|it| Scope::new(it.to_string()))
             .collect();
         Ok(Self {
             basic_client,

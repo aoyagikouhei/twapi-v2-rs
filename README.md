@@ -21,7 +21,13 @@ Twitter v2 library.
 - Timeout
 - Logging
 
+### oauth
+- Twitter OAuth
+
 ## Changes
+
+### v0.4.0 (2023/04/25)
+* Twitter OAuth
 
 ### v0.3.0 (2023/04/24)
 * Support api::execute_twitter generics parameter
