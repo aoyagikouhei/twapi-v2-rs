@@ -1,4 +1,5 @@
 {
+    "rust-analyzer.cargo.features": ["oauth", "retry"],
     "rust-analyzer.linkedProjects": [
         "./Cargo.toml",
     ],

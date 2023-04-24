@@ -6,3 +6,6 @@ pub mod responses;
 
 #[cfg(feature = "retry")]
 pub mod retry;
+
+#[cfg(feature = "oauth")]
+pub mod oauth;
