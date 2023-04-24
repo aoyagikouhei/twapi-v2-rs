@@ -36,6 +36,17 @@ pub enum OAuthError {
     Token(String),
 }
 
+pub struct OAuthUrlResult {
+    pub oauth_url: String,
+    pub pkce_verifier: String,
+}
+
+pub struct TokenResult {
+    pub access_token: String,
+    pub refresh_token: Option<String>,
+    pub expires_in: Option<Duration>,
+}
+
 pub struct TwitterOauth {
     basic_client: BasicClient,
     redirect_url: RedirectUrl,
@@ -67,7 +78,7 @@ impl TwitterOauth {
         })
     }
 
-    pub fn oauth_url(&self) -> (String, String) {
+    pub fn oauth_url(&self) -> OAuthUrlResult {
         let (pkce_challenge, pkce_verifier) = oauth2::PkceCodeChallenge::new_random_sha256();
         let (auth_url, _csrf_token) = self
             .basic_client
@@ -78,14 +89,17 @@ impl TwitterOauth {
             .set_pkce_challenge(pkce_challenge)
             .url();
 
-        (auth_url.to_string(), pkce_verifier.secret().to_string())
+        OAuthUrlResult {
+            oauth_url: auth_url.to_string(),
+            pkce_verifier: pkce_verifier.secret().to_string(),
+        }
     }
 
     pub async fn token(
         &self,
         pkce_verifier_str: &str,
         code: &str,
-    ) -> Result<(String, Option<String>, Option<Duration>), OAuthError> {
+    ) -> Result<TokenResult, OAuthError> {
         let pkce_verifier = oauth2::PkceCodeVerifier::new(pkce_verifier_str.to_owned());
 
         let token = self
@@ -97,10 +111,10 @@ impl TwitterOauth {
             .request_async(async_http_client)
             .await
             .map_err(|e| OAuthError::Token(format!("{:?}", e)))?;
-        Ok((
-            token.access_token().secret().to_string(),
-            token.refresh_token().map(|it| it.secret().to_string()),
-            token.expires_in(),
-        ))
+        Ok(TokenResult {
+            access_token: token.access_token().secret().to_string(),
+            refresh_token: token.refresh_token().map(|it| it.secret().to_string()),
+            expires_in: token.expires_in(),
+        })
     }
 }
