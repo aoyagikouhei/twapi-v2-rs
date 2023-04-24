@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "./examples/oauth-web"
+		}
+	],
+	"settings": {
+		"rust-analyzer.cargo.features": [
+			"oauth",
+			"retry"
+		],
+		"rust-analyzer.linkedProjects": [
+			"./Cargo.toml",
+			"examples/oauth-web/Cargo.toml"
+		],
+		"rust-analyzer.showUnlinkedFileNotification": false
+	}
+}
