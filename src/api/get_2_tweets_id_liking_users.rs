@@ -54,6 +54,27 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str, id: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            id: id.to_owned(),
+            expansions: Some(Expansions::all()),
+            tweet_fields: Some(TweetFields::all()),
+            user_fields: Some(UserFields::all()),
+            ..Default::default()
+        }
+    }
+
+    pub fn open(bearer_code: &str, id: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            id: id.to_owned(),
+            expansions: Some(Expansions::all()),
+            tweet_fields: Some(TweetFields::open()),
+            user_fields: Some(UserFields::open()),
+            ..Default::default()
+        }
+    }
 
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);

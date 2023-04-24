@@ -52,6 +52,25 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str, username: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            username: username.to_owned(),
+            expansions: Some(Expansions::all()),
+            tweet_fields: Some(TweetFields::all()),
+            user_fields: Some(UserFields::all()),
+        }
+    }
+
+    pub fn open(bearer_code: &str, username: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            username: username.to_owned(),
+            expansions: Some(Expansions::all()),
+            tweet_fields: Some(TweetFields::open()),
+            user_fields: Some(UserFields::open()),
+        }
+    }
 
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);

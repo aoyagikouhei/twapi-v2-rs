@@ -77,6 +77,14 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str, r#type: Type) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            r#type,
+            status: Some(Status::all()),
+        }
+    }
+
     
     pub fn status(mut self, value: HashSet<Status>) -> Self {
         self.status = Some(value);

@@ -90,6 +90,29 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            dm_event_fields: Some(DmEventFields::all()),
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::all()),
+            tweet_fields: Some(TweetFields::all()),
+            user_fields: Some(UserFields::all()),
+            ..Default::default()
+        }
+    }
+
+    pub fn open(bearer_code: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            dm_event_fields: Some(DmEventFields::all()),
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::open()),
+            tweet_fields: Some(TweetFields::open()),
+            user_fields: Some(UserFields::open()),
+            ..Default::default()
+        }
+    }
 
     pub fn dm_event_fields(mut self, value: HashSet<DmEventFields>) -> Self {
         self.dm_event_fields = Some(value);

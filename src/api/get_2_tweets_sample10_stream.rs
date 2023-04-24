@@ -86,6 +86,33 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str, partition: usize) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            partition,
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::all()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
+            tweet_fields: Some(TweetFields::all()),
+            user_fields: Some(UserFields::all()),
+            ..Default::default()
+        }
+    }
+
+    pub fn open(bearer_code: &str, partition: usize) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            partition,
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::open()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
+            tweet_fields: Some(TweetFields::open()),
+            user_fields: Some(UserFields::open()),
+            ..Default::default()
+        }
+    }
 
     pub fn backfill_minutes(mut self, value: usize) -> Self {
         self.backfill_minutes = Some(value);

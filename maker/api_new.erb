@@ -24,6 +24,24 @@ def required_new(it)
     "#{it[:name].make_name.make_field}"
   end
 end
+
+def make_open_or_all(it, open_flag)
+  value = it[:name].ucc
+  if open_flag && ["media.fields", "tweet.fields", "user.fields"].include?(it[:name])
+    value = value + "::open()"
+  else
+    value = value + "::all()"
+  end
+  unless it[:required]
+    value = "Some(#{value})"
+  end
+  "#{it[:name].make_name.make_field}: #{value},"
+end
+
+open_flag = queries.filter{|it| ["media.fields", "tweet.fields", "user.fields"].include?(it[:name])}.present?
+enum_list = queries.filter{|it| it[:type] == "enum"}
+default_flag = non_required_queries.size > enum_list.size
+
 new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_name.make_field}: #{make_new_type(it)}"}
 new_array << "body: Body" if bodies.present?
 %>pub fn new(<%= new_array.join(", ") %>) -> Self {
@@ -33,4 +51,23 @@ new_array << "body: Body" if bodies.present?
         body,<% end %><% if non_required_queries.present? %>
         ..Default::default()<% end %>
     }
+}<% if enum_list.present? %>
+pub fn all(<%= new_array.join(", ") %>) -> Self {
+    Self {
+        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+        <%= required_new(it) %>,<% end %><% if bodies.present? %>
+        body,<% end %><% enum_list.each do |it| %>
+        <%= make_open_or_all(it, false) %><% end %><% if default_flag %>
+        ..Default::default()<% end %>
+    }
 }
+<% end %><% if open_flag %>
+pub fn open(<%= new_array.join(", ") %>) -> Self {
+    Self {
+        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+        <%= required_new(it) %>,<% end %><% if bodies.present? %>
+        body,<% end %><% enum_list.each do |it| %>
+        <%= make_open_or_all(it, true) %><% end %><% if default_flag %>
+        ..Default::default()<% end %>
+    }
+}<% end %>

@@ -120,6 +120,35 @@ impl Api {
             ..Default::default()
         }
     }
+    pub fn all(bearer_code: &str, id: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            id: id.to_owned(),
+            exclude: Some(Exclude::all()),
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::all()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
+            tweet_fields: Some(TweetFields::all()),
+            user_fields: Some(UserFields::all()),
+            ..Default::default()
+        }
+    }
+
+    pub fn open(bearer_code: &str, id: &str) -> Self {
+        Self {
+            bearer_code: bearer_code.to_owned(),
+            id: id.to_owned(),
+            exclude: Some(Exclude::all()),
+            expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::open()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
+            tweet_fields: Some(TweetFields::open()),
+            user_fields: Some(UserFields::open()),
+            ..Default::default()
+        }
+    }
 
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
