@@ -67,6 +67,7 @@ impl Api {
             ..Default::default()
         }
     }
+
     pub fn all(bearer_code: &str, user_ids: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),

@@ -111,6 +111,7 @@ impl Api {
             ..Default::default()
         }
     }
+
     pub fn all(bearer_code: &str, query: &str) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
@@ -121,6 +122,7 @@ impl Api {
             poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::all()),
             user_fields: Some(UserFields::all()),
+            max_results: Some(500),
             ..Default::default()
         }
     }
@@ -135,6 +137,7 @@ impl Api {
             poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::open()),
+            max_results: Some(500),
             ..Default::default()
         }
     }
