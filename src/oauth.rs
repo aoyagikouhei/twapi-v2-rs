@@ -63,11 +63,13 @@ pub enum OAuthError {
     Token(String),
 }
 
+#[derive(Debug, Clone)]
 pub struct OAuthUrlResult {
     pub oauth_url: String,
     pub pkce_verifier: String,
 }
 
+#[derive(Debug, Clone)]
 pub struct TokenResult {
     pub access_token: String,
     pub refresh_token: Option<String>,
