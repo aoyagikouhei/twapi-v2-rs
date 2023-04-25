@@ -125,7 +125,7 @@ impl Api {
             media_fields: Some(MediaFields::all()),
             place_fields: Some(PlaceFields::all()),
             poll_fields: Some(PollFields::all()),
-            tweet_fields: Some(TweetFields::all()),
+            tweet_fields: Some(TweetFields::organic()),
             user_fields: Some(UserFields::all()),
             max_results: Some(100),
             ..Default::default()

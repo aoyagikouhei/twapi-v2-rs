@@ -60,7 +60,7 @@ impl Api {
             bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
             expansions: Some(Expansions::all()),
-            tweet_fields: Some(TweetFields::all()),
+            tweet_fields: Some(TweetFields::organic()),
             user_fields: Some(UserFields::all()),
             max_results: Some(1000),
             ..Default::default()

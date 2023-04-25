@@ -97,7 +97,7 @@ impl Api {
             dm_event_fields: Some(DmEventFields::all()),
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::all()),
-            tweet_fields: Some(TweetFields::all()),
+            tweet_fields: Some(TweetFields::organic()),
             user_fields: Some(UserFields::all()),
             max_results: Some(100),
             ..Default::default()

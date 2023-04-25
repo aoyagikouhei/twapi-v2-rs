@@ -30,7 +30,11 @@ def make_open_or_all(it, open_flag)
   if open_flag && ["media.fields", "tweet.fields"].include?(it[:name])
     value = value + "::open()"
   else
-    value = value + "::all()"
+    if it[:name] == "tweet.fields"
+      value = value + "::organic()"
+    else
+      value = value + "::all()"
+    end
   end
   unless it[:required]
     value = "Some(#{value})"

@@ -53,6 +53,31 @@ impl TweetFields {
         result
     }
 
+    pub fn organic() -> HashSet<Self> {
+        let mut result = HashSet::new();
+        result.insert(Self::Attachments);
+        result.insert(Self::AuthorId);
+        result.insert(Self::ContextAnnotations);
+        result.insert(Self::ConversationId);
+        result.insert(Self::CreatedAt);
+        result.insert(Self::EditControls);
+        result.insert(Self::Entities);
+        result.insert(Self::Geo);
+        result.insert(Self::Id);
+        result.insert(Self::InReplyToUserId);
+        result.insert(Self::Lang);
+        result.insert(Self::NonPublicMetrics);
+        result.insert(Self::PublicMetrics);
+        result.insert(Self::OrganicMetrics);
+        result.insert(Self::PossiblySensitive);
+        result.insert(Self::ReferencedTweets);
+        result.insert(Self::ReplySettings);
+        result.insert(Self::Source);
+        result.insert(Self::Text);
+        result.insert(Self::Withheld);
+        result
+    }
+
     pub fn open() -> HashSet<Self> {
         let mut result = HashSet::new();
         result.insert(Self::Attachments);
