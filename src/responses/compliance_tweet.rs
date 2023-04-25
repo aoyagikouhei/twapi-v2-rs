@@ -5,5 +5,5 @@ pub struct ComplianceTweet {
     pub id: Option<String>,
     pub author_id: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

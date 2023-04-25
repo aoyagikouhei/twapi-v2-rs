@@ -7,5 +7,5 @@ pub struct Cashtags {
     pub cashtag: Option<String>,
     pub tag: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -15,7 +15,7 @@ pub struct Jobs {
     pub status: Option<Status>,
     pub error: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

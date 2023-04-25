@@ -41,12 +41,12 @@ pub struct Response {
     pub data: Option<Data>,
     pub errors: Option<Vec<Errors>>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
     pub following: Option<bool>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -23,7 +23,7 @@ pub struct Spaces {
     pub title: Option<String>,
     pub updated_at: Option<DateTime<Utc>>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

@@ -6,5 +6,5 @@ pub struct Options {
     pub label: Option<String>,
     pub votes: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

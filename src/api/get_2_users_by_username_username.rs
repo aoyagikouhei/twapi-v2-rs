@@ -117,5 +117,5 @@ pub struct Response {
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

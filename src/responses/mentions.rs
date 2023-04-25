@@ -6,5 +6,5 @@ pub struct Mentions {
     pub end: Option<String>,
     pub username: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

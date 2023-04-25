@@ -8,5 +8,5 @@ pub struct Media {
     pub url: Option<String>,
     pub width: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -32,5 +32,5 @@ pub struct Tweets {
     pub withheld: Option<Withheld>,
     pub source: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

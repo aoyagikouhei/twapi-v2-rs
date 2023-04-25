@@ -8,5 +8,5 @@ pub struct Annotations {
     pub r#type: Option<String>,
     pub normalized_text: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

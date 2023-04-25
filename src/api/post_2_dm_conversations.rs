@@ -72,7 +72,7 @@ impl Api {
 pub struct Response {
     pub data: Option<Data>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -80,5 +80,5 @@ pub struct Data {
     pub dm_conversation_id: Option<String>,
     pub dm_event_id: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

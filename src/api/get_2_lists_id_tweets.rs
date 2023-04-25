@@ -200,7 +200,7 @@ pub struct Response {
     pub includes: Option<Includes>,
     pub meta: Meta,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -209,5 +209,5 @@ pub struct Meta {
     pub previous_token: Option<String>,
     pub next_token: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

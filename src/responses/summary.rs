@@ -7,5 +7,5 @@ pub struct Summary {
     pub deleted: Option<i64>,
     pub not_deleted: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

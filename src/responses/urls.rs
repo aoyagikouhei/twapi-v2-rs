@@ -10,5 +10,5 @@ pub struct Urls {
     pub url: Option<String>,
     pub unwound_url: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

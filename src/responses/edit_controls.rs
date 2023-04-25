@@ -7,5 +7,5 @@ pub struct EditControls {
     pub edits_remaining: Option<i64>,
     pub is_edit_eligible: Option<bool>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

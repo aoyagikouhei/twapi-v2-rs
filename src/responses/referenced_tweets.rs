@@ -4,5 +4,5 @@ use serde::{Deserialize, Serialize};
 pub struct ReferencedTweets {
     pub id: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

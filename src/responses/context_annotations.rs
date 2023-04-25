@@ -5,7 +5,7 @@ pub struct ContextAnnotations {
     pub domain: Option<Domain>,
     pub entry: Option<Entry>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -14,7 +14,7 @@ pub struct Domain {
     pub name: Option<String>,
     pub description: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -23,5 +23,5 @@ pub struct Entry {
     pub name: Option<String>,
     pub description: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

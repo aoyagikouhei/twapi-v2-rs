@@ -10,5 +10,5 @@ pub struct Polls {
     pub end_datetime: Option<DateTime<Utc>>,
     pub voting_status: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

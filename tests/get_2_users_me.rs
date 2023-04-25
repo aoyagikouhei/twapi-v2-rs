@@ -8,6 +8,13 @@ async fn test_get_2_users_me() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let (res, _rate_limit) = get_2_users_me::Api::all(&bearer_code).execute().await?;
     println!("{:?}", res);
-    assert_eq!(res.data.unwrap().username, "aoyagikouhei");
+    let data = res.data.as_ref().unwrap();
+    let includes = res.includes.as_ref().unwrap();
+    assert_eq!(data.username, "aoyagikouhei");
+    assert_eq!(data.extra.is_empty(), true);
+    assert_eq!(includes.extra.is_empty(), true);
+    if let Some(errors) = res.errors.as_ref() {
+        assert_eq!(errors.iter().all(|it| it.extra.is_empty()), true);
+    }
     Ok(())
 }

@@ -19,7 +19,7 @@ pub struct Users {
     pub verified_type: Option<String>,
     pub withheld: Option<Withheld>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -29,5 +29,5 @@ pub struct PublicMetrics {
     pub tweet_count: Option<i64>,
     pub listed_count: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

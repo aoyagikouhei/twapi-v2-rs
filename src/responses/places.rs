@@ -12,5 +12,5 @@ pub struct Places {
     pub name: Option<String>,
     pub place_type: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

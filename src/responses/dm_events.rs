@@ -13,5 +13,5 @@ pub struct DmEvents {
     pub attachments: Option<Attachments>,
     pub referenced_tweets: Option<Vec<ReferencedTweets>>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

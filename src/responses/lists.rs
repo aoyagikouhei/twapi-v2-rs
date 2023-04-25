@@ -12,5 +12,5 @@ pub struct Lists {
     pub owner_id: Option<String>,
     pub description: Option<String>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -7,5 +7,5 @@ pub struct Counts {
     pub end: Option<DateTime<Utc>>,
     pub tweet_count: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

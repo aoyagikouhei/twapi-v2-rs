@@ -6,7 +6,7 @@ pub struct Withheld {
     pub country_codes: Option<Vec<String>>,
     pub scope: Option<Scope>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

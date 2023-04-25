@@ -207,7 +207,7 @@ pub struct Response {
     pub includes: Option<Includes>,
     pub matching_rules: MatchingRules,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -215,5 +215,5 @@ pub struct MatchingRules {
     pub id: String,
     pub tag: String,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -5,5 +5,5 @@ pub struct Coordinates {
     pub r#type: String,
     pub coordinates: Option<Vec<f64>>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

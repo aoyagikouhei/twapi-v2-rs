@@ -45,5 +45,5 @@ impl Api {
 pub struct Response {
     pub data: Option<Jobs>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

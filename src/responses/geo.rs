@@ -10,5 +10,5 @@ pub struct Geo {
     pub place_id: Option<String>,
     pub properties: Option<serde_json::Value>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

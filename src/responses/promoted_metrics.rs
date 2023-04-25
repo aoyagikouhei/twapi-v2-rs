@@ -10,5 +10,5 @@ pub struct PromotedMetrics {
     pub url_link_clicks: Option<i64>,
     pub user_profile_clicks: Option<i64>,
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -54,7 +54,7 @@ end
 pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
     pub <%= key.to_s.make_name %>: <%= make_response_type(key, value) %>, <% end %>
     #[serde(flatten)]
-    extra: std::collections::HashMap<String, serde_json::Value>,
+    pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 <% @enums.each_pair do |key, value|
   ary = value[:value].split(/, /) %>
