@@ -57,7 +57,7 @@ const TOKEN_URL: &str = "https://api.twitter.com/2/oauth2/token";
 #[derive(Error, Debug)]
 pub enum OAuthError {
     #[error("Url {0}")]
-    Url(#[from] url::ParseError),
+    Url(#[from] oauth2::url::ParseError),
 
     #[error("Token {0}")]
     Token(String),

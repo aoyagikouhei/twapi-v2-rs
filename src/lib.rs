@@ -4,6 +4,8 @@ pub mod fields;
 pub mod rate_limit;
 pub mod responses;
 
+pub use reqwest;
+
 #[cfg(feature = "retry")]
 pub mod retry;
 
