@@ -28,6 +28,10 @@ Twitter v2 library.
 
 ## Changes
 
+### v0.5.1 (2023/04/25)
+* remove unuse url crate
+* pub use reqwest
+
 ### v0.5.0 (2023/04/25)
 * Add Api::all, Api::open methods. It's all enum parameter setted.
 * In Api::all and Api::open methods, max_results is max value.
