@@ -79,17 +79,6 @@ impl Api {
         }
     }
 
-    pub fn open(bearer_code: &str, ids: &str) -> Self {
-        Self {
-            bearer_code: bearer_code.to_owned(),
-            ids: ids.to_owned(),
-            expansions: Some(Expansions::all()),
-            space_fields: Some(SpaceFields::all()),
-            topic_fields: Some(TopicFields::all()),
-            user_fields: Some(UserFields::open()),
-        }
-    }
-
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self

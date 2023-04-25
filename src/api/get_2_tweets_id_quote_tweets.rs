@@ -142,7 +142,7 @@ impl Api {
             place_fields: Some(PlaceFields::all()),
             poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::open()),
-            user_fields: Some(UserFields::open()),
+            user_fields: Some(UserFields::all()),
             max_results: Some(100),
             ..Default::default()
         }

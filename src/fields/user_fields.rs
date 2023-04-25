@@ -40,25 +40,6 @@ impl UserFields {
         result.insert(Self::Withheld);
         result
     }
-
-    pub fn open() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::CreatedAt);
-        result.insert(Self::Description);
-        result.insert(Self::Entities);
-        result.insert(Self::Id);
-        result.insert(Self::Location);
-        result.insert(Self::Name);
-        result.insert(Self::PinnedTweetId);
-        result.insert(Self::ProfileImageUrl);
-        result.insert(Self::Protected);
-        result.insert(Self::PublicMetrics);
-        result.insert(Self::Url);
-        result.insert(Self::Username);
-        result.insert(Self::Verified);
-        result.insert(Self::Withheld);
-        result
-    }
 }
 
 impl std::fmt::Display for UserFields {

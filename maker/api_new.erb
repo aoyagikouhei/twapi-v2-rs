@@ -27,7 +27,7 @@ end
 
 def make_open_or_all(it, open_flag)
   value = it[:name].ucc
-  if open_flag && ["media.fields", "tweet.fields", "user.fields"].include?(it[:name])
+  if open_flag && ["media.fields", "tweet.fields"].include?(it[:name])
     value = value + "::open()"
   else
     value = value + "::all()"
@@ -46,7 +46,7 @@ def make_max(it)
   "#{it[:name].make_name.make_field}: #{value},"
 end
 
-open_flag = queries.filter{|it| ["media.fields", "tweet.fields", "user.fields"].include?(it[:name])}.present?
+open_flag = queries.filter{|it| ["media.fields", "tweet.fields"].include?(it[:name])}.present?
 enum_list = queries.filter{|it| it[:type] == "enum"}
 max_list = queries.filter{|it| it[:max].present? }
 default_flag = non_required_queries.size > (enum_list.size + max_list.size)

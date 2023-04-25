@@ -69,7 +69,7 @@ impl Api {
             username: username.to_owned(),
             expansions: Some(Expansions::all()),
             tweet_fields: Some(TweetFields::open()),
-            user_fields: Some(UserFields::open()),
+            user_fields: Some(UserFields::all()),
         }
     }
 
