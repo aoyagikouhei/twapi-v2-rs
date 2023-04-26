@@ -9,7 +9,7 @@ Twitter v2 library.
 - Convenience setted parameter methods
 - Optional retriable and timeout and logging
 - Optional OAuth with web sample
-- Experimental type support.
+- **Experimental** type support.
 
 ## Features
 ### default
@@ -27,6 +27,14 @@ Twitter v2 library.
 - Twitter OAuth
 
 ## Changes
+
+### v0.5.2 (2023/04/26)
+* test get_2_users_me, get_2_tweets_search_recent
+* modify response parameters
+
+### v0.5.1 (2023/04/25)
+* remove unuse url crate
+* pub use reqwest
 
 ### v0.5.1 (2023/04/25)
 * remove unuse url crate
