@@ -28,6 +28,10 @@ Twitter v2 library.
 
 ## Changes
 
+### v0.5.3 (2023/04/27)
+* test post_2_tweets, delete_2_tweets_id, post_2_dm_conversations_with_participant_id_message, etc...
+* modify parameters
+
 ### v0.5.2 (2023/04/26)
 * test get_2_users_me, get_2_tweets_search_recent
 * modify response parameters
