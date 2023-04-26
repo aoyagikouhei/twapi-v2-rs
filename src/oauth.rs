@@ -24,6 +24,8 @@ pub enum TwitterScope {
     BlockWrite,
     BookmarkRead,
     BookmarkWrite,
+    DmRead,
+    DmWrite,
 }
 
 impl TwitterScope {
@@ -47,6 +49,8 @@ impl TwitterScope {
             Self::BlockWrite,
             Self::BookmarkRead,
             Self::BookmarkWrite,
+            Self::DmRead,
+            Self::DmWrite,
         ]
     }
 }
@@ -72,6 +76,8 @@ impl std::fmt::Display for TwitterScope {
             Self::BlockWrite => write!(f, "block.write"),
             Self::BookmarkRead => write!(f, "bookmark.read"),
             Self::BookmarkWrite => write!(f, "bookmark.write"),
+            Self::DmRead => write!(f, "dm.read"),
+            Self::DmWrite => write!(f, "dm.write"),
         }
     }
 }
