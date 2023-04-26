@@ -33,7 +33,7 @@ fn oauth_client() -> TwitterOauth {
         &std::env::var("API_KEY_CODE").unwrap(),
         &std::env::var("API_SECRET_CODE").unwrap(),
         "http://localhost:3000/oauth",
-        vec![TwitterScope::TweetRead, TwitterScope::UsersRead],
+        TwitterScope::all(),
     )
     .unwrap()
 }

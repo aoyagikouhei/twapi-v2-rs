@@ -6,13 +6,15 @@ const URL: &str = "https://api.twitter.com/2/dm_conversations/:dm_conversation_i
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Attachment {
-    media_id: String,
+    pub media_id: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    attachments: Option<Vec<Attachment>>,
-    text: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub attachments: Option<Vec<Attachment>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub text: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -36,7 +38,7 @@ impl Api {
         client
             .post(URL.replace(":dm_conversation_id", &self.dm_conversation_id))
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

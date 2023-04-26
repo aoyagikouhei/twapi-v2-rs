@@ -6,7 +6,7 @@ const URL: &str = "https://api.twitter.com/2/users/:id/muting";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    target_user_id: String,
+    pub target_user_id: String,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -30,7 +30,7 @@ impl Api {
         client
             .post(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

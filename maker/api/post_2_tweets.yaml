@@ -66,6 +66,10 @@ response:
           type: string
         text:
           type: string
+        edit_history_tweet_ids:
+          type: array
+          items:
+            type: string
     errors:
       type: array
       items:

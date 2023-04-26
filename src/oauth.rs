@@ -26,6 +26,31 @@ pub enum TwitterScope {
     BookmarkWrite,
 }
 
+impl TwitterScope {
+    pub fn all() -> Vec<Self> {
+        vec![
+            Self::TweetRead,
+            Self::TweetWrite,
+            Self::TweetModerateWrite,
+            Self::UsersRead,
+            Self::FollowsRead,
+            Self::FollowsWrite,
+            Self::OfflineAccess,
+            Self::SpaceRead,
+            Self::MuteRead,
+            Self::MuteWrite,
+            Self::LikeRead,
+            Self::LikeWrite,
+            Self::ListRead,
+            Self::ListWrite,
+            Self::BlockRead,
+            Self::BlockWrite,
+            Self::BookmarkRead,
+            Self::BookmarkWrite,
+        ]
+    }
+}
+
 impl std::fmt::Display for TwitterScope {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {

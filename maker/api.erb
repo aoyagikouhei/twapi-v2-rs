@@ -26,7 +26,7 @@ impl Api {
             .query(&query_parameters)<% end %><% if form.present? %>
             .form(&form_paramters)<% end %>
             <%= auth[:method] %><% if bodies.present? %>
-            .json(&serde_json::to_value(&self.body).unwrap())<% end %>
+            .json(&self.body)<% end %>
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

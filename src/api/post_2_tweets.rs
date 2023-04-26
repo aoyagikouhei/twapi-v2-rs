@@ -7,25 +7,26 @@ const URL: &str = "https://api.twitter.com/2/tweets";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Geo {
-    place_id: String,
+    pub place_id: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Media {
-    media_ids: Vec<String>,
-    tagged_user_ids: Vec<String>,
+    pub media_ids: Vec<String>,
+    pub tagged_user_ids: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Poll {
-    duration_minutes: String,
-    options: Vec<String>,
+    pub duration_minutes: String,
+    pub options: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Reply {
-    exclude_reply_user_ids: Option<Vec<String>>,
-    in_reply_to_tweet_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exclude_reply_user_ids: Option<Vec<String>>,
+    pub in_reply_to_tweet_id: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -51,15 +52,24 @@ impl Default for ReplySettings {
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    direct_message_deep_link: Option<String>,
-    for_super_followers_only: Option<String>,
-    geo: Option<Geo>,
-    media: Option<Media>,
-    poll: Option<Poll>,
-    quote_tweet_id: Option<String>,
-    reply: Option<Reply>,
-    reply_settings: Option<ReplySettings>,
-    text: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub direct_message_deep_link: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub for_super_followers_only: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geo: Option<Geo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub media: Option<Media>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll: Option<Poll>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub quote_tweet_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply: Option<Reply>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply_settings: Option<ReplySettings>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub text: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -81,7 +91,7 @@ impl Api {
         client
             .post(URL)
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
@@ -121,6 +131,7 @@ impl Response {
 pub struct Data {
     pub id: Option<String>,
     pub text: Option<String>,
+    pub edit_history_tweet_ids: Option<Vec<String>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

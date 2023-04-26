@@ -6,7 +6,8 @@ const URL: &str = "https://api.twitter.com/2/tweets/:id/hidden";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    hidden: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hidden: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -30,7 +31,7 @@ impl Api {
         client
             .put(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

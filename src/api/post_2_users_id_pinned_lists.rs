@@ -6,7 +6,7 @@ const URL: &str = "https://api.twitter.com/2/users/:id/pinned_lists";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    list_id: String,
+    pub list_id: String,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -30,7 +30,7 @@ impl Api {
         client
             .post(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

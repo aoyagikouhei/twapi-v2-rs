@@ -6,9 +6,11 @@ const URL: &str = "https://api.twitter.com/2/lists";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    name: String,
-    description: Option<String>,
-    private: Option<String>,
+    pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub private: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -32,7 +34,7 @@ impl Api {
         client
             .post(URL.replace(":id", &self.id))
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

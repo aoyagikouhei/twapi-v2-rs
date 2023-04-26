@@ -7,19 +7,22 @@ const URL: &str = "https://api.twitter.com/2/tweets/search/stream/rules";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Add {
-    value: String,
-    tag: Option<String>,
+    pub value: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Delete {
-    ids: Vec<String>,
+    pub ids: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    add: Option<Add>,
-    delete: Option<Delete>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub add: Option<Add>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub delete: Option<Delete>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -53,7 +56,7 @@ impl Api {
             .post(URL)
             .query(&query_parameters)
             .bearer_auth(self.bearer_code)
-            .json(&serde_json::to_value(&self.body).unwrap())
+            .json(&self.body)
     }
 
     pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {

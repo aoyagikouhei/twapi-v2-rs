@@ -28,6 +28,7 @@ def make_body_type(src)
   end
 end
 %>#[derive(Serialize, Deserialize, Debug, Default, Clone)]
-pub struct <%= name.ucc %> {<% properties.each() do |it| %>
-    <%= it[:name].make_name %>: <%= make_body_type(it) %>,<% end %>
+pub struct <%= name.ucc %> {<% properties.each() do |it| %><% if !it[:required] %>
+    #[serde(skip_serializing_if = "Option::is_none")]<% end %>
+    pub <%= it[:name].make_name %>: <%= make_body_type(it) %>,<% end %>
 }

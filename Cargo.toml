@@ -30,3 +30,8 @@ oauth = ["oauth2"]
 [dev-dependencies]
 tokio = { version = "1", features = ["macros"] }
 anyhow = "1.0.70"
+
+[package.metadata.docs.rs]
+features = ["unstable-doc"]
+rustdoc-args = ["--cfg", "docsrs"]
+cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
