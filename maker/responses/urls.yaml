@@ -5,14 +5,25 @@ response:
   properties:
     display_url:
       type: string
+    description:
+      type: string
     end:
       type: integer
     expanded_url:
       type: string
+    images:
+      type: array
+      items:
+        type: object
+        ref: images
     media_key:
       type: string
     start:
       type: integer
+    status:
+      type: integer
+    title:
+      type: string
     url:
       type: string
     unwound_url:

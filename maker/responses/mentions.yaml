@@ -4,8 +4,10 @@ response:
   type: object
   properties:
     start:
-      type: integre
+      type: integer
     end:
-      type: integre
+      type: integer
     username:
+      type: string
+    id:
       type: string

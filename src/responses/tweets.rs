@@ -34,3 +34,68 @@ pub struct Tweets {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Tweets {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .attachments
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .context_annotations
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .edit_controls
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .entities
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .geo
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .public_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .non_public_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .organic_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .promoted_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .referenced_tweets
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .withheld
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
+        if !res {
+            println!("Tweets {:?}", self.extra);
+        }
+        res
+    }
+}

@@ -8,3 +8,13 @@ pub struct Streams {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Streams {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Streams {:?}", self.extra);
+        }
+        res
+    }
+}

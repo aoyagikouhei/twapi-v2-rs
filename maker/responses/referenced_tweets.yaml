@@ -5,3 +5,6 @@ response:
   properties:
     id: 
       type: string
+    type:
+      type: enum_single
+      value: retweeted, quoted, replied_to

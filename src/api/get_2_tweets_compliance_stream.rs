@@ -51,6 +51,21 @@ pub struct Response {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Response {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
+        if !res {
+            println!("Response {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
     pub delete: Option<Compliance>,
@@ -59,4 +74,34 @@ pub struct Data {
     pub undrop: Option<Compliance>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+impl Data {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .delete
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .withheld
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .drop
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .undrop
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
+        if !res {
+            println!("Data {:?}", self.extra);
+        }
+        res
+    }
 }

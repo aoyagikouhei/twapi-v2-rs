@@ -4,9 +4,9 @@ response:
   type: object
   properties:
     start:
-      type: integre
+      type: integer
     end:
-      type: integre
+      type: integer
     cashtag:
       type: string
     tag:

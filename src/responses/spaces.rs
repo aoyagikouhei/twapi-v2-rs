@@ -26,9 +26,26 @@ pub struct Spaces {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Spaces {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .topics
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true);
+        if !res {
+            println!("Spaces {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum State {
+    #[serde(rename = "live")]
     Live,
+    #[serde(rename = "scheduled")]
     Scheduled,
 }
 

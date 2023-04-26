@@ -7,3 +7,13 @@ pub struct Coordinates {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Coordinates {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Coordinates {:?}", self.extra);
+        }
+        res
+    }
+}

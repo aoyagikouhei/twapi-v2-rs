@@ -14,3 +14,13 @@ pub struct Lists {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Lists {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Lists {:?}", self.extra);
+        }
+        res
+    }
+}

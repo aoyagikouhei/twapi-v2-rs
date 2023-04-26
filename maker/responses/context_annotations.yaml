@@ -12,7 +12,7 @@ response:
           type: string
         description:
           type: string
-    entry:
+    entity:
       type: object
       properties:
         id:

@@ -75,6 +75,21 @@ pub struct Response {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Response {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
+        if !res {
+            println!("Response {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
     pub access_token: Option<String>,
@@ -82,4 +97,14 @@ pub struct Data {
     pub expires_in: Option<i64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+impl Data {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Data {:?}", self.extra);
+        }
+        res
+    }
 }

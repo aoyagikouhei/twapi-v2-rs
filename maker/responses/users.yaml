@@ -9,7 +9,7 @@ response:
       type: string
     entities:
       type: object
-      ref: entities
+      ref: user_entities
     id:
       type: string
       required: true

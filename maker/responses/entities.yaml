@@ -28,6 +28,3 @@ response:
       items:
         type: object
         ref: urls
-    description:
-      type: object
-      ref: description

@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    bit_rate: # option
+      type: integer
+    content_type:
+      type: string
+    url:
+      type: string

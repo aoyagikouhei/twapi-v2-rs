@@ -169,9 +169,49 @@ pub struct Response {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Response {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .errors
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .includes
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
+        if !res {
+            println!("Response {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Meta {
     pub result_count: Option<i64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
+}
+
+impl Meta {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Meta {:?}", self.extra);
+        }
+        res
+    }
 }

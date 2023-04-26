@@ -19,6 +19,8 @@ def make_response_type(key, value)
   res = case value[:type]
   when "integer" then
     "i64"
+  when "float" then
+    "f64"
   when "array" then
     "Vec<#{make_items_type(value[:items])}>"
   when "date" then
@@ -47,6 +49,24 @@ def make_response_type(key, value)
     "Option<#{res}>"
   end
 end
+extra_list = []
+properties.each_pair do |key, value|
+  if value[:type] == "object"
+    if value[:required] == true
+      extra_list << "self.#{key}.is_empty_extra()"
+    else
+      extra_list << "self.#{key}.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true)"
+    end
+  elsif value[:type] == "array" && value[:items][:type] == "object"
+    if value[:required] == true
+      extra_list << "self.#{key}.iter().all(|it| it.is_empty_extra())"
+    else
+      extra_list << "self.#{key}.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true)"
+    end
+  end
+end
+extra_value = extra_list.present? ? " &&\n        #{extra_list.join(" &&\n        ")}" : ""
+
 %><% if independence_flag %><% if refs.present?  %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use serde::{Serialize, Deserialize};USE_DATE<% end %>
 
@@ -56,11 +76,22 @@ pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl <%= class_name %> {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty()<%= extra_value %>;
+        if !res {
+          println!("<%= class_name %> {:?}", self.extra);
+        }
+        res
+    }
+}
 <% @enums.each_pair do |key, value|
   ary = value[:value].split(/, /) %>
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum <%= key.to_s.ucc %> {<% ary.each do |it| %>
-  <%= it.ucc %>,<% end %>
+    #[serde(rename = "<%= it %>")]
+    <%= it.ucc %>,<% end %>
 }
 
 impl std::fmt::Display for <%= key.to_s.ucc %> {

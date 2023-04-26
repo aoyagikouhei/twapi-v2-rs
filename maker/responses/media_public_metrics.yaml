@@ -1,0 +1,7 @@
+---
+
+response:
+  type: object
+  properties:
+    view_count:
+      type: integer

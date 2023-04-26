@@ -9,9 +9,21 @@ pub struct Withheld {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Withheld {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Withheld {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Scope {
+    #[serde(rename = "tweet")]
     Tweet,
+    #[serde(rename = "user")]
     User,
 }
 

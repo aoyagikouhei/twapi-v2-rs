@@ -18,10 +18,23 @@ pub struct Jobs {
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
+impl Jobs {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Jobs {:?}", self.extra);
+        }
+        res
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Status {
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "failed")]
     Failed,
+    #[serde(rename = "complete")]
     Complete,
 }
 

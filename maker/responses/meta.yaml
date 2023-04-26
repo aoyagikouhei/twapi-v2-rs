@@ -1,0 +1,16 @@
+---
+
+response:
+  type: object
+  properties:
+    result_count:
+      type: integer
+      required: true
+    newest_id:
+      type: string
+      required: true
+    oldest_id:
+      type: string
+      required: true
+    next_token:
+      type: string

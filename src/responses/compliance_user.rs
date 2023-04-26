@@ -6,3 +6,13 @@ pub struct ComplianceUser {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl ComplianceUser {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("ComplianceUser {:?}", self.extra);
+        }
+        res
+    }
+}

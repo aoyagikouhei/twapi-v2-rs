@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    height: 
+      type: integer
+    url: 
+      type: string
+    width: 
+      type: integer

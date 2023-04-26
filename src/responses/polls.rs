@@ -12,3 +12,13 @@ pub struct Polls {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Polls {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty() && self.options.iter().all(|it| it.is_empty_extra());
+        if !res {
+            println!("Polls {:?}", self.extra);
+        }
+        res
+    }
+}

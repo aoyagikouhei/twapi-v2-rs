@@ -4,11 +4,11 @@ response:
   type: object
   properties:
     start:
-      type: integre
+      type: integer
     end:
-      type: integre
+      type: integer
     probability:
-      type: integre
+      type: float
     type:
       type: string
     normalized_text:

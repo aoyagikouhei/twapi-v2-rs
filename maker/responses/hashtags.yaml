@@ -4,10 +4,10 @@ response:
   type: object
   properties:
     start:
-      type: integre
+      type: integer
     end:
-      type: integre
-    hashtag:
+      type: integer
+    hashtag: # あやしい
       type: string
     tag:
       type: string

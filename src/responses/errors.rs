@@ -12,3 +12,13 @@ pub struct Errors {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Errors {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Errors {:?}", self.extra);
+        }
+        res
+    }
+}

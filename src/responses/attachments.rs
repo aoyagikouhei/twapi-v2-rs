@@ -6,3 +6,13 @@ pub struct Attachments {
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
+
+impl Attachments {
+    pub fn is_empty_extra(&self) -> bool {
+        let res = self.extra.is_empty();
+        if !res {
+            println!("Attachments {:?}", self.extra);
+        }
+        res
+    }
+}

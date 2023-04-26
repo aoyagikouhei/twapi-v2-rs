@@ -8,3 +8,13 @@ response:
       items:
         type: object
         ref: urls
+    hashtags: 
+      type: array
+      items:
+        type: object
+        ref: hashtags
+    mentions: 
+      type: array
+      items:
+        type: object
+        ref: mentions
