@@ -1,7 +1,7 @@
 ## Changes
 
 ### v0.5.4 (2023/04/28)
-* test post_2_users_id_retweets, post_2_users_id_likes, post_2_users_id_muting, post_2_users_id_following, post_2_users_id_blocking, post_2_users_id_bookmarks etc...
+* test post_2_users_id_retweets, post_2_users_id_likes, post_2_users_id_muting, post_2_users_id_following, post_2_users_id_blocking, post_2_users_id_bookmarks, etc...
 * modify parameters
 
 ### v0.5.3 (2023/04/27)
