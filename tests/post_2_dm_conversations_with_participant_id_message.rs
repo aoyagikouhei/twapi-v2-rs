@@ -22,7 +22,6 @@ async fn test_post_2_dm_conversations_with_participant_id_message() -> Result<()
         body,
     )
     .build();
-    println!("{:?}", builder);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<
