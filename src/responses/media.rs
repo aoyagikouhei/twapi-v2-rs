@@ -1,4 +1,4 @@
-use crate::responses::{public_metrics::PublicMetrics, variants::Variants};
+use crate::responses::{media_public_metrics::MediaPublicMetrics, variants::Variants};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -7,7 +7,7 @@ pub struct Media {
     pub height: Option<i64>,
     pub media_key: Option<String>,
     pub preview_image_url: Option<String>,
-    pub public_metrics: Option<PublicMetrics>,
+    pub public_metrics: Option<MediaPublicMetrics>,
     pub r#type: Option<String>,
     pub variants: Option<Vec<Variants>>,
     pub url: Option<String>,

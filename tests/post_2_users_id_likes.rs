@@ -1,0 +1,24 @@
+use anyhow::Result;
+use twapi_v2::api::{execute_twitter, post_2_users_id_likes};
+
+// BEARER_CODE=XXXXX ME_ID=XXXX TWEET_ID=XXXXX cargo test test_post_2_users_id_likes -- --nocapture --test-threads=1
+
+#[tokio::test]
+async fn test_post_2_users_id_likes() -> Result<()> {
+    let me_id = match std::env::var("ME_ID") {
+        Ok(me_id) => me_id,
+        _ => return Ok(()),
+    };
+    let tweet_id = match std::env::var("TWEET_ID") {
+        Ok(tweet_id) => tweet_id,
+        _ => return Ok(()),
+    };
+    let body = post_2_users_id_likes::Body { tweet_id };
+    let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+    let builder = post_2_users_id_likes::Api::new(&bearer_code, &me_id, body).build();
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+    println!("{}", serde_json::to_string(&res).unwrap());
+    let response = serde_json::from_value::<post_2_users_id_likes::Response>(res)?;
+    assert_eq!(response.is_empty_extra(), true);
+    Ok(())
+}

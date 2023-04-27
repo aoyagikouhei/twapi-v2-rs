@@ -13,7 +13,7 @@ response:
       type: string
     public_metrics:
       type: object
-      ref: public_metrics
+      ref: media_public_metrics
     type: 
       type: string
     variants:

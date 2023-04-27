@@ -41,3 +41,6 @@ response:
     includes:
       type: object
       ref: includes
+    meta:
+      type: object
+      ref: meta

@@ -1,7 +1,7 @@
 ## Changes
 
 ### v0.5.4 (2023/04/28)
-* test post_2_users_id_retweets, delete_2_users_id_retweets_source_tweet_id, get_2_tweets_id_retweeted_by, etc...
+* test post_2_users_id_retweets, post_2_users_id_likes, etc...
 * modify parameters
 
 ### v0.5.3 (2023/04/27)
