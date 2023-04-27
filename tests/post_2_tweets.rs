@@ -2,13 +2,17 @@ use anyhow::Result;
 use chrono::prelude::*;
 use twapi_v2::api::{execute_twitter, post_2_tweets};
 
-// BEARER_CODE=XXXXX cargo test test_post_2_tweets -- --nocapture --test-threads=1
+// BEARER_CODE=XXXXX TWEET_TEXT=hello cargo test test_post_2_tweets -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_post_2_tweets() -> Result<()> {
+    let tweet_text = match std::env::var("TWEET_TEXT") {
+        Ok(tweet_text) => tweet_text,
+        _ => return Ok(()),
+    };
     let now = Utc::now();
     let body = post_2_tweets::Body {
-        text: Some(format!("now! {}", now)),
+        text: Some(format!("now! {}, {}", now, tweet_text)),
         ..Default::default()
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
