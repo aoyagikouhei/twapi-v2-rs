@@ -32,6 +32,7 @@ tokio = { version = "1", features = ["macros"] }
 anyhow = "1.0.70"
 
 [package.metadata.docs.rs]
-features = ["unstable-doc"]
+all-features = true
+features = ["retry", "oauth", "rustls-tls"]
 rustdoc-args = ["--cfg", "docsrs"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

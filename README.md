@@ -27,36 +27,7 @@ Twitter v2 library.
 - Twitter OAuth
 
 ## Changes
-
-### v0.5.3 (2023/04/27)
-* test post_2_tweets, delete_2_tweets_id, post_2_dm_conversations_with_participant_id_message, etc...
-* modify parameters
-
-### v0.5.2 (2023/04/26)
-* test get_2_users_me, get_2_tweets_search_recent
-* modify response parameters
-
-### v0.5.1 (2023/04/25)
-* remove unuse url crate
-* pub use reqwest
-
-### v0.5.0 (2023/04/25)
-* Add Api::all, Api::open methods. It's all enum parameter setted.
-* In Api::all and Api::open methods, max_results is max value.
-
-### v0.4.0 (2023/04/25)
-* Twitter OAuth
-* oauth-web example
-
-### v0.3.0 (2023/04/24)
-* Support api::execute_twitter generics parameter
-* Api::execue method return specific type. (If you want to use serde_json::Value, use execute_twitter directly.)
-
-### v0.2.0 (2023/04/23)
-* Experimental type support.
-
-### v0.1.0 (2023/04/20)
-* First release.
+[CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)
 
 ## Examples
 
@@ -66,13 +37,13 @@ use twapi_v2::api::get_2_tweets_id;
 
 #[tokio::main]
 async fn main() {
-    let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
+    let bearer_code = std::env::var("BEARER_CODE").unwrap();
+    let tweet_id = std::env::var("TWEET_ID").unwrap();
     let res = get_2_tweets_id::Api::open(&bearer_code, &tweet_id)
         .execute()
         .await;
     if let Some((val, rate_limit)) = res {
-        println!("{:?}", res);
+        println!("{:?}", val);
     }
 }
 ```
