@@ -7,3 +7,7 @@ response:
       type: array
       items:
         type: string
+    card_ids: 
+      type: array
+      items:
+        type: string
