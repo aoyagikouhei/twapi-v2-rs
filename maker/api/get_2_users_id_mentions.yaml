@@ -54,18 +54,4 @@ response:
       ref: includes
     meta:
       type: object
-      required: true
-      properties:
-        count:
-          type: integer
-          required: true
-        newest_id:
-          type: string
-          required: true
-        oldest_id:
-          type: string
-          required: true
-        next_token:
-          type: string
-        previous_token:
-          type: string
+      ref: meta

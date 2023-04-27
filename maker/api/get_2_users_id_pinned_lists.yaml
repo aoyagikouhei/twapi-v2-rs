@@ -31,6 +31,4 @@ response:
       ref: includes
     meta:
       type: object
-      properties:
-        result_count:
-          type: integer
+      ref: meta

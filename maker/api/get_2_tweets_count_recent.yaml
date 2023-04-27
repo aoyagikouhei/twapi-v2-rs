@@ -32,6 +32,4 @@ response:
         ref: errors
     meta:
       type: object
-      properties:
-        total_tweet_count:
-          type: integer
+      ref: meta

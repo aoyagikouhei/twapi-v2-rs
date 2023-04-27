@@ -269,7 +269,7 @@ pub struct Response {
     pub data: Option<Vec<Tweets>>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
-    pub meta: Meta,
+    pub meta: Option<Meta>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -292,7 +292,11 @@ impl Response {
                 .as_ref()
                 .map(|it| it.is_empty_extra())
                 .unwrap_or(true)
-            && self.meta.is_empty_extra();
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
             println!("Response {:?}", self.extra);
         }

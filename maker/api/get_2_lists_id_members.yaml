@@ -37,12 +37,4 @@ response:
       ref: includes
     meta:
       type: object
-      required: true
-      properties:
-        result_count:
-          type: integer
-          required: true
-        previous_token:
-          type: string
-        next_token:
-          type: string
+      ref: meta

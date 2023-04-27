@@ -13,9 +13,7 @@ async fn test_post_2_users_id_retweets() -> Result<()> {
         Ok(tweet_id) => tweet_id,
         _ => return Ok(()),
     };
-    let body = post_2_users_id_retweets::Body {
-        tweet_id
-    };
+    let body = post_2_users_id_retweets::Body { tweet_id };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let builder = post_2_users_id_retweets::Api::new(&bearer_code, &me_id, body).build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;

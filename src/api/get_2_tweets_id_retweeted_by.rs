@@ -1,5 +1,5 @@
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
-use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
+use crate::responses::{errors::Errors, includes::Includes, meta::Meta, users::Users};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -135,7 +135,7 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Tweets>>,
+    pub data: Option<Vec<Users>>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
     pub meta: Option<Meta>,
@@ -168,23 +168,6 @@ impl Response {
                 .unwrap_or(true);
         if !res {
             println!("Response {:?}", self.extra);
-        }
-        res
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct Meta {
-    pub result_count: Option<i64>,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-impl Meta {
-    pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty();
-        if !res {
-            println!("Meta {:?}", self.extra);
         }
         res
     }

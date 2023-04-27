@@ -55,4 +55,3 @@ response:
     meta:
       type: object
       ref: meta
-      required: true

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, delete_2_tweets_id};
+use twapi_v2::api::{delete_2_tweets_id, execute_twitter};
 
 // BEARER_CODE=XXXXX DELETE_TWEET_ID=XXXXX cargo test test_delete_2_tweets_id -- --nocapture --test-threads=1
 

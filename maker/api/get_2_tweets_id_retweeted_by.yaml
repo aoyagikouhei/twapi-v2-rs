@@ -26,7 +26,7 @@ response:
       type: array
       items:
         type: object
-        ref: tweets
+        ref: users
     errors:
       type: array
       items:
@@ -37,6 +37,4 @@ response:
       ref: includes
     meta:
       type: object
-      properties:
-        result_count:
-          type: integer
+      ref: meta

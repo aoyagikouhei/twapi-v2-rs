@@ -1,4 +1,4 @@
-use crate::responses::{counts::Counts, errors::Errors};
+use crate::responses::{counts::Counts, errors::Errors, meta::Meta};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use reqwest::RequestBuilder;
@@ -136,24 +136,6 @@ impl Response {
                 .unwrap_or(true);
         if !res {
             println!("Response {:?}", self.extra);
-        }
-        res
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct Meta {
-    pub total_tweet_count: Option<i64>,
-    pub next_token: Option<String>,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-impl Meta {
-    pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty();
-        if !res {
-            println!("Meta {:?}", self.extra);
         }
         res
     }

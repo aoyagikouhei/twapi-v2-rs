@@ -41,10 +41,4 @@ response:
       ref: includes
     meta:
       type: object
-      properties:
-        next_token:
-          type: string
-        previous_token:
-          type: string
-        result_count:
-          type: integer
+      ref: meta
