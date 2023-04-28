@@ -1,6 +1,6 @@
 # twapi-v2-rs
 
-Twitter v2 library.
+Twitter API v2 library.
 
 [Documentation](https://docs.rs/twapi-v2)
 
