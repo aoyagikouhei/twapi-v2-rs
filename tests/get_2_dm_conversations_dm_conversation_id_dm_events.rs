@@ -10,10 +10,16 @@ async fn test_get_2_dm_conversations_dm_conversation_id_dm_events() -> Result<()
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_dm_conversations_dm_conversation_id_dm_events::Api::all(&bearer_code, &dm_conversation_id).build();
+    let builder = get_2_dm_conversations_dm_conversation_id_dm_events::Api::all(
+        &bearer_code,
+        &dm_conversation_id,
+    )
+    .build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
-    let response = serde_json::from_value::<get_2_dm_conversations_dm_conversation_id_dm_events::Response>(res)?;
+    let response = serde_json::from_value::<
+        get_2_dm_conversations_dm_conversation_id_dm_events::Response,
+    >(res)?;
     assert_eq!(response.is_empty_extra(), true);
     Ok(())
 }

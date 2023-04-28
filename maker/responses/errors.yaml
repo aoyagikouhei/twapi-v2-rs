@@ -5,11 +5,15 @@ response:
   properties:
     detail:
       type: string
+    field:
+      type: string
     parameter:
       type: string
     resource_id:
       type: string
     resource_type:
+      type: string
+    section:
       type: string
     title:
       type: string

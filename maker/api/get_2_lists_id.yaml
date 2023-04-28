@@ -17,10 +17,8 @@ response:
   type: object
   properties:
     data:
-      type: array
-      items:
-        type: object
-        ref: lists
+      type: object
+      ref: lists
     errors:
       type: array
       items:
