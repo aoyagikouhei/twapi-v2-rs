@@ -4,7 +4,7 @@ response:
   type: object
   properties:
     created_at:
-      type: stirng
+      type: date
     description:
       type: string
     entities:

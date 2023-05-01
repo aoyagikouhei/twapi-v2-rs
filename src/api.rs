@@ -23,7 +23,6 @@ pub mod get_2_dm_conversations_dm_conversation_id_dm_events;
 pub mod get_2_dm_conversations_with_participant_id_dm_events;
 pub mod get_2_dm_events;
 pub mod get_2_lists_id;
-pub mod get_2_lists_id_followed_lists;
 pub mod get_2_lists_id_followers;
 pub mod get_2_lists_id_members;
 pub mod get_2_lists_id_tweets;

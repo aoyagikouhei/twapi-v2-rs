@@ -1,5 +1,5 @@
 use crate::fields::{list_fields::ListFields, user_fields::UserFields};
-use crate::responses::{errors::Errors, includes::Includes, meta::Meta, users::Users};
+use crate::responses::{errors::Errors, includes::Includes, memberships::Memberships, meta::Meta};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -103,7 +103,7 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Users>>,
+    pub data: Option<Vec<Memberships>>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
     pub meta: Option<Meta>,

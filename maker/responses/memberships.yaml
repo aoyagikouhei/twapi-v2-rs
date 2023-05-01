@@ -1,0 +1,23 @@
+---
+
+response:
+  type: object
+  properties:
+    id:
+      type: string
+      required: true
+    name:
+      type: string
+      required: true
+    created_at:
+      type: date
+    private:
+      type: bool
+    follower_count:
+      type: integer
+    member_count:
+      type: integer
+    owner_id:
+      type: string
+    description:
+      type: string

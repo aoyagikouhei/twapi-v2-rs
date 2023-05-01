@@ -1,9 +1,10 @@
 use crate::responses::{user_entities::UserEntities, withheld::Withheld};
+use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Users {
-    pub created_at: Option<String>,
+    pub created_at: Option<DateTime<Utc>>,
     pub description: Option<String>,
     pub entities: Option<UserEntities>,
     pub id: String,

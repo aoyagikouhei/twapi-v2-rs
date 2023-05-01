@@ -1,7 +1,7 @@
 ## Changes
 
-### v0.5.5 (2023/04/29)
-* test etc...
+### v0.5.5 (2023/05/02)
+* test post_lists_id_members etc...
 * modify parameters
 
 ### v0.5.4 (2023/04/28)

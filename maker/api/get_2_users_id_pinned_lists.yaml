@@ -20,7 +20,7 @@ response:
       type: array
       items:
         type: object
-        ref: users
+        ref: memberships
     errors:
       type: array
       items:

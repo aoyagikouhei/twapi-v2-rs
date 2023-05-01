@@ -20,6 +20,7 @@ pub mod jobs;
 pub mod lists;
 pub mod media;
 pub mod media_public_metrics;
+pub mod memberships;
 pub mod mentions;
 pub mod meta;
 pub mod non_public_metrics;
