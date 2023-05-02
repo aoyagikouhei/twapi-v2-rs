@@ -18,7 +18,7 @@ pub struct Spaces {
     pub started_at: Option<DateTime<Utc>>,
     pub state: State,
     pub subscriber_count: Option<i64>,
-    pub topic_ids: Option<String>,
+    pub topic_ids: Option<Vec<String>>,
     pub topics: Option<Vec<Topics>>,
     pub title: Option<String>,
     pub updated_at: Option<DateTime<Utc>>,

@@ -40,8 +40,10 @@ response:
       required: true
     subscriber_count: 
       type: integer
-    topic_ids: 
-      type: string
+    topic_ids:
+      type: array
+      items:
+        type: string
     topics: 
       type: array
       items:

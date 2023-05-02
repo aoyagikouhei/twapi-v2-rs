@@ -1,0 +1,40 @@
+---
+
+url: https://api.twitter.com/2/spaces/:id/tweets
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: attachments.poll_ids, attachments.media_keys, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id
+  - name: media.fields
+    type: enum
+  - name: place.fields
+    type: enum
+  - name: poll.fields
+    type: enum
+  - name: tweet.fields
+    type: enum
+  - name: user.fields
+    type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: tweets
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
+    meta:
+      type: object
+      ref: meta

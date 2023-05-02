@@ -30,6 +30,7 @@ pub mod get_2_spaces;
 pub mod get_2_spaces_by_creator_ids;
 pub mod get_2_spaces_id;
 pub mod get_2_spaces_id_buyers;
+pub mod get_2_spaces_id_tweets;
 pub mod get_2_spaces_search;
 pub mod get_2_tweets;
 pub mod get_2_tweets_compliance_stream;
