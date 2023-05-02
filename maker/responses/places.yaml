@@ -3,24 +3,24 @@
 response:
   type: object
   properties:
-    full_name: 
+    full_name:
       type: string
       required: true
-    id: 
+    id:
       type: string
       required: true
-    contained_within: 
+    contained_within:
       type: array
       items:
         type: string
-    country: 
+    country:
       type: string
-    country_code: 
-      type: integer
-    geo: 
+    country_code:
+      type: string
+    geo:
       type: object
       ref: geo
-    name: 
+    name:
       type: string
-    place_type: 
+    place_type:
       type: string

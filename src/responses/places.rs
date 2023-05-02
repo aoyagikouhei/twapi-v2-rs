@@ -7,7 +7,7 @@ pub struct Places {
     pub id: String,
     pub contained_within: Option<Vec<String>>,
     pub country: Option<String>,
-    pub country_code: Option<i64>,
+    pub country_code: Option<String>,
     pub geo: Option<Geo>,
     pub name: Option<String>,
     pub place_type: Option<String>,
