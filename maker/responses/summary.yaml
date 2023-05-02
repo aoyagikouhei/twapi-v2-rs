@@ -3,11 +3,15 @@
 response:
   type: object
   properties:
-    created: 
+    created:
       type: integer
-    not_created: 
+    not_created:
       type: integer
-    deleted: 
+    deleted:
       type: integer
-    not_deleted: 
+    not_deleted:
+      type: integer
+    valid:
+      type: integer
+    invalid:
       type: integer

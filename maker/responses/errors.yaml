@@ -3,6 +3,8 @@
 response:
   type: object
   properties:
+    id:
+      type: string
     detail:
       type: string
     field:

@@ -11,7 +11,7 @@ pub struct Body {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub private: Option<String>,
+    pub private: Option<bool>,
 }
 
 #[derive(Debug, Clone, Default)]

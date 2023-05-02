@@ -6,8 +6,7 @@ const URL: &str = "https://api.twitter.com/2/tweets/:id/hidden";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub hidden: Option<String>,
+    pub hidden: bool,
 }
 
 #[derive(Debug, Clone, Default)]

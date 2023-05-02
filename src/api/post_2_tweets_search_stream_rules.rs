@@ -1,5 +1,6 @@
 use crate::responses::{errors::Errors, streams::Streams, summary::Summary};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
+use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
@@ -20,7 +21,7 @@ pub struct Delete {
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub add: Option<Add>,
+    pub add: Option<Vec<Add>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub delete: Option<Delete>,
 }
@@ -96,7 +97,7 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Meta {
-    pub sent: i64,
+    pub sent: DateTime<Utc>,
     pub summary: Summary,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

@@ -1,5 +1,6 @@
 use crate::responses::{errors::Errors, streams::Streams};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
+use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
@@ -73,7 +74,8 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Meta {
-    pub sent: i64,
+    pub result_count: i64,
+    pub sent: DateTime<Utc>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

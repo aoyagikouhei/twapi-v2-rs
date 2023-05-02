@@ -9,13 +9,15 @@ body:
   type: object
   properties:
     - name: add
-      type: object
-      properties:
-        - name: value
-          type: string
-          required: true
-        - name: tag
-          type: string
+      type: array
+      items:
+        type: object
+        properties:
+          - name: value
+            type: string
+            required: true
+          - name: tag
+            type: string
     - name: delete
       type: object
       properties:
@@ -42,7 +44,7 @@ response:
       required: true
       properties:
         sent:
-          type: integer
+          type: date
           required: true
         summary:
           type: object

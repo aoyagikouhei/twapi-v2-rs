@@ -10,6 +10,7 @@ body:
   properties:
     - name: hidden
       type: bool
+      required: true
 response:
   type: object
   properties:

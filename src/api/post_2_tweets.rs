@@ -55,7 +55,7 @@ pub struct Body {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub direct_message_deep_link: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub for_super_followers_only: Option<String>,
+    pub for_super_followers_only: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geo: Option<Geo>,
     #[serde(skip_serializing_if = "Option::is_none")]

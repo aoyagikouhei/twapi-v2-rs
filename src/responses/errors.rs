@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Errors {
+    pub id: Option<String>,
     pub detail: Option<String>,
     pub field: Option<String>,
     pub parameter: Option<String>,

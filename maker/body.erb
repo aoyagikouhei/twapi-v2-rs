@@ -12,6 +12,8 @@ def make_body_type(src)
   res = case src[:type]
   when "enum_single" then
     src[:name].ucc
+  when "bool"
+    "bool"
   when "string" then
     "String"
   when "object" then
