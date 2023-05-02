@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "./examples/oauth-web"
+		},
+		{
+			"path": "./examples/streaming"
 		}
 	],
 	"settings": {
@@ -14,7 +17,8 @@
 		],
 		"rust-analyzer.linkedProjects": [
 			"./Cargo.toml",
-			"examples/oauth-web/Cargo.toml"
+			"examples/oauth-web/Cargo.toml",
+			"examples/streaming/Cargo.toml"
 		],
 		"rust-analyzer.showUnlinkedFileNotification": false
 	}

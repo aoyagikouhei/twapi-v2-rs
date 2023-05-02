@@ -26,10 +26,8 @@ response:
   type: object
   properties:
     data:
-      type: array
-      items:
-        type: object
-        ref: tweets
+      type: object
+      ref: tweets
     errors:
       type: array
       items:
@@ -39,12 +37,8 @@ response:
       type: object
       ref: includes
     matching_rules:
-      type: object
+      type: array
       required: true
-      properties:
-        id:
-          type: string
-          required: true
-        tag:
-          type: string
-          required: true
+      items:
+        type: object
+        ref: matching_rules

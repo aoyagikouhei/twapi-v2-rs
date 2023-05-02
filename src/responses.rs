@@ -18,6 +18,7 @@ pub mod images;
 pub mod includes;
 pub mod jobs;
 pub mod lists;
+pub mod matching_rules;
 pub mod media;
 pub mod media_public_metrics;
 pub mod memberships;

@@ -1,5 +1,10 @@
 ## Changes
 
+### v0.5.6 (2023/05/03)
+* add streaming example
+* test post_2_tweets_search_stream_rules etc...
+* modify parameters
+
 ### v0.5.5 (2023/05/02)
 * test post_lists_id_members etc...
 * modify parameters

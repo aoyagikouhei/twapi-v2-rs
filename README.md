@@ -8,7 +8,8 @@ Twitter API v2 library.
 - Retrive rate limit from response headers
 - Convenience setted parameter methods
 - Optional retriable and timeout and logging
-- Optional OAuth with web sample
+- Optional OAuth with web example
+- Streaming example
 - **Experimental** type support.
 
 ## Features
@@ -54,3 +55,9 @@ cd examples/oauth-web
 API_KEY_CODE=XXXX API_SECRET_CODE=XXXX cargo run
 ```
 http://localhost:3000/
+
+### Striaming
+```
+cd examples/streaming
+BEARER_CODE=XXXXX cargo run
+```

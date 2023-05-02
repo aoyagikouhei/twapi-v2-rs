@@ -2,7 +2,9 @@ use crate::fields::{
     media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
     tweet_fields::TweetFields, user_fields::UserFields,
 };
-use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
+use crate::responses::{
+    errors::Errors, includes::Includes, matching_rules::MatchingRules, tweets::Tweets,
+};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use itertools::Itertools;
@@ -202,10 +204,10 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Tweets>>,
+    pub data: Option<Tweets>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
-    pub matching_rules: MatchingRules,
+    pub matching_rules: Vec<MatchingRules>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -216,7 +218,7 @@ impl Response {
             && self
                 .data
                 .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .map(|it| it.is_empty_extra())
                 .unwrap_or(true)
             && self
                 .errors
@@ -228,27 +230,9 @@ impl Response {
                 .as_ref()
                 .map(|it| it.is_empty_extra())
                 .unwrap_or(true)
-            && self.matching_rules.is_empty_extra();
+            && self.matching_rules.iter().all(|it| it.is_empty_extra());
         if !res {
             println!("Response {:?}", self.extra);
-        }
-        res
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct MatchingRules {
-    pub id: String,
-    pub tag: String,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-impl MatchingRules {
-    pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty();
-        if !res {
-            println!("MatchingRules {:?}", self.extra);
         }
         res
     }
