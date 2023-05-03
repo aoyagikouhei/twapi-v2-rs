@@ -17,12 +17,13 @@ form:
 response:
   type: object
   properties:
-    data:
-      type: object
-      properties:
-        access_token:
-          type: string
-        refresh_token:
-          type: string
-        expires_in:
-          type: integer
+    access_token:
+      type: string
+    refresh_token:
+      type: string
+    expires_in:
+      type: integer
+    token_type:
+      type: string
+    scope:
+      type: string
