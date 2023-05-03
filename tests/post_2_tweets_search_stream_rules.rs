@@ -1,7 +1,7 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, post_2_tweets_search_stream_rules};
 
-// BEARER_CODE=XXXXX cargo test test_post_2_tweets_search_stream_rules -- --nocapture --test-threads=1
+// APP_BEARER_CODE=XXXXX cargo test test_post_2_tweets_search_stream_rules -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_post_2_tweets_search_stream_rules() -> Result<()> {
@@ -31,7 +31,7 @@ async fn test_post_2_tweets_search_stream_rules() -> Result<()> {
         ..Default::default()
     };
     */
-    let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+    let bearer_code = std::env::var("APP_BEARER_CODE").unwrap_or_default();
     let builder = post_2_tweets_search_stream_rules::Api::new(&bearer_code, body).build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());

@@ -1,5 +1,15 @@
 ## Changes
 
+### v0.5.7 (2023/05/04)
+* test get_2_users_id_mention etc...
+* modify parameters
+
+### v0.5.6 (2023/05/03)
+* add streaming example
+* test post_2_tweets_search_stream_rules etc...
+* modify post_2_auth2_token interface
+* modify parameters
+
 ### v0.5.6 (2023/05/03)
 * add streaming example
 * test post_2_tweets_search_stream_rules etc...
