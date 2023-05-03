@@ -59,7 +59,7 @@ def execute(path)
   enum_flag = queries.filter{|it| it[:type] == "enum"}.present?
   @date_flag = queries.filter{|it| it[:type] == "date" }.present?
 
-  self_required = (queries + form).filter{|it| it[:required] } + paths
+  self_required = (queries + form.filter{|it| it[:alter].blank?}).filter{|it| it[:required] } + paths
   required_queries = queries.filter{|it| it[:required] }
   non_required_queries = queries.filter{|it| !it[:required] }
 

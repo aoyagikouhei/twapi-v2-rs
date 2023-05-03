@@ -27,7 +27,6 @@ impl Default for GrantType {
 pub struct Api {
     api_key_code: String,
     api_secret_code: String,
-    client_id: String,
     grant_type: GrantType,
     refresh_token: String,
 }
@@ -36,14 +35,12 @@ impl Api {
     pub fn new(
         api_key_code: &str,
         api_secret_code: &str,
-        client_id: &str,
         grant_type: GrantType,
         refresh_token: &str,
     ) -> Self {
         Self {
             api_key_code: api_key_code.to_owned(),
             api_secret_code: api_secret_code.to_owned(),
-            client_id: client_id.to_owned(),
             grant_type,
             refresh_token: refresh_token.to_owned(),
         }
@@ -51,7 +48,7 @@ impl Api {
 
     pub fn build(self) -> RequestBuilder {
         let form_paramters = vec![
-            ("client_id", self.client_id),
+            ("client_id", self.api_key_code.clone()),
             ("grant_type", self.grant_type.to_string()),
             ("refresh_token", self.refresh_token),
         ];

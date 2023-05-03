@@ -6,6 +6,7 @@ auth: basic
 form:
   - name: client_id
     type: string
+    alter: api_key_code
     required: true
   - name: grant_type
     type: enum_single

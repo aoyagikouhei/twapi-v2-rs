@@ -20,7 +20,6 @@ async fn test_post_2_oauth2_token() -> Result<()> {
     let builder = post_2_oauth2_token::Api::new(
         &api_key_code,
         &api_secret_code,
-        &api_key_code,
         post_2_oauth2_token::GrantType::RefreshToken,
         &refresh_token,
     )
