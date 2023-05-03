@@ -1,0 +1,12 @@
+---
+
+response:
+  type: object
+  properties:
+    total_tweet_count:
+      type: integer
+      required: true
+    next_token:
+      type: string
+    previous_token:
+      type: string

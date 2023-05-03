@@ -6,6 +6,7 @@ pub struct Media {
     pub duration_ms: Option<i64>,
     pub height: Option<i64>,
     pub media_key: Option<String>,
+    pub alt_text: Option<String>,
     pub preview_image_url: Option<String>,
     pub public_metrics: Option<MediaPublicMetrics>,
     pub r#type: Option<String>,

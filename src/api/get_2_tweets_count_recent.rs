@@ -1,4 +1,4 @@
-use crate::responses::{counts::Counts, errors::Errors, meta::Meta};
+use crate::responses::{counts::Counts, errors::Errors, meta_count::MetaCount};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use reqwest::RequestBuilder;
@@ -111,7 +111,7 @@ impl Api {
 pub struct Response {
     pub data: Option<Vec<Counts>>,
     pub errors: Option<Vec<Errors>>,
-    pub meta: Option<Meta>,
+    pub meta: Option<MetaCount>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

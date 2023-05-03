@@ -5,23 +5,25 @@ response:
   properties:
     duration_ms:
       type: integer
-    height: 
+    height:
       type: integer
-    media_key: 
+    media_key:
       type: string
-    preview_image_url: 
+    alt_text:
+      type: string
+    preview_image_url:
       type: string
     public_metrics:
       type: object
       ref: media_public_metrics
-    type: 
+    type:
       type: string
     variants:
       type: array
       items:
         type: object
         ref: variants
-    url: 
+    url:
       type: string
-    width: 
+    width:
       type: integer

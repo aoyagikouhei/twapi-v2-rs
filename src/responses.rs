@@ -24,6 +24,7 @@ pub mod media_public_metrics;
 pub mod memberships;
 pub mod mentions;
 pub mod meta;
+pub mod meta_count;
 pub mod non_public_metrics;
 pub mod options;
 pub mod organic_metrics;

@@ -13,36 +13,6 @@ use std::collections::HashSet;
 const URL: &str = "https://api.twitter.com/2/users/:id/mentions";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-pub enum Exclude {
-    Retweets,
-    Replies,
-}
-
-impl Exclude {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::Retweets);
-        result.insert(Self::Replies);
-        result
-    }
-}
-
-impl std::fmt::Display for Exclude {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Retweets => write!(f, "retweets"),
-            Self::Replies => write!(f, "replies"),
-        }
-    }
-}
-
-impl Default for Exclude {
-    fn default() -> Self {
-        Self::Retweets
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     AttachmentsPollIds,
     AttachmentsMediaKeys,
@@ -98,7 +68,6 @@ pub struct Api {
     bearer_code: String,
     id: String,
     end_time: Option<DateTime<Utc>>,
-    exclude: Option<HashSet<Exclude>>,
     expansions: Option<HashSet<Expansions>>,
     max_results: Option<usize>,
     media_fields: Option<HashSet<MediaFields>>,
@@ -125,7 +94,6 @@ impl Api {
         Self {
             bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
-            exclude: Some(Exclude::all()),
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::all()),
             place_fields: Some(PlaceFields::all()),
@@ -141,7 +109,6 @@ impl Api {
         Self {
             bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
-            exclude: Some(Exclude::all()),
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::open()),
             place_fields: Some(PlaceFields::all()),
@@ -155,11 +122,6 @@ impl Api {
 
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
-        self
-    }
-
-    pub fn exclude(mut self, value: HashSet<Exclude>) -> Self {
-        self.exclude = Some(value);
         self
     }
 
@@ -222,9 +184,6 @@ impl Api {
         let mut query_parameters = vec![];
         if let Some(end_time) = self.end_time {
             query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
-        }
-        if let Some(exclude) = self.exclude {
-            query_parameters.push(("exclude", exclude.iter().join(",")));
         }
         if let Some(expansions) = self.expansions {
             query_parameters.push(("expansions", expansions.iter().join(",")));
