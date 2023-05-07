@@ -30,6 +30,9 @@ Twitter API v2 library.
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)
 
+## Test status
+[TEST.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/TEST.md)
+
 ## Examples
 
 ### API
