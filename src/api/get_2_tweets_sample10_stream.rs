@@ -207,7 +207,7 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Tweets>>,
+    pub data: Option<Tweets>,
     pub errors: Option<Vec<Errors>>,
     pub includes: Option<Includes>,
     #[serde(flatten)]
@@ -220,7 +220,7 @@ impl Response {
             && self
                 .data
                 .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .map(|it| it.is_empty_extra())
                 .unwrap_or(true)
             && self
                 .errors

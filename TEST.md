@@ -28,15 +28,15 @@
 | |get_2_spaces_search.rs| |
 | |get_2_tweets.rs| |
 |x|get_2_tweets_compliance_stream.rs| |
-| |get_2_tweets_count_all.rs|Failed, I'm not academic.|
+| |get_2_tweets_count_all.rs|Failed academic only|
 | |get_2_tweets_count_recent.rs| |
 | |get_2_tweets_id.rs| |
 | |get_2_tweets_id_liking_users.rs| |
 | |get_2_tweets_id_quote_tweets.rs| |
 | |get_2_tweets_id_retweeted_by.rs| |
-|x|get_2_tweets_sample10_stream.rs| |
-|x|get_2_tweets_sample_stream.rs| |
-| |get_2_tweets_search_all.rs|Failed, I'm not academic.|
+|-|get_2_tweets_sample10_stream.rs|example/streaming, Failed academic only|
+|-|get_2_tweets_sample_stream.rs|example/streaming|
+| |get_2_tweets_search_all.rs|Failed academic only|
 | |get_2_tweets_search_recent.rs| |
 |-|get_2_tweets_search_stream.rs|example/streaming|
 | |get_2_tweets_search_stream_rules.rs| |

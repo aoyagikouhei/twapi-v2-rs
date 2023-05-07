@@ -29,10 +29,8 @@ response:
   type: object
   properties:
     data:
-      type: array
-      items:
-        type: object
-        ref: tweets
+      type: object
+      ref: tweets
     errors:
       type: array
       items:
