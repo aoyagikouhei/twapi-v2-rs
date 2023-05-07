@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.5.8 (2023/05/xx)
+* typo README
+* remove no use files
+
 ### v0.5.7 (2023/05/04)
 * test get_2_users_id_mention etc...
 * modify parameters
