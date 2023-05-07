@@ -56,7 +56,7 @@ API_KEY_CODE=XXXX API_SECRET_CODE=XXXX cargo run
 ```
 http://localhost:3000/
 
-### Striaming
+### Streaming
 ```
 cd examples/streaming
 BEARER_CODE=XXXXX cargo run
