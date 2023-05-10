@@ -36,7 +36,7 @@
 | |get_2_tweets_id_retweeted_by.rs| |
 |NG|get_2_tweets_sample10_stream.rs|example/streaming, Failed academic only|
 | |get_2_tweets_sample_stream.rs|example/streaming|
-| |get_2_tweets_search_all.rs|Failed academic only|
+|NG|get_2_tweets_search_all.rs|Failed academic only|
 | |get_2_tweets_search_recent.rs| |
 | |get_2_tweets_search_stream.rs|example/streaming|
 | |get_2_tweets_search_stream_rules.rs| |
