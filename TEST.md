@@ -27,7 +27,7 @@
 | |get_2_spaces_id_tweets.rs| |
 | |get_2_spaces_search.rs| |
 | |get_2_tweets.rs| |
-|x|get_2_tweets_compliance_stream.rs| |
+|-|get_2_tweets_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
 | |get_2_tweets_count_all.rs|Failed academic only|
 | |get_2_tweets_count_recent.rs| |
 | |get_2_tweets_id.rs| |
@@ -43,7 +43,7 @@
 | |get_2_users.rs| |
 | |get_2_users_by.rs| |
 | |get_2_users_by_username_username.rs| |
-|x|get_2_users_compliance_stream.rs| |
+|-|get_2_users_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
 | |get_2_users_id.rs| |
 | |get_2_users_id_blocking.rs| |
 | |get_2_users_id_bookmarks.rs| |
