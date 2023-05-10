@@ -17,7 +17,7 @@ end
 
 def make_form(it)
   if it[:constant].present?
-    "(\"#{it[:name]}\", \"#{it[:constant]}\"),"
+    "(\"#{it[:name]}\", \"#{it[:constant]}\".to_owned()),"
   else
     "(\"#{it[:name]}\", self.#{(it[:alter].present? ? it[:alter] : it[:name]).make_name.make_field}#{make_query_value(it)}),"
   end

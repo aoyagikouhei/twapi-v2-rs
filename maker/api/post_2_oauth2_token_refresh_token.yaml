@@ -7,11 +7,9 @@ form:
   - name: client_id
     type: string
     alter: api_key_code
-    required: true
   - name: grant_type
-    type: enum_single
-    value: refresh_token
-    required: true
+    type: string
+    constant: refresh_token
   - name: refresh_token
     type: string
     required: true
