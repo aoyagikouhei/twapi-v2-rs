@@ -3,8 +3,11 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum TopicFields {
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "name")]
     Name,
+    #[serde(rename = "description")]
     Description,
 }
 

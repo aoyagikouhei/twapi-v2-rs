@@ -3,6 +3,7 @@ use std::collections::HashSet;
 
 <% end %>#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum <%= class_name %> {<% ary.each do |it| %>
+    #[serde(rename = "<%= it %>")]
     <%= it.ucc %>,<% end %>
 }
 <% if all_flag %>

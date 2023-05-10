@@ -1,15 +1,15 @@
-use crate::responses::jobs::Jobs;
+use crate::responses::{jobs::Jobs, meta::Meta};
 use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
-use itertools::Itertools;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
+    #[serde(rename = "tweets")]
     Tweets,
+    #[serde(rename = "users")]
     Users,
 }
 
@@ -30,21 +30,14 @@ impl Default for Type {
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Status {
+    #[serde(rename = "created")]
     Created,
+    #[serde(rename = "in_progress")]
     InProgress,
+    #[serde(rename = "failed")]
     Failed,
+    #[serde(rename = "complete")]
     Complete,
-}
-
-impl Status {
-    pub fn all() -> HashSet<Self> {
-        let mut result = HashSet::new();
-        result.insert(Self::Created);
-        result.insert(Self::InProgress);
-        result.insert(Self::Failed);
-        result.insert(Self::Complete);
-        result
-    }
 }
 
 impl std::fmt::Display for Status {
@@ -68,7 +61,7 @@ impl Default for Status {
 pub struct Api {
     bearer_code: String,
     r#type: Type,
-    status: Option<HashSet<Status>>,
+    status: Option<Status>,
 }
 
 impl Api {
@@ -80,15 +73,7 @@ impl Api {
         }
     }
 
-    pub fn all(bearer_code: &str, r#type: Type) -> Self {
-        Self {
-            bearer_code: bearer_code.to_owned(),
-            r#type,
-            status: Some(Status::all()),
-        }
-    }
-
-    pub fn status(mut self, value: HashSet<Status>) -> Self {
+    pub fn status(mut self, value: Status) -> Self {
         self.status = Some(value);
         self
     }
@@ -97,7 +82,7 @@ impl Api {
         let mut query_parameters = vec![];
         query_parameters.push(("type", self.r#type.to_string()));
         if let Some(status) = self.status {
-            query_parameters.push(("status", status.iter().join(",")));
+            query_parameters.push(("status", status.to_string()));
         }
         let client = reqwest::Client::new();
         client
@@ -114,6 +99,7 @@ impl Api {
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
     pub data: Option<Vec<Jobs>>,
+    pub meta: Option<Meta>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -125,6 +111,11 @@ impl Response {
                 .data
                 .as_ref()
                 .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
                 .unwrap_or(true);
         if !res {
             println!("Response {:?}", self.extra);

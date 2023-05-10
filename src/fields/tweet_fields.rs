@@ -3,26 +3,47 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum TweetFields {
+    #[serde(rename = "attachments")]
     Attachments,
+    #[serde(rename = "author_id")]
     AuthorId,
+    #[serde(rename = "context_annotations")]
     ContextAnnotations,
+    #[serde(rename = "conversation_id")]
     ConversationId,
+    #[serde(rename = "created_at")]
     CreatedAt,
+    #[serde(rename = "edit_controls")]
     EditControls,
+    #[serde(rename = "entities")]
     Entities,
+    #[serde(rename = "geo")]
     Geo,
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "in_reply_to_user_id")]
     InReplyToUserId,
+    #[serde(rename = "lang")]
     Lang,
+    #[serde(rename = "non_public_metrics")]
     NonPublicMetrics,
+    #[serde(rename = "public_metrics")]
     PublicMetrics,
+    #[serde(rename = "organic_metrics")]
     OrganicMetrics,
+    #[serde(rename = "promoted_metrics")]
     PromotedMetrics,
+    #[serde(rename = "possibly_sensitive")]
     PossiblySensitive,
+    #[serde(rename = "referenced_tweets")]
     ReferencedTweets,
+    #[serde(rename = "reply_settings")]
     ReplySettings,
+    #[serde(rename = "source")]
     Source,
+    #[serde(rename = "text")]
     Text,
+    #[serde(rename = "withheld")]
     Withheld,
 }
 

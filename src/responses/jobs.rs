@@ -14,6 +14,7 @@ pub struct Jobs {
     pub url: Option<String>,
     pub status: Option<Status>,
     pub error: Option<String>,
+    pub resumable: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -30,6 +31,8 @@ impl Jobs {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Status {
+    #[serde(rename = "created")]
+    Created,
     #[serde(rename = "in_progress")]
     InProgress,
     #[serde(rename = "failed")]
@@ -41,6 +44,7 @@ pub enum Status {
 impl std::fmt::Display for Status {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
+            Self::Created => write!(f, "created"),
             Self::InProgress => write!(f, "in_progress"),
             Self::Failed => write!(f, "failed"),
             Self::Complete => write!(f, "complete"),
@@ -50,6 +54,6 @@ impl std::fmt::Display for Status {
 
 impl Default for Status {
     fn default() -> Self {
-        Self::InProgress
+        Self::Created
     }
 }

@@ -24,6 +24,8 @@ response:
       type: string
     status: 
       type: enum_single
-      value: in_progress, failed, complete
+      value: created, in_progress, failed, complete
     error: 
       type: string
+    resumable:
+      type: bool

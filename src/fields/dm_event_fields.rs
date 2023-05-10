@@ -3,14 +3,23 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum DmEventFields {
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "text")]
     Text,
+    #[serde(rename = "event_type")]
     EventType,
+    #[serde(rename = "created_at")]
     CreatedAt,
+    #[serde(rename = "dm_conversation_id")]
     DmConversationId,
+    #[serde(rename = "sender_id")]
     SenderId,
+    #[serde(rename = "participant_ids")]
     ParticipantIds,
+    #[serde(rename = "referenced_tweets")]
     ReferencedTweets,
+    #[serde(rename = "attachments")]
     Attachments,
 }
 

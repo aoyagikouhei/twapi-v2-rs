@@ -3,10 +3,15 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum PollFields {
+    #[serde(rename = "duration_minutes")]
     DurationMinutes,
+    #[serde(rename = "end_datetime")]
     EndDatetime,
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "options")]
     Options,
+    #[serde(rename = "voting_status")]
     VotingStatus,
 }
 

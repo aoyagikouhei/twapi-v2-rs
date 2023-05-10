@@ -14,14 +14,23 @@ const URL: &str = "https://api.twitter.com/2/tweets/search/all";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "attachments.poll_ids")]
     AttachmentsPollIds,
+    #[serde(rename = "attachments.media_keys")]
     AttachmentsMediaKeys,
+    #[serde(rename = "author_id")]
     AuthorId,
+    #[serde(rename = "edit_history_tweet_ids")]
     EditHistoryTweetIds,
+    #[serde(rename = "entities.mentions.username")]
     EntitiesMentionsUsername,
+    #[serde(rename = "geo.place_id")]
     GeoPlaceId,
+    #[serde(rename = "in_reply_to_user_id")]
     InReplyToUserId,
+    #[serde(rename = "referenced_tweets.id")]
     ReferencedTweetsId,
+    #[serde(rename = "referenced_tweets.id.author_id")]
     ReferencedTweetsIdAuthorId,
 }
 
@@ -65,7 +74,9 @@ impl Default for Expansions {
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum SortOrder {
+    #[serde(rename = "recency")]
     Recency,
+    #[serde(rename = "relevancy")]
     Relevancy,
 }
 

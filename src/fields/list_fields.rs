@@ -3,11 +3,17 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ListFields {
+    #[serde(rename = "created_at")]
     CreatedAt,
+    #[serde(rename = "follower_count")]
     FollowerCount,
+    #[serde(rename = "member_count")]
     MemberCount,
+    #[serde(rename = "private")]
     Private,
+    #[serde(rename = "description")]
     Description,
+    #[serde(rename = "owner_id")]
     OwnerId,
 }
 

@@ -8,8 +8,11 @@ const URL: &str = "https://api.twitter.com/2/tweets/counts/all";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Granularity {
+    #[serde(rename = "minute")]
     Minute,
+    #[serde(rename = "hour")]
     Hour,
+    #[serde(rename = "day")]
     Day,
 }
 

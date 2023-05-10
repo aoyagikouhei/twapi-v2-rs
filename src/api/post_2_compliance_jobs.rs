@@ -5,10 +5,32 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
 
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+pub enum Type {
+    #[serde(rename = "tweets")]
+    Tweets,
+    #[serde(rename = "users")]
+    Users,
+}
+
+impl std::fmt::Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Tweets => write!(f, "tweets"),
+            Self::Users => write!(f, "users"),
+        }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Self::Tweets
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<String>,
+    pub r#type: Type,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -18,15 +40,13 @@ pub struct Body {
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     bearer_code: String,
-    id: String,
     body: Body,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, id: &str, body: Body) -> Self {
+    pub fn new(bearer_code: &str, body: Body) -> Self {
         Self {
             bearer_code: bearer_code.to_owned(),
-            id: id.to_owned(),
             body,
         }
     }
@@ -34,7 +54,7 @@ impl Api {
     pub fn build(self) -> RequestBuilder {
         let client = reqwest::Client::new();
         client
-            .post(URL.replace(":id", &self.id))
+            .post(URL)
             .bearer_auth(self.bearer_code)
             .json(&self.body)
     }

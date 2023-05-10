@@ -3,6 +3,9 @@
 ### v0.5.9 (2023/05/11)
 * add post_2_oauth2_token_refresh_token
 * remove post_2_oauth2_token
+* serde rename for request enum
+* test get_2_compliance_jobs
+* modify parameters
 
 ### v0.5.8 (2023/05/08)
 * typo README

@@ -31,7 +31,9 @@ pub struct Reply {
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ReplySettings {
+    #[serde(rename = "mentionedUsers")]
     Mentionedusers,
+    #[serde(rename = "following")]
     Following,
 }
 

@@ -10,6 +10,7 @@ const URL: &str = "https://api.twitter.com/2/users/:id/owned_lists";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "owner_id")]
     OwnerId,
 }
 

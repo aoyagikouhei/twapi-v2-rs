@@ -3,18 +3,31 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum MediaFields {
+    #[serde(rename = "duration_ms")]
     DurationMs,
+    #[serde(rename = "height")]
     Height,
+    #[serde(rename = "media_key")]
     MediaKey,
+    #[serde(rename = "preview_image_url")]
     PreviewImageUrl,
+    #[serde(rename = "type")]
     Type,
+    #[serde(rename = "url")]
     Url,
+    #[serde(rename = "width")]
     Width,
+    #[serde(rename = "public_metrics")]
     PublicMetrics,
+    #[serde(rename = "non_public_metrics")]
     NonPublicMetrics,
+    #[serde(rename = "organic_metrics")]
     OrganicMetrics,
+    #[serde(rename = "promoted_metrics")]
     PromotedMetrics,
+    #[serde(rename = "alt_text")]
     AltText,
+    #[serde(rename = "variants")]
     Variants,
 }
 

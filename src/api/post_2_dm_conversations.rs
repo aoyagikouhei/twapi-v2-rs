@@ -6,6 +6,7 @@ const URL: &str = "https://api.twitter.com/2/dm_conversations";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ConversationType {
+    #[serde(rename = "Group")]
     Group,
 }
 

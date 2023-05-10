@@ -12,10 +12,15 @@ const URL: &str = "https://api.twitter.com/2/spaces";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "invited_user_ids")]
     InvitedUserIds,
+    #[serde(rename = "speaker_ids")]
     SpeakerIds,
+    #[serde(rename = "creator_id")]
     CreatorId,
+    #[serde(rename = "host_ids")]
     HostIds,
+    #[serde(rename = "topics_ids")]
     TopicsIds,
 }
 

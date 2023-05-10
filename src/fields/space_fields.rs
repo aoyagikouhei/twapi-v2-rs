@@ -3,22 +3,39 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum SpaceFields {
+    #[serde(rename = "host_ids")]
     HostIds,
+    #[serde(rename = "created_at")]
     CreatedAt,
+    #[serde(rename = "creator_id")]
     CreatorId,
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "lang")]
     Lang,
+    #[serde(rename = "invited_user_ids")]
     InvitedUserIds,
+    #[serde(rename = "participant_count")]
     ParticipantCount,
+    #[serde(rename = "speaker_ids")]
     SpeakerIds,
+    #[serde(rename = "started_at")]
     StartedAt,
+    #[serde(rename = "ended_at")]
     EndedAt,
+    #[serde(rename = "subscriber_count")]
     SubscriberCount,
+    #[serde(rename = "topic_ids")]
     TopicIds,
+    #[serde(rename = "state")]
     State,
+    #[serde(rename = "title")]
     Title,
+    #[serde(rename = "updated_at")]
     UpdatedAt,
+    #[serde(rename = "scheduled_start")]
     ScheduledStart,
+    #[serde(rename = "is_ticketed")]
     IsTicketed,
 }
 

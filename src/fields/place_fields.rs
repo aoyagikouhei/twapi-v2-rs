@@ -3,13 +3,21 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum PlaceFields {
+    #[serde(rename = "contained_within")]
     ContainedWithin,
+    #[serde(rename = "country")]
     Country,
+    #[serde(rename = "country_code")]
     CountryCode,
+    #[serde(rename = "full_name")]
     FullName,
+    #[serde(rename = "geo")]
     Geo,
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "name")]
     Name,
+    #[serde(rename = "place_type")]
     PlaceType,
 }
 

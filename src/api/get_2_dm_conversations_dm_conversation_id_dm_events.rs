@@ -13,8 +13,11 @@ const URL: &str = "https://api.twitter.com/2/dm_conversations/:dm_conversation_i
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum EventTypes {
+    #[serde(rename = "MessageCreate")]
     Messagecreate,
+    #[serde(rename = "ParticipantsJoin")]
     Participantsjoin,
+    #[serde(rename = "ParticipantsLeave")]
     Participantsleave,
 }
 
@@ -36,9 +39,13 @@ impl Default for EventTypes {
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "attachments.media_keys")]
     AttachmentsMediaKeys,
+    #[serde(rename = "referenced_tweets.id")]
     ReferencedTweetsId,
+    #[serde(rename = "sender_id")]
     SenderId,
+    #[serde(rename = "participant_ids")]
     ParticipantIds,
 }
 

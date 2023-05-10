@@ -3,20 +3,35 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum UserFields {
+    #[serde(rename = "created_at")]
     CreatedAt,
+    #[serde(rename = "description")]
     Description,
+    #[serde(rename = "entities")]
     Entities,
+    #[serde(rename = "id")]
     Id,
+    #[serde(rename = "location")]
     Location,
+    #[serde(rename = "name")]
     Name,
+    #[serde(rename = "pinned_tweet_id")]
     PinnedTweetId,
+    #[serde(rename = "profile_image_url")]
     ProfileImageUrl,
+    #[serde(rename = "protected")]
     Protected,
+    #[serde(rename = "public_metrics")]
     PublicMetrics,
+    #[serde(rename = "url")]
     Url,
+    #[serde(rename = "username")]
     Username,
+    #[serde(rename = "verified")]
     Verified,
+    #[serde(rename = "verified_type")]
     VerifiedType,
+    #[serde(rename = "withheld")]
     Withheld,
 }
 

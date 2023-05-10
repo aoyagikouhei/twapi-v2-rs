@@ -11,8 +11,8 @@
 | |delete_2_users_source_user_id_blocking_target_user_id.rs| |
 | |delete_2_users_source_user_id_following_target_user_id.rs| |
 | |delete_2_users_source_user_id_muting_target_user_id.rs| |
-|x|get_2_compliance_jobs.rs| |
-|x|get_2_compliance_jobs_id.rs| |
+| |get_2_compliance_jobs.rs| |
+| |get_2_compliance_jobs_id.rs| |
 | |get_2_dm_conversations_dm_conversation_id_dm_events.rs| |
 | |get_2_dm_conversations_with_participant_id_dm_events.rs| |
 | |get_2_dm_events.rs| |
@@ -27,23 +27,23 @@
 | |get_2_spaces_id_tweets.rs| |
 | |get_2_spaces_search.rs| |
 | |get_2_tweets.rs| |
-|-|get_2_tweets_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
-| |get_2_tweets_count_all.rs|Failed academic only|
+|NG|get_2_tweets_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
+|NG|get_2_tweets_count_all.rs|Failed academic only|
 | |get_2_tweets_count_recent.rs| |
 | |get_2_tweets_id.rs| |
 | |get_2_tweets_id_liking_users.rs| |
 | |get_2_tweets_id_quote_tweets.rs| |
 | |get_2_tweets_id_retweeted_by.rs| |
-|-|get_2_tweets_sample10_stream.rs|example/streaming, Failed academic only|
-|-|get_2_tweets_sample_stream.rs|example/streaming|
+|NG|get_2_tweets_sample10_stream.rs|example/streaming, Failed academic only|
+| |get_2_tweets_sample_stream.rs|example/streaming|
 | |get_2_tweets_search_all.rs|Failed academic only|
 | |get_2_tweets_search_recent.rs| |
-|-|get_2_tweets_search_stream.rs|example/streaming|
+| |get_2_tweets_search_stream.rs|example/streaming|
 | |get_2_tweets_search_stream_rules.rs| |
 | |get_2_users.rs| |
 | |get_2_users_by.rs| |
 | |get_2_users_by_username_username.rs| |
-|-|get_2_users_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
+|NG|get_2_users_compliance_stream.rs|example/streaming. Failed. "When authenticating requests to the Twitter API v2 endpoints, you must use keys and tokens from a Twitter developer App that is attached to a Project. You can create a project via the developer portal."|
 | |get_2_users_id.rs| |
 | |get_2_users_id_blocking.rs| |
 | |get_2_users_id_bookmarks.rs| |
@@ -59,7 +59,7 @@
 | |get_2_users_id_timelines_reverse_chronological.rs| |
 | |get_2_users_id_tweets.rs| |
 | |get_2_users_me.rs| |
-|x|post_2_compliance_jobs.rs| |
+| |post_2_compliance_jobs.rs| |
 | |post_2_dm_conversations.rs| |
 | |post_2_dm_conversations_dm_conversation_id_message.rs| |
 | |post_2_dm_conversations_with_participant_id_message.rs| |

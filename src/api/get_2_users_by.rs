@@ -10,6 +10,7 @@ const URL: &str = "https://api.twitter.com/2/users/by";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "pinned_tweet_id")]
     PinnedTweetId,
 }
 
