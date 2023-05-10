@@ -14,9 +14,18 @@ def make_query_value(it)
     ".to_string()"
   end
 end
+
+def make_form(it)
+  if it[:constant].present?
+    "(\"#{it[:name]}\", \"#{it[:constant]}\"),"
+  else
+    "(\"#{it[:name]}\", self.#{(it[:alter].present? ? it[:alter] : it[:name]).make_name.make_field}#{make_query_value(it)}),"
+  end
+end
+
 %><% if form.present? %>
 let form_paramters = vec![<% form.each do |it| %>
-    ("<%= it[:name] %>", self.<%= (it[:alter].present? ? it[:alter] : it[:name]).make_name.make_field %><%= make_query_value(it) %>),<% end %>
+    <%= make_form(it) %><% end %>
 ];
 <% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
 query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_name.make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>

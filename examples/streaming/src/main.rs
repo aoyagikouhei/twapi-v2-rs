@@ -1,6 +1,7 @@
 use twapi_v2::{
-    api::get_2_tweets_search_stream as api
+    //api::get_2_tweets_search_stream as api
     //api::get_2_tweets_compliance_stream as api
+    api::get_2_users_compliance_stream as api
     //api::get_2_tweets_sample_stream as api
     //api::get_2_tweets_sample10_stream as api
 };
@@ -11,8 +12,8 @@ use futures_util::StreamExt;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let response = api::Api::open(&bearer_code).build().send().await?;
-    //let response = api::Api::new(&bearer_code, 1).build().send().await?;
+    //let response = api::Api::open(&bearer_code).build().send().await?;
+    let response = api::Api::new(&bearer_code, 1).build().send().await?;
     if !response.status().is_success() {
         println!("{:?}", response.status());
         let json: serde_json::Value = response.json().await?;

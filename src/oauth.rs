@@ -111,6 +111,7 @@ pub struct TwitterOauth {
     basic_client: BasicClient,
     redirect_url: RedirectUrl,
     scopes: Vec<Scope>,
+    api_secret_code: String,
 }
 
 impl TwitterOauth {
@@ -135,6 +136,7 @@ impl TwitterOauth {
             basic_client,
             redirect_url,
             scopes,
+            api_secret_code: api_secret_code.to_owned(),
         })
     }
 
@@ -175,6 +177,27 @@ impl TwitterOauth {
             access_token: token.access_token().secret().to_string(),
             refresh_token: token.refresh_token().map(|it| it.secret().to_string()),
             expires_in: token.expires_in(),
+        })
+    }
+
+    // third_party_app, service_client
+    pub async fn client_credentials(
+        &self,
+    ) -> Result<TokenResult, OAuthError> {
+        let token = self
+            .basic_client
+            .clone()
+            .exchange_client_credentials()
+            .add_scopes(self.scopes.clone())
+            .add_extra_param("client_secret", self.api_secret_code.clone())
+            .add_extra_param("client_type", "third_party_app")
+            .request_async(async_http_client)
+            .await
+            .map_err(|e| OAuthError::Token(format!("{:?}", e)))?;
+        Ok(TokenResult {
+            access_token: token.access_token().secret().to_string(),
+            refresh_token: None,
+            expires_in: None,
         })
     }
 }

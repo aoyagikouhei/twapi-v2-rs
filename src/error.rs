@@ -17,7 +17,7 @@ pub enum Error {
     #[error("serde json {0}")]
     Json(#[from] serde_json::Error),
 
-    #[error("StatusError {0:?}")]
+    #[error("TwitterError {0:?}, {1:?}")]
     Twitter(TwitterError, serde_json::Value, Option<RateLimit>),
 }
 
