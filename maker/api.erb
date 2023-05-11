@@ -24,7 +24,7 @@ impl Api {
         client
             .<%= yml[:method] %>(URL<%= paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>)<% if queries.present? %>
             .query(&query_parameters)<% end %><% if form.present? %>
-            .form(&form_paramters)<% end %>
+            .form(&form_parameters)<% end %>
             <%= auth[:method] %><% if bodies.present? %>
             .json(&self.body)<% end %>
     }

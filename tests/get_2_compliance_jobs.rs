@@ -10,7 +10,8 @@ async fn test_get_2_compliance_jobs() -> Result<()> {
         _ => return Ok(()),
     };
     let builder =
-        get_2_compliance_jobs::Api::new(&app_bearer_code, get_2_compliance_jobs::Type::Users).build();
+        get_2_compliance_jobs::Api::new(&app_bearer_code, get_2_compliance_jobs::Type::Users)
+            .build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_compliance_jobs::Response>(res)?;

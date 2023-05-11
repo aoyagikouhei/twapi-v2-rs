@@ -21,7 +21,7 @@ impl Api {
     }
 
     pub fn build(self) -> RequestBuilder {
-        let form_paramters = vec![
+        let form_parameters = vec![
             ("client_id", self.api_key_code.clone()),
             ("grant_type", "refresh_token".to_owned()),
             ("refresh_token", self.refresh_token),
@@ -30,7 +30,7 @@ impl Api {
         let client = reqwest::Client::new();
         client
             .post(URL)
-            .form(&form_paramters)
+            .form(&form_parameters)
             .basic_auth(self.api_key_code, Some(self.api_secret_code))
     }
 

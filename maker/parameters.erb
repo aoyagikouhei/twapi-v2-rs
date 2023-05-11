@@ -24,7 +24,7 @@ def make_form(it)
 end
 
 %><% if form.present? %>
-let form_paramters = vec![<% form.each do |it| %>
+let form_parameters = vec![<% form.each do |it| %>
     <%= make_form(it) %><% end %>
 ];
 <% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
