@@ -1,8 +1,10 @@
 ## Changes
 
-### v0.5.10 (2023/05/xx)
+### v0.5.10 (2023/08/01)
 * modified typo
 * modified test status
+* add note_tweet in tweets
+* add bookmark_count in public_metrics
 
 ### v0.5.9 (2023/05/11)
 * add post_2_oauth2_token_refresh_token
