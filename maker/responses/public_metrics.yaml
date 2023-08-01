@@ -3,6 +3,8 @@
 response:
   type: object
   properties:
+    bookmark_count: 
+      type: integer
     impression_count: 
       type: integer
     like_count: 

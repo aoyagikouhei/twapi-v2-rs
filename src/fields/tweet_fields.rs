@@ -45,6 +45,8 @@ pub enum TweetFields {
     Text,
     #[serde(rename = "withheld")]
     Withheld,
+    #[serde(rename = "note_tweet")]
+    NoteTweet,
 }
 
 impl TweetFields {
@@ -71,6 +73,7 @@ impl TweetFields {
         result.insert(Self::Source);
         result.insert(Self::Text);
         result.insert(Self::Withheld);
+        result.insert(Self::NoteTweet);
         result
     }
 
@@ -96,6 +99,7 @@ impl TweetFields {
         result.insert(Self::Source);
         result.insert(Self::Text);
         result.insert(Self::Withheld);
+        result.insert(Self::NoteTweet);
         result
     }
 
@@ -119,6 +123,7 @@ impl TweetFields {
         result.insert(Self::Source);
         result.insert(Self::Text);
         result.insert(Self::Withheld);
+        result.insert(Self::NoteTweet);
         result
     }
 }
@@ -147,6 +152,7 @@ impl std::fmt::Display for TweetFields {
             Self::Source => write!(f, "source"),
             Self::Text => write!(f, "text"),
             Self::Withheld => write!(f, "withheld"),
+            Self::NoteTweet => write!(f, "note_tweet"),
         }
     }
 }

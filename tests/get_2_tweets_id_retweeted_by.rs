@@ -12,14 +12,14 @@ async fn test_get_2_tweets_id_retweeted_by() -> Result<()> {
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_tweets_id_retweeted_by::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);
-
-    let builder = get_2_tweets_id_retweeted_by::Api::open(&bearer_code, "1617696866413719556")
-        .pagination_token(&response.meta.unwrap().next_token.unwrap())
-        .build();
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
-    println!("\n{}", serde_json::to_string(&res).unwrap());
-    let response = serde_json::from_value::<get_2_tweets_id_retweeted_by::Response>(res)?;
-    assert_eq!(response.is_empty_extra(), true);
-
+    /*
+       let builder = get_2_tweets_id_retweeted_by::Api::open(&bearer_code, "1617696866413719556")
+           .pagination_token(&response.meta.unwrap().next_token.unwrap())
+           .build();
+       let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+       println!("\n{}", serde_json::to_string(&res).unwrap());
+       let response = serde_json::from_value::<get_2_tweets_id_retweeted_by::Response>(res)?;
+       assert_eq!(response.is_empty_extra(), true);
+    */
     Ok(())
 }

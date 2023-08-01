@@ -6,7 +6,7 @@ use twapi_v2::api::{execute_twitter, get_2_users_by};
 #[tokio::test]
 async fn test_get_2_users_by_by() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_users_by::Api::open(&bearer_code, "aoyagikouhei,uv_technology").build();
+    let builder = get_2_users_by::Api::open(&bearer_code, "barley_tea_0522,uv_technology").build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_users_by::Response>(res)?;

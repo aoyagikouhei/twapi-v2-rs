@@ -26,6 +26,7 @@ pub mod mentions;
 pub mod meta;
 pub mod meta_count;
 pub mod non_public_metrics;
+pub mod note_tweet;
 pub mod options;
 pub mod organic_metrics;
 pub mod places;

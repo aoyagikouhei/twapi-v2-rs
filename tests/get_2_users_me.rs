@@ -11,7 +11,7 @@ async fn test_get_2_users_me() -> Result<()> {
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_users_me::Response>(res)?;
     let data = response.data.as_ref().unwrap();
-    assert_eq!(data.username, "aoyagikouhei");
+    assert_eq!(data.username, "barley_tea_0522");
     assert_eq!(response.is_empty_extra(), true);
     Ok(())
 }

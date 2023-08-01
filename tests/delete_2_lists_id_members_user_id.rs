@@ -11,7 +11,8 @@ async fn test_delete_2_lists_id_members_user_id() -> Result<()> {
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let builder =
-        delete_2_lists_id_members_user_id::Api::new(&bearer_code, "14914404", &user_id).build();
+        delete_2_lists_id_members_user_id::Api::new(&bearer_code, "1686145482224254977", &user_id)
+            .build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<delete_2_lists_id_members_user_id::Response>(res)?;

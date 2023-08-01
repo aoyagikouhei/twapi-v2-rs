@@ -6,7 +6,7 @@ use twapi_v2::api::{execute_twitter, get_2_lists_id};
 #[tokio::test]
 async fn test_get_2_lists_id() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_lists_id::Api::all(&bearer_code, "14914404").build();
+    let builder = get_2_lists_id::Api::all(&bearer_code, "1686145482224254977").build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_lists_id::Response>(res)?;

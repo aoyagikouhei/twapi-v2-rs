@@ -11,7 +11,8 @@ async fn test_post_2_users_id_following() -> Result<()> {
     };
     let body = post_2_users_id_following::Body { target_user_id };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = post_2_users_id_following::Api::new(&bearer_code, "19522946", body).build();
+    let builder =
+        post_2_users_id_following::Api::new(&bearer_code, "1660518823991336966", body).build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_users_id_following::Response>(res)?;

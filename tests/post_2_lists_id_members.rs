@@ -11,7 +11,8 @@ async fn test_post_2_lists_id_members() -> Result<()> {
     };
     let body = post_2_lists_id_members::Body { user_id };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = post_2_lists_id_members::Api::new(&bearer_code, "14914404", body).build();
+    let builder =
+        post_2_lists_id_members::Api::new(&bearer_code, "1686145482224254977", body).build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_lists_id_members::Response>(res)?;

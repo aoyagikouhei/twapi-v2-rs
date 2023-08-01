@@ -12,7 +12,7 @@ async fn test_delete_2_users_source_user_id_following_target_user_id() -> Result
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let builder = delete_2_users_source_user_id_following_target_user_id::Api::new(
         &bearer_code,
-        "19522946",
+        "1660518823991336966",
         &target_user_id,
     )
     .build();

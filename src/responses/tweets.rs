@@ -1,6 +1,6 @@
 use crate::responses::{
     attachments::Attachments, context_annotations::ContextAnnotations, edit_controls::EditControls,
-    entities::Entities, geo::Geo, non_public_metrics::NonPublicMetrics,
+    entities::Entities, geo::Geo, non_public_metrics::NonPublicMetrics, note_tweet::NoteTweet,
     organic_metrics::OrganicMetrics, promoted_metrics::PromotedMetrics,
     public_metrics::PublicMetrics, referenced_tweets::ReferencedTweets, withheld::Withheld,
 };
@@ -24,6 +24,7 @@ pub struct Tweets {
     pub possibly_sensitive: Option<bool>,
     pub public_metrics: Option<PublicMetrics>,
     pub non_public_metrics: Option<NonPublicMetrics>,
+    pub note_tweet: Option<NoteTweet>,
     pub organic_metrics: Option<OrganicMetrics>,
     pub promoted_metrics: Option<PromotedMetrics>,
     pub reply_settings: Option<String>,
@@ -70,6 +71,11 @@ impl Tweets {
                 .unwrap_or(true)
             && self
                 .non_public_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .note_tweet
                 .as_ref()
                 .map(|it| it.is_empty_extra())
                 .unwrap_or(true)

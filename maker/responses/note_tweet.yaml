@@ -1,0 +1,10 @@
+---
+
+response:
+  type: object
+  properties:
+    text:
+      type: string
+    entities:
+      type: object
+      ref: entities

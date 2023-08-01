@@ -46,6 +46,9 @@ response:
     non_public_metrics:
       type: object
       ref: non_public_metrics
+    note_tweet:
+      type: object
+      ref: note_tweet
     organic_metrics:
       type: object
       ref: organic_metrics

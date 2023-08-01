@@ -7,7 +7,7 @@ mod common;
 #[tokio::test]
 async fn test_get_2_lists_id_tweets() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_lists_id_tweets::Api::open(&bearer_code, "14914404").build();
+    let builder = get_2_lists_id_tweets::Api::open(&bearer_code, "1686145482224254977").build();
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     common::write_json(&res, "get_2_lists_id_tweets")?;
     let response = serde_json::from_value::<get_2_lists_id_tweets::Response>(res)?;
