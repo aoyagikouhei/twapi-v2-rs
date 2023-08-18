@@ -1,15 +1,14 @@
-use crate::fields::{
-    media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
-    tweet_fields::TweetFields, user_fields::UserFields,
-};
-use crate::responses::{errors::Errors, includes::Includes, meta::Meta, tweets::Tweets};
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use itertools::Itertools;
-use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
+use crate::fields::{media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields, tweet_fields::TweetFields, user_fields::UserFields};
+use crate::responses::{tweets::Tweets, errors::Errors, includes::Includes, meta::Meta};
+use reqwest::RequestBuilder;
+use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
 
 const URL: &str = "https://api.twitter.com/2/users/:id/liked_tweets";
+
+
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -66,14 +65,11 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self {
-        Self::AttachmentsPollIds
-    }
+    fn default() -> Self { Self::AttachmentsPollIds }
 }
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    bearer_code: String,
     id: String,
     expansions: Option<HashSet<Expansions>>,
     max_results: Option<usize>,
@@ -86,17 +82,15 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, id: &str) -> Self {
+    pub fn new(id: &str) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
             ..Default::default()
         }
     }
-
-    pub fn all(bearer_code: &str, id: &str) -> Self {
+    
+    pub fn all(id: &str) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::all()),
@@ -108,10 +102,9 @@ impl Api {
             ..Default::default()
         }
     }
-
-    pub fn open(bearer_code: &str, id: &str) -> Self {
+    
+    pub fn open(id: &str) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             id: id.to_owned(),
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::open()),
@@ -123,42 +116,42 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-
+    
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-
+    
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
-
+    
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-
+    
     pub fn place_fields(mut self, value: HashSet<PlaceFields>) -> Self {
         self.place_fields = Some(value);
         self
     }
-
+    
     pub fn poll_fields(mut self, value: HashSet<PollFields>) -> Self {
         self.poll_fields = Some(value);
         self
     }
-
+    
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-
+    
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -194,49 +187,34 @@ impl Api {
         client
             .get(URL.replace(":id", &self.id))
             .query(&query_parameters)
-            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build()).await
+    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(), auth).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Tweets>>,
-    pub errors: Option<Vec<Errors>>,
-    pub includes: Option<Includes>,
-    pub meta: Option<Meta>,
+    pub data: Option<Vec<Tweets>>, 
+    pub errors: Option<Vec<Errors>>, 
+    pub includes: Option<Includes>, 
+    pub meta: Option<Meta>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .errors
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .includes
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .meta
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }

@@ -1,26 +1,28 @@
-use crate::responses::compliance::Compliance;
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
+use serde::{Serialize, Deserialize};
+use crate::responses::{compliance::Compliance};
 use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
+use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
 
 const URL: &str = "https://api.twitter.com/2/tweets/compliance/stream";
 
+
+
+
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    bearer_code: String,
     partition: usize,
     backfill_minutes: Option<usize>,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, partition: usize) -> Self {
+    pub fn new(partition: usize) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             partition,
             ..Default::default()
         }
     }
-
+    
     pub fn backfill_minutes(mut self, value: usize) -> Self {
         self.backfill_minutes = Some(value);
         self
@@ -36,71 +38,54 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build()).await
+    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(), auth).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Data>,
+    pub data: Option<Data>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
-    pub delete: Option<Compliance>,
-    pub withheld: Option<Compliance>,
-    pub drop: Option<Compliance>,
-    pub undrop: Option<Compliance>,
+    pub delete: Option<Compliance>, 
+    pub withheld: Option<Compliance>, 
+    pub drop: Option<Compliance>, 
+    pub undrop: Option<Compliance>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Data {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .delete
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .withheld
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .drop
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .undrop
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.delete.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.withheld.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.drop.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.undrop.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Data {:?}", self.extra);
+          println!("Data {:?}", self.extra);
         }
         res
     }

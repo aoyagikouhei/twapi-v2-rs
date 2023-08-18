@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -88,7 +88,5 @@ impl std::fmt::Display for SpaceFields {
 }
 
 impl Default for SpaceFields {
-    fn default() -> Self {
-        Self::HostIds
-    }
+    fn default() -> Self { Self::HostIds }
 }

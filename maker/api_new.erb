@@ -55,11 +55,10 @@ enum_list = queries.filter{|it| it[:type] == "enum"}
 max_list = queries.filter{|it| it[:max].present? }
 default_flag = non_required_queries.size > (enum_list.size + max_list.size)
 
-new_array = auth[:keys].map{|it| "#{it}: &str"} + self_required.map{|it| "#{it[:name].make_name.make_field}: #{make_new_type(it)}"}
+new_array = self_required.map{|it| "#{it[:name].make_name.make_field}: #{make_new_type(it)}"}
 new_array << "body: Body" if bodies.present?
 %>pub fn new(<%= new_array.join(", ") %>) -> Self {
-    Self {
-        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+    Self {<% self_required.each do |it| %>
         <%= required_new(it) %>,<% end %><% if bodies.present? %>
         body,<% end %><% if non_required_queries.present? %>
         ..Default::default()<% end %>
@@ -67,8 +66,7 @@ new_array << "body: Body" if bodies.present?
 }<% if enum_list.present? %>
 
 pub fn all(<%= new_array.join(", ") %>) -> Self {
-    Self {
-        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+    Self {<% self_required.each do |it| %>
         <%= required_new(it) %>,<% end %><% if bodies.present? %>
         body,<% end %><% enum_list.each do |it| %>
         <%= make_open_or_all(it, false) %><% end %><% max_list.each do |it| %>
@@ -78,8 +76,7 @@ pub fn all(<%= new_array.join(", ") %>) -> Self {
 }<% end %><% if open_flag %>
 
 pub fn open(<%= new_array.join(", ") %>) -> Self {
-    Self {
-        <%= auth[:keys].map{|it| "#{it}: #{it}.to_owned(),"}.join("") %><% self_required.each do |it| %>
+    Self {<% self_required.each do |it| %>
         <%= required_new(it) %>,<% end %><% if bodies.present? %>
         body,<% end %><% enum_list.each do |it| %>
         <%= make_open_or_all(it, true) %><% end %><% max_list.each do |it| %>

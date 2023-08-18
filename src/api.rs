@@ -85,11 +85,49 @@ pub mod post_2_users_id_retweets;
 pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
-pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Option<RateLimit>), Error>
+pub trait Auth {
+    fn auth(&self, builder: RequestBuilder) -> RequestBuilder;
+}
+
+pub struct BasicAuth {
+    api_key_code: String,
+    api_secret_code: String,
+}
+
+impl Auth for BasicAuth {
+    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
+        builder.basic_auth(self.api_key_code, Some(self.api_secret_code))
+    }
+}
+
+pub struct BearerAuth {
+    bearer_code: String,
+}
+
+impl Auth for BearerAuth {
+    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
+        builder.bearer_auth(self.bearer_code)
+    }
+}
+
+pub struct OAuthAuth {
+    consumer_code: String,
+    consumer_secret_code: String,
+    access_code: String,
+    access_secret_code: String,
+}
+
+impl Auth for OAuthAuth {
+    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
+        builder.header("Authrizzation", "xxx")
+    }
+}
+
+pub async fn execute_twitter<T>(builder: RequestBuilder, auth: &impl Auth) -> Result<(T, Option<RateLimit>), Error>
 where
     T: DeserializeOwned,
 {
-    let response = builder.send().await?;
+    let response = auth.auth(builder).send().await?;
     let status_code = response.status();
     let header = response.headers();
     let rate_limit = RateLimit::new(header);

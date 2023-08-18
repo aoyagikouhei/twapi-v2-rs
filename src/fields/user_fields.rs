@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -80,7 +80,5 @@ impl std::fmt::Display for UserFields {
 }
 
 impl Default for UserFields {
-    fn default() -> Self {
-        Self::CreatedAt
-    }
+    fn default() -> Self { Self::CreatedAt }
 }

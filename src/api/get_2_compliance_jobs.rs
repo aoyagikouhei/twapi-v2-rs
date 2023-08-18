@@ -1,9 +1,11 @@
+use serde::{Serialize, Deserialize};
 use crate::responses::{jobs::Jobs, meta::Meta};
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
+use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
+
+
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
@@ -23,9 +25,7 @@ impl std::fmt::Display for Type {
 }
 
 impl Default for Type {
-    fn default() -> Self {
-        Self::Tweets
-    }
+    fn default() -> Self { Self::Tweets }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -52,27 +52,23 @@ impl std::fmt::Display for Status {
 }
 
 impl Default for Status {
-    fn default() -> Self {
-        Self::Created
-    }
+    fn default() -> Self { Self::Created }
 }
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    bearer_code: String,
     r#type: Type,
     status: Option<Status>,
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, r#type: Type) -> Self {
+    pub fn new(r#type: Type) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             r#type,
             ..Default::default()
         }
     }
-
+    
     pub fn status(mut self, value: Status) -> Self {
         self.status = Some(value);
         self
@@ -88,37 +84,30 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build()).await
+    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(), auth).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Jobs>>,
-    pub meta: Option<Meta>,
+    pub data: Option<Vec<Jobs>>, 
+    pub meta: Option<Meta>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .meta
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }

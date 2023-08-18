@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -64,6 +64,7 @@ impl MediaFields {
         result.insert(Self::Variants);
         result
     }
+    
 }
 
 impl std::fmt::Display for MediaFields {
@@ -87,7 +88,5 @@ impl std::fmt::Display for MediaFields {
 }
 
 impl Default for MediaFields {
-    fn default() -> Self {
-        Self::DurationMs
-    }
+    fn default() -> Self { Self::DurationMs }
 }

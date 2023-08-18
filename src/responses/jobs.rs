@@ -1,20 +1,20 @@
+use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
-use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Jobs {
-    pub id: Option<String>,
-    pub created_at: Option<DateTime<Utc>>,
-    pub r#type: Option<String>,
-    pub name: Option<String>,
-    pub upload_url: Option<String>,
-    pub upload_expires_at: Option<DateTime<Utc>>,
-    pub download_url: Option<String>,
-    pub download_expires_at: Option<DateTime<Utc>>,
-    pub url: Option<String>,
-    pub status: Option<Status>,
-    pub error: Option<String>,
-    pub resumable: Option<bool>,
+    pub id: Option<String>, 
+    pub created_at: Option<DateTime<Utc>>, 
+    pub r#type: Option<String>, 
+    pub name: Option<String>, 
+    pub upload_url: Option<String>, 
+    pub upload_expires_at: Option<DateTime<Utc>>, 
+    pub download_url: Option<String>, 
+    pub download_expires_at: Option<DateTime<Utc>>, 
+    pub url: Option<String>, 
+    pub status: Option<Status>, 
+    pub error: Option<String>, 
+    pub resumable: Option<bool>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -23,7 +23,7 @@ impl Jobs {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("Jobs {:?}", self.extra);
+          println!("Jobs {:?}", self.extra);
         }
         res
     }
@@ -53,7 +53,5 @@ impl std::fmt::Display for Status {
 }
 
 impl Default for Status {
-    fn default() -> Self {
-        Self::Created
-    }
+    fn default() -> Self { Self::Created }
 }

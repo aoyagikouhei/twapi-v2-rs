@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Withheld {
-    pub copyright: Option<bool>,
-    pub country_codes: Option<Vec<String>>,
-    pub scope: Option<Scope>,
+    pub copyright: Option<bool>, 
+    pub country_codes: Option<Vec<String>>, 
+    pub scope: Option<Scope>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -13,7 +13,7 @@ impl Withheld {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("Withheld {:?}", self.extra);
+          println!("Withheld {:?}", self.extra);
         }
         res
     }
@@ -37,7 +37,5 @@ impl std::fmt::Display for Scope {
 }
 
 impl Default for Scope {
-    fn default() -> Self {
-        Self::Tweet
-    }
+    fn default() -> Self { Self::Tweet }
 }

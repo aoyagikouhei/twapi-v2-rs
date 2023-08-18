@@ -21,8 +21,7 @@ def make_type(it)
     end
   end
 %>#[derive(Debug, Clone, Default)]
-pub struct Api {<% auth[:keys].each do |it| %>
-    <%= it %>: String,<% end %><% (paths + queries + form.filter{|it| it[:alter].blank? && it[:constant].blank?}).each do |it| %>
+pub struct Api {<% (paths + queries + form.filter{|it| it[:alter].blank? && it[:constant].blank?}).each do |it| %>
     <%= it[:name].make_name.make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
     body: Body,<% end %>
 }

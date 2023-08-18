@@ -1,14 +1,14 @@
-use crate::fields::{
-    space_fields::SpaceFields, topic_fields::TopicFields, user_fields::UserFields,
-};
-use crate::responses::{errors::Errors, includes::Includes, meta::Meta, spaces::Spaces};
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use itertools::Itertools;
-use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
+use crate::fields::{space_fields::SpaceFields, topic_fields::TopicFields, user_fields::UserFields};
+use crate::responses::{spaces::Spaces, errors::Errors, includes::Includes, meta::Meta};
+use reqwest::RequestBuilder;
+use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
 
 const URL: &str = "https://api.twitter.com/2/spaces/by/creator_ids";
+
+
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -49,14 +49,11 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self {
-        Self::InvitedUserIds
-    }
+    fn default() -> Self { Self::InvitedUserIds }
 }
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    bearer_code: String,
     user_ids: String,
     expansions: Option<HashSet<Expansions>>,
     space_fields: Option<HashSet<SpaceFields>>,
@@ -65,17 +62,15 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, user_ids: &str) -> Self {
+    pub fn new(user_ids: &str) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             user_ids: user_ids.to_owned(),
             ..Default::default()
         }
     }
-
-    pub fn all(bearer_code: &str, user_ids: &str) -> Self {
+    
+    pub fn all(user_ids: &str) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             user_ids: user_ids.to_owned(),
             expansions: Some(Expansions::all()),
             space_fields: Some(SpaceFields::all()),
@@ -83,22 +78,22 @@ impl Api {
             user_fields: Some(UserFields::all()),
         }
     }
-
+    
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-
+    
     pub fn space_fields(mut self, value: HashSet<SpaceFields>) -> Self {
         self.space_fields = Some(value);
         self
     }
-
+    
     pub fn topic_fields(mut self, value: HashSet<TopicFields>) -> Self {
         self.topic_fields = Some(value);
         self
     }
-
+    
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -123,49 +118,34 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build()).await
+    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(), auth).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Spaces>>,
-    pub errors: Option<Vec<Errors>>,
-    pub includes: Option<Includes>,
-    pub meta: Option<Meta>,
+    pub data: Option<Vec<Spaces>>, 
+    pub errors: Option<Vec<Errors>>, 
+    pub includes: Option<Includes>, 
+    pub meta: Option<Meta>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .errors
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .includes
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .meta
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }

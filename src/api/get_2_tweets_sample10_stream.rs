@@ -1,16 +1,15 @@
-use crate::fields::{
-    media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
-    tweet_fields::TweetFields, user_fields::UserFields,
-};
-use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use chrono::prelude::*;
 use itertools::Itertools;
-use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
+use crate::fields::{media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields, tweet_fields::TweetFields, user_fields::UserFields};
+use crate::responses::{tweets::Tweets, errors::Errors, includes::Includes};
+use reqwest::RequestBuilder;
+use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
 
 const URL: &str = "https://api.twitter.com/2/tweets/sample10/stream";
+
+
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -67,14 +66,11 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self {
-        Self::AttachmentsPollIds
-    }
+    fn default() -> Self { Self::AttachmentsPollIds }
 }
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    bearer_code: String,
     partition: usize,
     backfill_minutes: Option<usize>,
     end_time: Option<DateTime<Utc>>,
@@ -88,17 +84,15 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(bearer_code: &str, partition: usize) -> Self {
+    pub fn new(partition: usize) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             partition,
             ..Default::default()
         }
     }
-
-    pub fn all(bearer_code: &str, partition: usize) -> Self {
+    
+    pub fn all(partition: usize) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             partition,
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::all()),
@@ -109,10 +103,9 @@ impl Api {
             ..Default::default()
         }
     }
-
-    pub fn open(bearer_code: &str, partition: usize) -> Self {
+    
+    pub fn open(partition: usize) -> Self {
         Self {
-            bearer_code: bearer_code.to_owned(),
             partition,
             expansions: Some(Expansions::all()),
             media_fields: Some(MediaFields::open()),
@@ -123,47 +116,47 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn backfill_minutes(mut self, value: usize) -> Self {
         self.backfill_minutes = Some(value);
         self
     }
-
+    
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
         self
     }
-
+    
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-
+    
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
-
+    
     pub fn place_fields(mut self, value: HashSet<PlaceFields>) -> Self {
         self.place_fields = Some(value);
         self
     }
-
+    
     pub fn poll_fields(mut self, value: HashSet<PollFields>) -> Self {
         self.poll_fields = Some(value);
         self
     }
-
+    
     pub fn start_time(mut self, value: DateTime<Utc>) -> Self {
         self.start_time = Some(value);
         self
     }
-
+    
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-
+    
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -191,10 +184,7 @@ impl Api {
             query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
         }
         if let Some(start_time) = self.start_time {
-            query_parameters.push((
-                "start_time",
-                start_time.format("%Y-%m-%dT%H%M%SZ").to_string(),
-            ));
+            query_parameters.push(("start_time", start_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
         }
         if let Some(tweet_fields) = self.tweet_fields {
             query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
@@ -206,43 +196,32 @@ impl Api {
         client
             .get(URL)
             .query(&query_parameters)
-            .bearer_auth(self.bearer_code)
     }
 
-    pub async fn execute(self) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build()).await
+    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(), auth).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Tweets>,
-    pub errors: Option<Vec<Errors>>,
-    pub includes: Option<Includes>,
+    pub data: Option<Tweets>, 
+    pub errors: Option<Vec<Errors>>, 
+    pub includes: Option<Includes>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .errors
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .includes
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true);
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }
