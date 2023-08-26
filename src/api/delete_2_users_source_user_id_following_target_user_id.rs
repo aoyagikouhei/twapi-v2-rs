@@ -23,15 +23,17 @@ impl Api {
         }
     }
     
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         
         let client = reqwest::Client::new();
-        client
+        let builder = client
             .delete(URL.replace(":source_user_id", &self.source_user_id).replace(":target_user_id", &self.target_user_id))
+        ;
+        auth.auth(builder, "delete", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(), auth).await
+        execute_twitter(self.build(auth)).await
     }
 }
 

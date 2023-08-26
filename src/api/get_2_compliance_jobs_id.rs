@@ -21,15 +21,17 @@ impl Api {
         }
     }
     
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         
         let client = reqwest::Client::new();
-        client
+        let builder = client
             .get(URL.replace(":id", &self.id))
+        ;
+        auth.auth(builder, "get", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(), auth).await
+        execute_twitter(self.build(auth)).await
     }
 }
 

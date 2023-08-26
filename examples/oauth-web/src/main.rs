@@ -7,7 +7,7 @@ use axum::{
 use std::{collections::HashMap, net::SocketAddr};
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use twapi_v2::{
-    api::get_2_users_me,
+    api::{get_2_users_me, BearerAuth},
     oauth::{TwitterOauth, TwitterScope},
 };
 use url::Url;
@@ -55,8 +55,9 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
         .await
         .unwrap();
     println!("{:?}", res);
-    let me = get_2_users_me::Api::all(&res.access_token)
-        .execute()
+    let bearer_auth = BearerAuth { bearer_code: res.access_token };
+    let me = get_2_users_me::Api::all()
+        .execute(&bearer_auth)
         .await
         .unwrap();
     Json(me.0).into_response()

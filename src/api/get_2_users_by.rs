@@ -85,7 +85,7 @@ impl Api {
         self
     }
 
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         let mut query_parameters = vec![];
         query_parameters.push(("usernames", self.usernames));
         if let Some(expansions) = self.expansions {
@@ -98,13 +98,15 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        client
+        let builder = client
             .get(URL)
             .query(&query_parameters)
+        ;
+        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(), auth).await
+        execute_twitter(self.build(auth)).await
     }
 }
 

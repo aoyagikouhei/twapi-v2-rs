@@ -47,20 +47,22 @@ impl Api {
         self
     }
 
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(dry_run) = self.dry_run {
             query_parameters.push(("dry_run", dry_run.to_string()));
         }
         let client = reqwest::Client::new();
-        client
+        let builder = client
             .post(URL)
             .query(&query_parameters)
             .json(&self.body)
+        ;
+        auth.auth(builder, "post", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(), auth).await
+        execute_twitter(self.build(auth)).await
     }
 }
 

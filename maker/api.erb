@@ -18,18 +18,20 @@ const URL: &str = "<%= yml[:url] %>";
 impl Api {
 <%= api_new %>
 <%= setter %>
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
 <%= parameters %>
         let client = reqwest::Client::new();
-        client
+        let builder = client
             .<%= yml[:method] %>(URL<%= paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>)<% if queries.present? %>
             .query(&query_parameters)<% end %><% if form.present? %>
             .form(&form_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
+        ;
+        auth.auth(builder, "<%= yml[:method] %>", URL, <%= queries.present? ? :"&query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect()" : "&vec![]" %>)
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(), auth).await
+        execute_twitter(self.build(auth)).await
     }
 }
 

@@ -1,5 +1,7 @@
+use oauth2::http::method;
 use reqwest::RequestBuilder;
 use serde::de::DeserializeOwned;
+use twapi_oauth::oauth1_authorization_header;
 
 use crate::{
     error::{Error, TwitterError},
@@ -86,48 +88,46 @@ pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
 pub trait Auth {
-    fn auth(&self, builder: RequestBuilder) -> RequestBuilder;
-}
-
-pub struct BasicAuth {
-    api_key_code: String,
-    api_secret_code: String,
-}
-
-impl Auth for BasicAuth {
-    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
-        builder.basic_auth(self.api_key_code, Some(self.api_secret_code))
-    }
+    fn auth(&self, builder: RequestBuilder, method: &str, uri: &str, options: &Vec<(&str, &str)>) -> RequestBuilder;
 }
 
 pub struct BearerAuth {
-    bearer_code: String,
+    pub bearer_code: String,
 }
 
 impl Auth for BearerAuth {
-    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
-        builder.bearer_auth(self.bearer_code)
+    fn auth(&self, builder: RequestBuilder, _method: &str, _uri: &str, _options: &Vec<(&str, &str)>) -> RequestBuilder {
+        builder.bearer_auth(&self.bearer_code)
     }
 }
 
 pub struct OAuthAuth {
-    consumer_code: String,
-    consumer_secret_code: String,
-    access_code: String,
-    access_secret_code: String,
+    consumer_key: String,
+    consumer_secret: String,
+    access_key: String,
+    access_secret: String,
 }
 
 impl Auth for OAuthAuth {
-    fn auth(&self, builder: RequestBuilder) -> RequestBuilder {
-        builder.header("Authrizzation", "xxx")
+    fn auth(&self, builder: RequestBuilder, method: &str, uri: &str, options: &Vec<(&str, &str)>) -> RequestBuilder {
+        let auth = oauth1_authorization_header(
+            &self.consumer_key,
+            &self.consumer_secret,
+            &self.access_key,
+            &self.access_secret,
+            method,
+            uri,
+            &options,
+        );
+        builder.header(reqwest::header::AUTHORIZATION, auth)
     }
 }
 
-pub async fn execute_twitter<T>(builder: RequestBuilder, auth: &impl Auth) -> Result<(T, Option<RateLimit>), Error>
+pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Option<RateLimit>), Error>
 where
     T: DeserializeOwned,
 {
-    let response = auth.auth(builder).send().await?;
+    let response = builder.send().await?;
     let status_code = response.status();
     let header = response.headers();
     let rate_limit = RateLimit::new(header);
