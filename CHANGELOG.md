@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.6.0 (2023/08/26)
+* breaking change separate authentication
+* support OAuth1.1a authentication
+
 ### v0.5.10 (2023/08/01)
 * modified typo
 * modified test status

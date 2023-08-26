@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::{
-    api::{execute_twitter, get_2_spaces_id, BearerAuth},
+    api::{execute_twitter, get_2_spaces_id, BearerAuthentication},
     fields::space_fields::SpaceFields,
 };
 
@@ -13,7 +13,7 @@ async fn test_get_2_spaces_id() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let mut expantions = get_2_spaces_id::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces_id::Expansions::TopicsIds);

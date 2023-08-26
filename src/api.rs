@@ -86,8 +86,8 @@ pub mod post_2_users_id_retweets;
 pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
-pub trait Auth {
-    fn auth(
+pub trait Authentication {
+    fn execute(
         &self,
         builder: RequestBuilder,
         method: &str,
@@ -96,11 +96,11 @@ pub trait Auth {
     ) -> RequestBuilder;
 }
 
-pub struct BearerAuth {
+pub struct BearerAuthentication {
     bearer_code: String,
 }
 
-impl BearerAuth {
+impl BearerAuthentication {
     pub fn new<T: Into<String>>(bearer_code: T) -> Self {
         Self {
             bearer_code: bearer_code.into(),
@@ -108,8 +108,8 @@ impl BearerAuth {
     }
 }
 
-impl Auth for BearerAuth {
-    fn auth(
+impl Authentication for BearerAuthentication {
+    fn execute(
         &self,
         builder: RequestBuilder,
         _method: &str,
@@ -120,14 +120,14 @@ impl Auth for BearerAuth {
     }
 }
 
-pub struct OAuthAuth {
+pub struct OAuthAuthentication {
     consumer_key: String,
     consumer_secret: String,
     access_key: String,
     access_secret: String,
 }
 
-impl OAuthAuth {
+impl OAuthAuthentication {
     pub fn new<T: Into<String>>(
         consumer_key: T,
         consumer_secret: T,
@@ -143,8 +143,8 @@ impl OAuthAuth {
     }
 }
 
-impl Auth for OAuthAuth {
-    fn auth(
+impl Authentication for OAuthAuthentication {
+    fn execute(
         &self,
         builder: RequestBuilder,
         method: &str,

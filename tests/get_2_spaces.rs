@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_spaces, BearerAuth};
+use twapi_v2::api::{execute_twitter, get_2_spaces, BearerAuthentication};
 
 // BEARER_CODE=XXXXX SPACES_IDS=XXXXX cargo test test_get_2_spaces -- --nocapture --test-threads=1
 
@@ -10,7 +10,7 @@ async fn test_get_2_spaces() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let mut expantions = get_2_spaces::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces::Expansions::TopicsIds);

@@ -82,7 +82,7 @@ mod tests {
     use crate::{
         api::{
             get_2_tweets_id::{Api, Response},
-            BearerAuth,
+            BearerAuthentication,
         },
         retry::execute_retry,
     };
@@ -104,8 +104,8 @@ mod tests {
         let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
         let logger = Logger {};
 
-        let bearer_auth = BearerAuth::new(bearer_code);
-        let builder: RequestBuilder = Api::open(&tweet_id).build(&bearer_auth);
+        let auth = BearerAuthentication::new(bearer_code);
+        let builder: RequestBuilder = Api::open(&tweet_id).build(&auth);
 
         let res = execute_retry::<Response>(
             builder,

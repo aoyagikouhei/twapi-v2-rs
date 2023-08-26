@@ -4,7 +4,7 @@ use crate::fields::{
 };
 use crate::responses::{errors::Errors, includes::Includes, tweets::Tweets};
 use crate::{
-    api::{execute_twitter, Auth},
+    api::{execute_twitter, Authentication},
     error::Error,
     rate_limit::RateLimit,
 };
@@ -169,7 +169,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
+    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
         query_parameters.push(("partition", self.partition.to_string()));
         if let Some(backfill_minutes) = self.backfill_minutes {
@@ -204,7 +204,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         let builder = client.get(URL).query(&query_parameters);
-        auth.auth(
+        authentication.execute(
             builder,
             "GET",
             URL,
@@ -215,8 +215,11 @@ impl Api {
         )
     }
 
-    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(auth)).await
+    pub async fn execute(
+        self,
+        authentication: &impl Authentication,
+    ) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(authentication)).await
     }
 }
 

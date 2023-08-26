@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, post_2_users_id_blocking, BearerAuth};
+use twapi_v2::api::{execute_twitter, post_2_users_id_blocking, BearerAuthentication};
 
 // BEARER_CODE=XXXXX TARGET_USER_ID=XXXXX cargo test test_post_2_users_id_blocking -- --nocapture --test-threads=1
 
@@ -11,7 +11,7 @@ async fn test_post_2_users_id_blocking() -> Result<()> {
     };
     let body = post_2_users_id_blocking::Body { target_user_id };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let builder =
         post_2_users_id_blocking::Api::new("1660518823991336966", body).build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;

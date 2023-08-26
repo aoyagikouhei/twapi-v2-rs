@@ -7,6 +7,8 @@ Twitter API v2 library.
 - Request builder
 - Retrive rate limit from response headers
 - Convenience setted parameter methods
+- Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
+- OAuth1.1a authentication(OAuth 1.0a User Contex)
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
 - Streaming example
@@ -37,14 +39,15 @@ Twitter API v2 library.
 
 ### API
 ```rust
-use twapi_v2::api::get_2_tweets_id;
+use twapi_v2::api::{get_2_tweets_id, BearerAuthentication};
 
 #[tokio::main]
 async fn main() {
     let bearer_code = std::env::var("BEARER_CODE").unwrap();
+    let auth = BearerAuthentication::new(bearer_code);
     let tweet_id = std::env::var("TWEET_ID").unwrap();
-    let res = get_2_tweets_id::Api::open(&bearer_code, &tweet_id)
-        .execute()
+    let res = get_2_tweets_id::Api::open(&tweet_id)
+        .execute(&auth)
         .await;
     if let Some((val, rate_limit)) = res {
         println!("{:?}", val);

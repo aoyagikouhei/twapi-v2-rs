@@ -1,12 +1,12 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_spaces_search, BearerAuth};
+use twapi_v2::api::{execute_twitter, get_2_spaces_search, BearerAuthentication};
 
 // BEARER_CODE=XXXXX cargo test test_get_2_spaces_search -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_spaces_search() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let mut expantions = get_2_spaces_search::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces_search::Expansions::TopicsIds);

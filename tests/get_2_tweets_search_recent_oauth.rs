@@ -1,11 +1,11 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_tweets_search_recent, OAuthAuth};
+use twapi_v2::api::{execute_twitter, get_2_tweets_search_recent, OAuthAuthentication};
 
 // CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_tweets_search_recent_oauth -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_tweets_search_recent_oauth() -> Result<()> {
-    let auth = OAuthAuth::new(
+    let auth = OAuthAuthentication::new(
         std::env::var("CONSUMER_KEY").unwrap_or_default(),
         std::env::var("CONSUMER_SECRET").unwrap_or_default(),
         std::env::var("ACCESS_KEY").unwrap_or_default(),

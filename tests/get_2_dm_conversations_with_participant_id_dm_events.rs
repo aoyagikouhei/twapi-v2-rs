@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{
-    execute_twitter, get_2_dm_conversations_with_participant_id_dm_events, BearerAuth,
+    execute_twitter, get_2_dm_conversations_with_participant_id_dm_events, BearerAuthentication,
 };
 
 // BEARER_CODE=XXXXX PARTICIPANT_ID=XXXXX cargo test test_get_2_dm_conversations_with_participant_id_dm_events -- --nocapture --test-threads=1
@@ -12,7 +12,7 @@ async fn test_get_2_dm_conversations_with_participant_id_dm_events() -> Result<(
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let builder = get_2_dm_conversations_with_participant_id_dm_events::Api::all(&participant_id)
         .build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;

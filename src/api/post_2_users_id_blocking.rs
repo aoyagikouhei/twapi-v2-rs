@@ -1,5 +1,5 @@
 use crate::{
-    api::{execute_twitter, Auth},
+    api::{execute_twitter, Authentication},
     error::Error,
     rate_limit::RateLimit,
 };
@@ -27,14 +27,17 @@ impl Api {
         }
     }
 
-    pub fn build(self, auth: &impl Auth) -> RequestBuilder {
+    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
         let builder = client.post(URL.replace(":id", &self.id)).json(&self.body);
-        auth.auth(builder, "POST", URL, &vec![])
+        authentication.execute(builder, "POST", URL, &vec![])
     }
 
-    pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
-        execute_twitter(self.build(auth)).await
+    pub async fn execute(
+        self,
+        authentication: &impl Authentication,
+    ) -> Result<(Response, Option<RateLimit>), Error> {
+        execute_twitter(self.build(authentication)).await
     }
 }
 

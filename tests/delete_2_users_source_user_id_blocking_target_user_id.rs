@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{
-    delete_2_users_source_user_id_blocking_target_user_id, execute_twitter, BearerAuth,
+    delete_2_users_source_user_id_blocking_target_user_id, execute_twitter, BearerAuthentication,
 };
 
 // BEARER_CODE=XXXXX TARGET_USER_ID=XXXXX cargo test test_delete_2_users_source_user_id_blocking_target_user_id -- --nocapture --test-threads=1
@@ -12,7 +12,7 @@ async fn test_delete_2_users_source_user_id_blocking_target_user_id() -> Result<
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth::new(bearer_code);
+    let bearer_auth = BearerAuthentication::new(bearer_code);
     let builder = delete_2_users_source_user_id_blocking_target_user_id::Api::new(
         "1660518823991336966",
         &target_user_id,

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_tweets_count_recent, BearerAuth};
+use twapi_v2::api::{execute_twitter, get_2_tweets_count_recent, BearerAuthentication};
 
 // APP_BEARER_CODE=XXXXX cargo test test_get_2_tweets_count_recent -- --nocapture --test-threads=1
 
@@ -9,7 +9,7 @@ async fn test_get_2_tweets_count_recent() -> Result<()> {
         Ok(app_bearer_code) => app_bearer_code,
         _ => return Ok(()),
     };
-    let bearer_auth = BearerAuth::new(app_bearer_code);
+    let bearer_auth = BearerAuthentication::new(app_bearer_code);
     let builder = get_2_tweets_count_recent::Api::new("東京").build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
