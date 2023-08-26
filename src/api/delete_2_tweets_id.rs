@@ -22,7 +22,7 @@ impl Api {
     pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         let client = reqwest::Client::new();
         let builder = client.delete(URL.replace(":id", &self.id));
-        auth.auth(builder, "delete", URL, &vec![])
+        auth.auth(builder, "DELETE", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {

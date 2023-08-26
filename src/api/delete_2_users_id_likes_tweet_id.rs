@@ -28,7 +28,7 @@ impl Api {
             URL.replace(":id", &self.id)
                 .replace(":tweet_id", &self.tweet_id),
         );
-        auth.auth(builder, "delete", URL, &vec![])
+        auth.auth(builder, "DELETE", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {

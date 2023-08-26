@@ -91,7 +91,7 @@ impl Api {
     pub fn build(self, auth: &impl Auth) -> RequestBuilder {
         let client = reqwest::Client::new();
         let builder = client.post(URL).json(&self.body);
-        auth.auth(builder, "post", URL, &vec![])
+        auth.auth(builder, "POST", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {

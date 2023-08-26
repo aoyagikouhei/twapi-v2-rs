@@ -127,6 +127,22 @@ pub struct OAuthAuth {
     access_secret: String,
 }
 
+impl OAuthAuth {
+    pub fn new<T: Into<String>>(
+        consumer_key: T,
+        consumer_secret: T,
+        access_key: T,
+        access_secret: T,
+    ) -> Self {
+        Self {
+            consumer_key: consumer_key.into(),
+            consumer_secret: consumer_secret.into(),
+            access_key: access_key.into(),
+            access_secret: access_secret.into(),
+        }
+    }
+}
+
 impl Auth for OAuthAuth {
     fn auth(
         &self,
@@ -144,6 +160,7 @@ impl Auth for OAuthAuth {
             uri,
             options,
         );
+        println!("auth={}", auth);
         builder.header(reqwest::header::AUTHORIZATION, auth)
     }
 }

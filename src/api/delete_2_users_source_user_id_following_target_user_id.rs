@@ -29,7 +29,7 @@ impl Api {
             URL.replace(":source_user_id", &self.source_user_id)
                 .replace(":target_user_id", &self.target_user_id),
         );
-        auth.auth(builder, "delete", URL, &vec![])
+        auth.auth(builder, "DELETE", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {

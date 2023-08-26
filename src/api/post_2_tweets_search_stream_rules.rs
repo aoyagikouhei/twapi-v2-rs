@@ -58,7 +58,7 @@ impl Api {
         let builder = client.post(URL).query(&query_parameters).json(&self.body);
         auth.auth(
             builder,
-            "post",
+            "POST",
             URL,
             &query_parameters
                 .iter()

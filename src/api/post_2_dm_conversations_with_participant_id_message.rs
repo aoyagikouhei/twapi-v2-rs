@@ -40,7 +40,7 @@ impl Api {
         let builder = client
             .post(URL.replace(":participant_id", &self.participant_id))
             .json(&self.body);
-        auth.auth(builder, "post", URL, &vec![])
+        auth.auth(builder, "POST", URL, &vec![])
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {

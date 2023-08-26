@@ -173,7 +173,7 @@ impl Api {
         let builder = client.get(URL).query(&query_parameters);
         auth.auth(
             builder,
-            "get",
+            "GET",
             URL,
             &query_parameters
                 .iter()

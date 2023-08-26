@@ -117,7 +117,7 @@ impl Api {
             .query(&query_parameters);
         auth.auth(
             builder,
-            "get",
+            "GET",
             URL,
             &query_parameters
                 .iter()
