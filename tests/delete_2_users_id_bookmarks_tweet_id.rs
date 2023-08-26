@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{delete_2_users_id_bookmarks_tweet_id, execute_twitter};
+use twapi_v2::api::{delete_2_users_id_bookmarks_tweet_id, execute_twitter, BearerAuth};
 
 // BEARER_CODE=XXXXX TWEET_ID=XXXXX cargo test test_delete_2_users_id_bookmarks_tweet_id -- --nocapture --test-threads=1
 
@@ -10,12 +10,9 @@ async fn test_delete_2_users_id_bookmarks_tweet_id() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = delete_2_users_id_bookmarks_tweet_id::Api::new(
-        &bearer_code,
-        "1660518823991336966",
-        &tweet_id,
-    )
-    .build();
+    let bearer_auth = BearerAuth::new(bearer_code);
+    let builder = delete_2_users_id_bookmarks_tweet_id::Api::new("1660518823991336966", &tweet_id)
+        .build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<delete_2_users_id_bookmarks_tweet_id::Response>(res)?;

@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -56,5 +56,7 @@ impl std::fmt::Display for DmEventFields {
 }
 
 impl Default for DmEventFields {
-    fn default() -> Self { Self::Id }
+    fn default() -> Self {
+        Self::Id
+    }
 }

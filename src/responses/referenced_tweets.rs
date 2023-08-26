@@ -1,9 +1,9 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ReferencedTweets {
-    pub id: Option<String>, 
-    pub r#type: Option<Type>, 
+    pub id: Option<String>,
+    pub r#type: Option<Type>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -12,7 +12,7 @@ impl ReferencedTweets {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("ReferencedTweets {:?}", self.extra);
+            println!("ReferencedTweets {:?}", self.extra);
         }
         res
     }
@@ -39,5 +39,7 @@ impl std::fmt::Display for Type {
 }
 
 impl Default for Type {
-    fn default() -> Self { Self::Retweeted }
+    fn default() -> Self {
+        Self::Retweeted
+    }
 }

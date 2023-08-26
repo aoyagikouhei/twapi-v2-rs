@@ -1,11 +1,13 @@
-use serde::{Serialize, Deserialize};
 use crate::responses::{jobs::Jobs, meta::Meta};
+use crate::{
+    api::{execute_twitter, Auth},
+    error::Error,
+    rate_limit::RateLimit,
+};
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/compliance/jobs";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
@@ -25,7 +27,9 @@ impl std::fmt::Display for Type {
 }
 
 impl Default for Type {
-    fn default() -> Self { Self::Tweets }
+    fn default() -> Self {
+        Self::Tweets
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -52,7 +56,9 @@ impl std::fmt::Display for Status {
 }
 
 impl Default for Status {
-    fn default() -> Self { Self::Created }
+    fn default() -> Self {
+        Self::Created
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -68,7 +74,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn status(mut self, value: Status) -> Self {
         self.status = Some(value);
         self
@@ -81,11 +87,16 @@ impl Api {
             query_parameters.push(("status", status.to_string()));
         }
         let client = reqwest::Client::new();
-        let builder = client
-            .get(URL)
-            .query(&query_parameters)
-        ;
-        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
+        let builder = client.get(URL).query(&query_parameters);
+        auth.auth(
+            builder,
+            "get",
+            URL,
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect(),
+        )
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
@@ -93,23 +104,29 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Jobs>>, 
-    pub meta: Option<Meta>, 
+    pub data: Option<Vec<Jobs>>,
+    pub meta: Option<Meta>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

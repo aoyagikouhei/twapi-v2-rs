@@ -1,14 +1,16 @@
-use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
-use crate::responses::{users::Users, errors::Errors, includes::Includes, meta::Meta};
+use crate::responses::{errors::Errors, includes::Includes, meta::Meta, users::Users};
+use crate::{
+    api::{execute_twitter, Auth},
+    error::Error,
+    rate_limit::RateLimit,
+};
+use itertools::Itertools;
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/users/:id/blocking";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -33,7 +35,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::PinnedTweetId }
+    fn default() -> Self {
+        Self::PinnedTweetId
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -53,7 +57,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn all(id: &str) -> Self {
         Self {
             id: id.to_owned(),
@@ -64,7 +68,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn open(id: &str) -> Self {
         Self {
             id: id.to_owned(),
@@ -75,27 +79,27 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-    
+
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -121,9 +125,16 @@ impl Api {
         let client = reqwest::Client::new();
         let builder = client
             .get(URL.replace(":id", &self.id))
-            .query(&query_parameters)
-        ;
-        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
+            .query(&query_parameters);
+        auth.auth(
+            builder,
+            "get",
+            URL,
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect(),
+        )
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
@@ -131,27 +142,41 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Users>>, 
-    pub errors: Option<Vec<Errors>>, 
-    pub includes: Option<Includes>, 
-    pub meta: Option<Meta>, 
+    pub data: Option<Vec<Users>>,
+    pub errors: Option<Vec<Errors>>,
+    pub includes: Option<Includes>,
+    pub meta: Option<Meta>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
-        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .errors
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .includes
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

@@ -3,6 +3,7 @@ use chrono::prelude::*;
 use twapi_v2::api::{
     execute_twitter,
     post_2_dm_conversations::{self, Message},
+    BearerAuth,
 };
 
 // BEARER_CODE=XXXXX PARTICIPANT_IDS=XXXXX,YYYY cargo test test_post_2_dm_conversations -- --nocapture --test-threads=1
@@ -29,7 +30,8 @@ async fn test_post_2_dm_conversations() -> Result<()> {
         ..Default::default()
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = post_2_dm_conversations::Api::new(&bearer_code, body).build();
+    let bearer_auth = BearerAuth::new(bearer_code);
+    let builder = post_2_dm_conversations::Api::new(body).build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_dm_conversations::Response>(res)?;

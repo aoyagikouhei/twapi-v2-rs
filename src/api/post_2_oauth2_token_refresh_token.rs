@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
+use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/oauth2/token";
 
@@ -19,9 +19,8 @@ impl Api {
             refresh_token: refresh_token.to_owned(),
         }
     }
-    
+
     pub fn build(self) -> RequestBuilder {
-        
         let form_parameters = vec![
             ("client_id", self.api_key_code.clone()),
             ("grant_type", "refresh_token".to_owned()),
@@ -40,15 +39,13 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub access_token: Option<String>, 
-    pub refresh_token: Option<String>, 
-    pub expires_in: Option<i64>, 
-    pub token_type: Option<String>, 
-    pub scope: Option<String>, 
+    pub access_token: Option<String>,
+    pub refresh_token: Option<String>,
+    pub expires_in: Option<i64>,
+    pub token_type: Option<String>,
+    pub scope: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -57,7 +54,7 @@ impl Response {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

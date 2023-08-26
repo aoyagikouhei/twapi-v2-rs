@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -52,5 +52,7 @@ impl std::fmt::Display for PlaceFields {
 }
 
 impl Default for PlaceFields {
-    fn default() -> Self { Self::ContainedWithin }
+    fn default() -> Self {
+        Self::ContainedWithin
+    }
 }

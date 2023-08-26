@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -40,5 +40,7 @@ impl std::fmt::Display for PollFields {
 }
 
 impl Default for PollFields {
-    fn default() -> Self { Self::DurationMinutes }
+    fn default() -> Self {
+        Self::DurationMinutes
+    }
 }

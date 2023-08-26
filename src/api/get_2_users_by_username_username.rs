@@ -1,14 +1,16 @@
-use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
-use crate::responses::{users::Users, errors::Errors, includes::Includes};
+use crate::responses::{errors::Errors, includes::Includes, users::Users};
+use crate::{
+    api::{execute_twitter, Auth},
+    error::Error,
+    rate_limit::RateLimit,
+};
+use itertools::Itertools;
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/users/by/username/:username";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -33,7 +35,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::PinnedTweetId }
+    fn default() -> Self {
+        Self::PinnedTweetId
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -51,7 +55,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn all(username: &str) -> Self {
         Self {
             username: username.to_owned(),
@@ -60,7 +64,7 @@ impl Api {
             user_fields: Some(UserFields::all()),
         }
     }
-    
+
     pub fn open(username: &str) -> Self {
         Self {
             username: username.to_owned(),
@@ -69,17 +73,17 @@ impl Api {
             user_fields: Some(UserFields::all()),
         }
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -99,9 +103,16 @@ impl Api {
         let client = reqwest::Client::new();
         let builder = client
             .get(URL.replace(":username", &self.username))
-            .query(&query_parameters)
-        ;
-        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
+            .query(&query_parameters);
+        auth.auth(
+            builder,
+            "get",
+            URL,
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect(),
+        )
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
@@ -109,25 +120,35 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Users>, 
-    pub errors: Option<Vec<Errors>>, 
-    pub includes: Option<Includes>, 
+    pub data: Option<Users>,
+    pub errors: Option<Vec<Errors>>,
+    pub includes: Option<Includes>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
-        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .errors
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .includes
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

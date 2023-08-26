@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -102,7 +102,6 @@ impl TweetFields {
         result.insert(Self::NoteTweet);
         result
     }
-    
 
     pub fn open() -> HashSet<Self> {
         let mut result = HashSet::new();
@@ -127,7 +126,6 @@ impl TweetFields {
         result.insert(Self::NoteTweet);
         result
     }
-    
 }
 
 impl std::fmt::Display for TweetFields {
@@ -160,5 +158,7 @@ impl std::fmt::Display for TweetFields {
 }
 
 impl Default for TweetFields {
-    fn default() -> Self { Self::Attachments }
+    fn default() -> Self {
+        Self::Attachments
+    }
 }

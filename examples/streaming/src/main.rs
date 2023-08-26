@@ -12,7 +12,7 @@ use futures_util::StreamExt;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let bearer_auth = BearerAuth{ bearer_code };
+    let bearer_auth = BearerAuth::new(bearer_code);
     let response = api::Api::open().build(&bearer_auth).send().await?;
     //let response = api::Api::new(&bearer_code, 1).build().send().await?;
     if !response.status().is_success() {

@@ -1,12 +1,14 @@
-use chrono::prelude::*;
-use serde::{Serialize, Deserialize};
 use crate::responses::{counts::Counts, errors::Errors, meta_count::MetaCount};
+use crate::{
+    api::{execute_twitter, Auth},
+    error::Error,
+    rate_limit::RateLimit,
+};
+use chrono::prelude::*;
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "https://api.twitter.com/2/tweets/counts/all";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Granularity {
@@ -29,7 +31,9 @@ impl std::fmt::Display for Granularity {
 }
 
 impl Default for Granularity {
-    fn default() -> Self { Self::Minute }
+    fn default() -> Self {
+        Self::Minute
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -49,27 +53,27 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
         self
     }
-    
+
     pub fn granularity(mut self, value: Granularity) -> Self {
         self.granularity = Some(value);
         self
     }
-    
+
     pub fn since_id(mut self, value: &str) -> Self {
         self.since_id = Some(value.to_owned());
         self
     }
-    
+
     pub fn start_time(mut self, value: DateTime<Utc>) -> Self {
         self.start_time = Some(value);
         self
     }
-    
+
     pub fn until_id(mut self, value: &str) -> Self {
         self.until_id = Some(value.to_owned());
         self
@@ -88,17 +92,25 @@ impl Api {
             query_parameters.push(("since_id", since_id));
         }
         if let Some(start_time) = self.start_time {
-            query_parameters.push(("start_time", start_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
+            query_parameters.push((
+                "start_time",
+                start_time.format("%Y-%m-%dT%H%M%SZ").to_string(),
+            ));
         }
         if let Some(until_id) = self.until_id {
             query_parameters.push(("until_id", until_id));
         }
         let client = reqwest::Client::new();
-        let builder = client
-            .get(URL)
-            .query(&query_parameters)
-        ;
-        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
+        let builder = client.get(URL).query(&query_parameters);
+        auth.auth(
+            builder,
+            "get",
+            URL,
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect(),
+        )
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
@@ -106,25 +118,35 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<Counts>>, 
-    pub errors: Option<Vec<Errors>>, 
-    pub meta: Option<MetaCount>, 
+    pub data: Option<Vec<Counts>>,
+    pub errors: Option<Vec<Errors>>,
+    pub meta: Option<MetaCount>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .errors
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

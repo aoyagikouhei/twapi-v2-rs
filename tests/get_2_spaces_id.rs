@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::{
-    api::{execute_twitter, get_2_spaces_id},
+    api::{execute_twitter, get_2_spaces_id, BearerAuth},
     fields::space_fields::SpaceFields,
 };
 
@@ -13,16 +13,17 @@ async fn test_get_2_spaces_id() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+    let bearer_auth = BearerAuth::new(bearer_code);
     let mut expantions = get_2_spaces_id::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces_id::Expansions::TopicsIds);
     let mut spaces_fields = SpaceFields::all();
     // Setting this paramter is invalid.
     spaces_fields.remove(&SpaceFields::SubscriberCount);
-    let builder: reqwest::RequestBuilder = get_2_spaces_id::Api::all(&bearer_code, &id)
+    let builder: reqwest::RequestBuilder = get_2_spaces_id::Api::all(&id)
         .space_fields(spaces_fields)
         .expansions(expantions)
-        .build();
+        .build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_spaces_id::Response>(res)?;

@@ -1,14 +1,19 @@
-use itertools::Itertools;
-use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
-use crate::fields::{dm_event_fields::DmEventFields, media_fields::MediaFields, tweet_fields::TweetFields, user_fields::UserFields};
+use crate::fields::{
+    dm_event_fields::DmEventFields, media_fields::MediaFields, tweet_fields::TweetFields,
+    user_fields::UserFields,
+};
 use crate::responses::{dm_events::DmEvents, errors::Errors, includes::Includes, meta::Meta};
+use crate::{
+    api::{execute_twitter, Auth},
+    error::Error,
+    rate_limit::RateLimit,
+};
+use itertools::Itertools;
 use reqwest::RequestBuilder;
-use crate::{error::Error, rate_limit::RateLimit, api::{execute_twitter, Auth}};
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "https://api.twitter.com/2/dm_conversations/with/:participant_id/dm_events";
-
-
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum EventTypes {
@@ -31,7 +36,9 @@ impl std::fmt::Display for EventTypes {
 }
 
 impl Default for EventTypes {
-    fn default() -> Self { Self::Messagecreate }
+    fn default() -> Self {
+        Self::Messagecreate
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -69,7 +76,9 @@ impl std::fmt::Display for Expansions {
 }
 
 impl Default for Expansions {
-    fn default() -> Self { Self::AttachmentsMediaKeys }
+    fn default() -> Self {
+        Self::AttachmentsMediaKeys
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -92,7 +101,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn all(participant_id: &str) -> Self {
         Self {
             participant_id: participant_id.to_owned(),
@@ -105,7 +114,7 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn open(participant_id: &str) -> Self {
         Self {
             participant_id: participant_id.to_owned(),
@@ -118,42 +127,42 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn dm_event_fields(mut self, value: HashSet<DmEventFields>) -> Self {
         self.dm_event_fields = Some(value);
         self
     }
-    
+
     pub fn event_types(mut self, value: EventTypes) -> Self {
         self.event_types = Some(value);
         self
     }
-    
+
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-    
+
     pub fn max_results(mut self, value: usize) -> Self {
         self.max_results = Some(value);
         self
     }
-    
+
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
-    
+
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
         self
     }
-    
+
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-    
+
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
@@ -188,9 +197,16 @@ impl Api {
         let client = reqwest::Client::new();
         let builder = client
             .get(URL.replace(":participant_id", &self.participant_id))
-            .query(&query_parameters)
-        ;
-        auth.auth(builder, "get", URL, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect())
+            .query(&query_parameters);
+        auth.auth(
+            builder,
+            "get",
+            URL,
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect(),
+        )
     }
 
     pub async fn execute(self, auth: &impl Auth) -> Result<(Response, Option<RateLimit>), Error> {
@@ -198,27 +214,41 @@ impl Api {
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub data: Option<Vec<DmEvents>>, 
-    pub errors: Option<Vec<Errors>>, 
-    pub includes: Option<Includes>, 
-    pub meta: Option<Meta>, 
+    pub data: Option<Vec<DmEvents>>,
+    pub errors: Option<Vec<Errors>>,
+    pub includes: Option<Includes>,
+    pub meta: Option<Meta>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
-        self.meta.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .errors
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .includes
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .meta
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }

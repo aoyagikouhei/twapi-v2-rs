@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_compliance_jobs_id};
+use twapi_v2::api::{execute_twitter, get_2_compliance_jobs_id, BearerAuth};
 
 // BEARER_CODE=XXXXX JOB_ID=XXXXX cargo test test_get_2_compliance_jobs_id -- --nocapture --test-threads=1
 
@@ -10,7 +10,8 @@ async fn test_get_2_compliance_jobs_id() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_compliance_jobs_id::Api::new(&bearer_code, &job_id).build();
+    let bearer_auth = BearerAuth::new(bearer_code);
+    let builder = get_2_compliance_jobs_id::Api::new(&job_id).build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_compliance_jobs_id::Response>(res)?;

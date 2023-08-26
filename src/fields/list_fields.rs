@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
@@ -44,5 +44,7 @@ impl std::fmt::Display for ListFields {
 }
 
 impl Default for ListFields {
-    fn default() -> Self { Self::CreatedAt }
+    fn default() -> Self {
+        Self::CreatedAt
+    }
 }

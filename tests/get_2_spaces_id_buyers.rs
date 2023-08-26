@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, get_2_spaces_id_buyers};
+use twapi_v2::api::{execute_twitter, get_2_spaces_id_buyers, BearerAuth};
 
 // BEARER_CODE=XXXXX SPACES_ID=XXXXX cargo test test_get_2_spaces_id_buyers -- --nocapture --test-threads=1
 
@@ -10,7 +10,8 @@ async fn test_get_2_spaces_id_buyers() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
-    let builder = get_2_spaces_id_buyers::Api::all(&bearer_code, &spaces_id).build();
+    let bearer_auth = BearerAuth::new(bearer_code);
+    let builder = get_2_spaces_id_buyers::Api::all(&spaces_id).build(&bearer_auth);
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_spaces_id_buyers::Response>(res)?;

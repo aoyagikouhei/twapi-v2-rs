@@ -80,7 +80,10 @@ mod tests {
     use reqwest::{RequestBuilder, StatusCode};
 
     use crate::{
-        api::{get_2_tweets_id::{Api, Response}, BearerAuth},
+        api::{
+            get_2_tweets_id::{Api, Response},
+            BearerAuth,
+        },
         retry::execute_retry,
     };
 
@@ -101,7 +104,7 @@ mod tests {
         let tweet_id = std::env::var("TWEET_ID").unwrap_or_default();
         let logger = Logger {};
 
-        let bearer_auth = BearerAuth{bearer_code};
+        let bearer_auth = BearerAuth::new(bearer_code);
         let builder: RequestBuilder = Api::open(&tweet_id).build(&bearer_auth);
 
         let res = execute_retry::<Response>(

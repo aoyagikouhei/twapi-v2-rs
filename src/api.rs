@@ -1,4 +1,3 @@
-use oauth2::http::method;
 use reqwest::RequestBuilder;
 use serde::de::DeserializeOwned;
 use twapi_oauth::oauth1_authorization_header;
@@ -88,15 +87,35 @@ pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
 pub trait Auth {
-    fn auth(&self, builder: RequestBuilder, method: &str, uri: &str, options: &Vec<(&str, &str)>) -> RequestBuilder;
+    fn auth(
+        &self,
+        builder: RequestBuilder,
+        method: &str,
+        uri: &str,
+        options: &Vec<(&str, &str)>,
+    ) -> RequestBuilder;
 }
 
 pub struct BearerAuth {
-    pub bearer_code: String,
+    bearer_code: String,
+}
+
+impl BearerAuth {
+    pub fn new<T: Into<String>>(bearer_code: T) -> Self {
+        Self {
+            bearer_code: bearer_code.into(),
+        }
+    }
 }
 
 impl Auth for BearerAuth {
-    fn auth(&self, builder: RequestBuilder, _method: &str, _uri: &str, _options: &Vec<(&str, &str)>) -> RequestBuilder {
+    fn auth(
+        &self,
+        builder: RequestBuilder,
+        _method: &str,
+        _uri: &str,
+        _options: &Vec<(&str, &str)>,
+    ) -> RequestBuilder {
         builder.bearer_auth(&self.bearer_code)
     }
 }
@@ -109,7 +128,13 @@ pub struct OAuthAuth {
 }
 
 impl Auth for OAuthAuth {
-    fn auth(&self, builder: RequestBuilder, method: &str, uri: &str, options: &Vec<(&str, &str)>) -> RequestBuilder {
+    fn auth(
+        &self,
+        builder: RequestBuilder,
+        method: &str,
+        uri: &str,
+        options: &Vec<(&str, &str)>,
+    ) -> RequestBuilder {
         let auth = oauth1_authorization_header(
             &self.consumer_key,
             &self.consumer_secret,
@@ -117,7 +142,7 @@ impl Auth for OAuthAuth {
             &self.access_secret,
             method,
             uri,
-            &options,
+            options,
         );
         builder.header(reqwest::header::AUTHORIZATION, auth)
     }
