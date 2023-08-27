@@ -10,7 +10,7 @@ axum = "0.6.16"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 tower-cookies = "0.9.0"
-twapi-v2 = { path="../..", features = ["retry", "oauth"] }
+twapi-v2 = { path="../..", features = ["retry", "oauth", "oauth11a"] }
 url = "2.3.1"
 
 [features]

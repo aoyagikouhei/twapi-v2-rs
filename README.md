@@ -29,6 +29,9 @@ Twitter API v2 library.
 ### oauth
 - Twitter OAuth
 
+### oauth11a
+- Use api by oauth 1.1a
+
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)
 
@@ -37,7 +40,7 @@ Twitter API v2 library.
 
 ## Examples
 
-### API
+### API(bearer)
 ```rust
 use twapi_v2::api::{get_2_tweets_id, BearerAuthentication};
 
@@ -45,6 +48,29 @@ use twapi_v2::api::{get_2_tweets_id, BearerAuthentication};
 async fn main() {
     let bearer_code = std::env::var("BEARER_CODE").unwrap();
     let auth = BearerAuthentication::new(bearer_code);
+    let tweet_id = std::env::var("TWEET_ID").unwrap();
+    let res = get_2_tweets_id::Api::open(&tweet_id)
+        .execute(&auth)
+        .await;
+    if let Some((val, rate_limit)) = res {
+        println!("{:?}", val);
+    }
+}
+```
+
+### API(OAuth1.1a)
+```rust
+use twapi_v2::api::{get_2_tweets_id, BearerAuthentication};
+use twapi_v2::oauth11a::OAuthAuthentication;
+
+#[tokio::main]
+async fn main() {
+    let auth = OAuthAuthentication::new(
+        std::env::var("CONSUMER_KEY").unwrap_or_default(),
+        std::env::var("CONSUMER_SECRET").unwrap_or_default(),
+        std::env::var("ACCESS_KEY").unwrap_or_default(),
+        std::env::var("ACCESS_SECRET").unwrap_or_default(),
+    );
     let tweet_id = std::env::var("TWEET_ID").unwrap();
     let res = get_2_tweets_id::Api::open(&tweet_id)
         .execute(&auth)
