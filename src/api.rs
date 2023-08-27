@@ -1,6 +1,5 @@
 use reqwest::RequestBuilder;
 use serde::de::DeserializeOwned;
-use twapi_oauth::oauth1_authorization_header;
 
 use crate::{
     error::{Error, TwitterError},
@@ -117,51 +116,6 @@ impl Authentication for BearerAuthentication {
         _options: &Vec<(&str, &str)>,
     ) -> RequestBuilder {
         builder.bearer_auth(&self.bearer_code)
-    }
-}
-
-pub struct OAuthAuthentication {
-    consumer_key: String,
-    consumer_secret: String,
-    access_key: String,
-    access_secret: String,
-}
-
-impl OAuthAuthentication {
-    pub fn new<T: Into<String>>(
-        consumer_key: T,
-        consumer_secret: T,
-        access_key: T,
-        access_secret: T,
-    ) -> Self {
-        Self {
-            consumer_key: consumer_key.into(),
-            consumer_secret: consumer_secret.into(),
-            access_key: access_key.into(),
-            access_secret: access_secret.into(),
-        }
-    }
-}
-
-impl Authentication for OAuthAuthentication {
-    fn execute(
-        &self,
-        builder: RequestBuilder,
-        method: &str,
-        uri: &str,
-        options: &Vec<(&str, &str)>,
-    ) -> RequestBuilder {
-        let auth = oauth1_authorization_header(
-            &self.consumer_key,
-            &self.consumer_secret,
-            &self.access_key,
-            &self.access_secret,
-            method,
-            uri,
-            options,
-        );
-        println!("auth={}", auth);
-        builder.header(reqwest::header::AUTHORIZATION, auth)
     }
 }
 

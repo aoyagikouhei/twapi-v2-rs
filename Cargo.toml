@@ -12,21 +12,26 @@ readme = "README.md"
 documentation = "https://docs.rs/twapi-v2"
 
 [dependencies]
-chrono = { version="0.4.24", features=[ "serde" ] }
+base64 = { version = "0.21.3", optional = true }
+chrono = { version = "0.4.24", features = [ "serde" ] }
+hmac = { version = "0.12.1", optional = true }
 itertools = "0.10.5"
 oauth2 = { version = "4.3", optional = true }
+rand = { version = "0.8.5", optional = true }
 reqwest = { version = "0.11", features = ["json"], default-features = false, optional = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-twapi-oauth = "0.1.4"
+sha1 = { version = "0.10.5", optional = true }
 thiserror = "1.0"
 tokio = { version = "1", features = ["time"], optional = true }
+url = { version = "2.4.0", optional = true }
 
 [features]
 default = ["reqwest/default-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 retry = ["tokio"]
 oauth = ["oauth2"]
+oauth11a = ["base64", "hmac", "rand", "sha1", "url"]
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros"] }
@@ -34,6 +39,6 @@ anyhow = "1.0.70"
 
 [package.metadata.docs.rs]
 all-features = true
-features = ["retry", "oauth", "rustls-tls"]
+features = ["retry", "oauth", "oauth11a", "rustls-tls"]
 rustdoc-args = ["--cfg", "docsrs"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]
