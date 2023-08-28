@@ -37,7 +37,7 @@ impl Authentication for OAuthAuthentication {
         builder: RequestBuilder,
         method: &str,
         uri: &str,
-        options: &Vec<(&str, &str)>,
+        options: &[(&str, &str)],
     ) -> RequestBuilder {
         let auth = oauth1_authorization_header(
             &self.consumer_key,

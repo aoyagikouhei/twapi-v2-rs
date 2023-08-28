@@ -40,7 +40,7 @@ impl Api {
         let builder = client
             .post(URL.replace(":participant_id", &self.participant_id))
             .json(&self.body);
-        authentication.execute(builder, "POST", URL, &vec![])
+        authentication.execute(builder, "POST", URL, &[])
     }
 
     pub async fn execute(

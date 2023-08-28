@@ -27,7 +27,7 @@ impl Api {
             .form(&form_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
         ;
-        authentication.execute(builder, "<%= yml[:method].upcase %>", URL, <%= queries.present? ? :"&query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect()" : "&vec![]" %>)
+        authentication.execute(builder, "<%= yml[:method].upcase %>", URL, <%= queries.present? ? :"&query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect::<Vec<_>>()" : "&[]" %>)
     }
 
     pub async fn execute(self, authentication: &impl Authentication) -> Result<(Response, Option<RateLimit>), Error> {

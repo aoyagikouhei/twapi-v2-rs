@@ -28,7 +28,7 @@ impl Api {
             URL.replace(":id", &self.id)
                 .replace(":source_tweet_id", &self.source_tweet_id),
         );
-        authentication.execute(builder, "DELETE", URL, &vec![])
+        authentication.execute(builder, "DELETE", URL, &[])
     }
 
     pub async fn execute(

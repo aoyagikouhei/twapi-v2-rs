@@ -40,7 +40,7 @@ impl Api {
         let builder = client
             .post(URL.replace(":dm_conversation_id", &self.dm_conversation_id))
             .json(&self.body);
-        authentication.execute(builder, "POST", URL, &vec![])
+        authentication.execute(builder, "POST", URL, &[])
     }
 
     pub async fn execute(

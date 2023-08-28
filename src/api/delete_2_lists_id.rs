@@ -22,7 +22,7 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
         let builder = client.delete(URL.replace(":id", &self.id));
-        authentication.execute(builder, "DELETE", URL, &vec![])
+        authentication.execute(builder, "DELETE", URL, &[])
     }
 
     pub async fn execute(

@@ -28,7 +28,7 @@ impl Api {
             URL.replace(":id", &self.id)
                 .replace(":list_id", &self.list_id),
         );
-        authentication.execute(builder, "DELETE", URL, &vec![])
+        authentication.execute(builder, "DELETE", URL, &[])
     }
 
     pub async fn execute(

@@ -109,7 +109,7 @@ impl Api {
             &query_parameters
                 .iter()
                 .map(|it| (it.0, it.1.as_str()))
-                .collect(),
+                .collect::<Vec<_>>(),
         )
     }
 

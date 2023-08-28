@@ -91,7 +91,7 @@ pub trait Authentication {
         builder: RequestBuilder,
         method: &str,
         uri: &str,
-        options: &Vec<(&str, &str)>,
+        options: &[(&str, &str)],
     ) -> RequestBuilder;
 }
 
@@ -113,7 +113,7 @@ impl Authentication for BearerAuthentication {
         builder: RequestBuilder,
         _method: &str,
         _uri: &str,
-        _options: &Vec<(&str, &str)>,
+        _options: &[(&str, &str)],
     ) -> RequestBuilder {
         builder.bearer_auth(&self.bearer_code)
     }
