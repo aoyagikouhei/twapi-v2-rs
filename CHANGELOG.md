@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.7.0 (2023/09/05)
+* breaking change oauth11a to oauth10a
+* updated crates
+
 ### v0.6.0 (2023/08/28)
 * breaking change separate authentication
 * support OAuth1.1a authentication. feature oauth11a

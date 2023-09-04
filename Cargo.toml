@@ -1,12 +1,12 @@
 [package]
 name = "twapi-v2"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
 edition = "2021"
 description = "Twitter API v2 library."
 repository = "https://github.com/aoyagikouhei/twapi-v2-rs"
-keywords = ["twitter"]
+keywords = ["twitter", "v2", "api", "client", "oauth"]
 categories = ["api-bindings"]
 readme = "README.md"
 documentation = "https://docs.rs/twapi-v2"

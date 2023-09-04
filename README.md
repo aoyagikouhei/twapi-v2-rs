@@ -8,7 +8,7 @@ Twitter API v2 library.
 - Retrive rate limit from response headers
 - Convenience setted parameter methods
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
-- OAuth1.1a authentication(OAuth 1.0a User Contex)
+- OAuth1.0a authentication(OAuth 1.0a User Contex)
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
 - Streaming example
@@ -29,8 +29,8 @@ Twitter API v2 library.
 ### oauth
 - Twitter OAuth
 
-### oauth11a
-- Use api by oauth 1.1a
+### oauth10a
+- Use api by OAuth1.0a
 
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)
@@ -58,10 +58,10 @@ async fn main() {
 }
 ```
 
-### API(OAuth1.1a)
+### API(OAuth1.0a)
 ```rust
 use twapi_v2::api::{get_2_tweets_id, BearerAuthentication};
-use twapi_v2::oauth11a::OAuthAuthentication;
+use twapi_v2::oauth10a::OAuthAuthentication;
 
 #[tokio::main]
 async fn main() {
