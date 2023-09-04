@@ -16,3 +16,4 @@ url = "2.4"
 [features]
 retry = []
 oauth = []
+oauth10a = []
