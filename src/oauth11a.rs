@@ -46,7 +46,7 @@ impl Authentication for OAuthAuthentication {
             &self.access_secret,
             method,
             uri,
-            options,
+            &options.to_vec(),
         );
         builder.header(reqwest::header::AUTHORIZATION, auth)
     }

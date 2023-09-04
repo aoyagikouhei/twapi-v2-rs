@@ -56,9 +56,6 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
         .unwrap();
     println!("{:?}", res);
     let auth = BearerAuthentication::new(res.access_token);
-    let me = get_2_users_me::Api::all()
-        .execute(&auth)
-        .await
-        .unwrap();
+    let me = get_2_users_me::Api::all().execute(&auth).await.unwrap();
     Json(me.0).into_response()
 }
