@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_tweets_search_recent};
-use twapi_v2::oauth11a::OAuthAuthentication;
+use twapi_v2::oauth10a::OAuthAuthentication;
 
 // CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_tweets_search_recent_oauth -- --nocapture --test-threads=1
 

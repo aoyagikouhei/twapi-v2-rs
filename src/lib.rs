@@ -13,5 +13,5 @@ pub mod retry;
 #[cfg(feature = "oauth")]
 pub mod oauth;
 
-#[cfg(feature = "oauth11a")]
-pub mod oauth11a;
+#[cfg(feature = "oauth10a")]
+pub mod oauth10a;

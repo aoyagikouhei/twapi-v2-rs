@@ -140,7 +140,7 @@ fn make_query(list: &Vec<(&str, String)>, separator: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::oauth11a::oauth1_authorization_header;
+    use crate::oauth10a::oauth1_authorization_header;
     #[test]
     fn it_oauth2_authorization_header() {
         println!(

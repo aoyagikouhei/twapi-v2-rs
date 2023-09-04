@@ -31,7 +31,7 @@ default = ["reqwest/default-tls"]
 rustls-tls = ["reqwest/rustls-tls"]
 retry = ["tokio"]
 oauth = ["oauth2"]
-oauth11a = ["base64", "hmac", "rand", "sha1", "url"]
+oauth10a = ["base64", "hmac", "rand", "sha1", "url"]
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros"] }
@@ -39,6 +39,6 @@ anyhow = "1.0.70"
 
 [package.metadata.docs.rs]
 all-features = true
-features = ["retry", "oauth", "oauth11a", "rustls-tls"]
+features = ["retry", "oauth", "oauth10a", "rustls-tls"]
 rustdoc-args = ["--cfg", "docsrs"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

@@ -12,7 +12,7 @@
 	],
 	"settings": {
 		"rust-analyzer.cargo.features": [
-			"oauth11a",
+			"oauth10a",
 			"oauth",
 			"retry"
 		],
