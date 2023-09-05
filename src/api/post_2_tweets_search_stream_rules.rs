@@ -55,11 +55,12 @@ impl Api {
             query_parameters.push(("dry_run", dry_run.to_string()));
         }
         let client = reqwest::Client::new();
-        let builder = client.post(URL).query(&query_parameters).json(&self.body);
+        let url = URL.to_string();
+        let builder = client.post(&url).query(&query_parameters).json(&self.body);
         authentication.execute(
             builder,
             "POST",
-            URL,
+            &url,
             &query_parameters
                 .iter()
                 .map(|it| (it.0, it.1.as_str()))

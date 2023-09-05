@@ -29,8 +29,9 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let builder = client.put(URL.replace(":id", &self.id)).json(&self.body);
-        authentication.execute(builder, "PUT", URL, &[])
+        let url = URL.replace(":id", &self.id);
+        let builder = client.put(&url).json(&self.body);
+        authentication.execute(builder, "PUT", &url, &[])
     }
 
     pub async fn execute(

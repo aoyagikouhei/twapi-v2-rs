@@ -35,11 +35,12 @@ impl Api {
             query_parameters.push(("backfill_minutes", backfill_minutes.to_string()));
         }
         let client = reqwest::Client::new();
-        let builder = client.get(URL).query(&query_parameters);
+        let url = URL.to_string();
+        let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,
             "GET",
-            URL,
+            &url,
             &query_parameters
                 .iter()
                 .map(|it| (it.0, it.1.as_str()))

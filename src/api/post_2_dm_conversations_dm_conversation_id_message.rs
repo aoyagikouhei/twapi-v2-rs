@@ -37,10 +37,9 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let builder = client
-            .post(URL.replace(":dm_conversation_id", &self.dm_conversation_id))
-            .json(&self.body);
-        authentication.execute(builder, "POST", URL, &[])
+        let url = URL.replace(":dm_conversation_id", &self.dm_conversation_id);
+        let builder = client.post(&url).json(&self.body);
+        authentication.execute(builder, "POST", &url, &[])
     }
 
     pub async fn execute(

@@ -21,13 +21,14 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
 <%= parameters %>
         let client = reqwest::Client::new();
+        let url = URL<%= paths.empty? ? ".to_string()" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>;
         let builder = client
-            .<%= yml[:method] %>(URL<%= paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>)<% if queries.present? %>
+            .<%= yml[:method] %>(&url)<% if queries.present? %>
             .query(&query_parameters)<% end %><% if form.present? %>
             .form(&form_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
         ;
-        authentication.execute(builder, "<%= yml[:method].upcase %>", URL, <%= queries.present? ? :"&query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect::<Vec<_>>()" : "&[]" %>)
+        authentication.execute(builder, "<%= yml[:method].upcase %>", &url, <%= queries.present? ? :"&query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect::<Vec<_>>()" : "&[]" %>)
     }
 
     pub async fn execute(self, authentication: &impl Authentication) -> Result<(Response, Option<RateLimit>), Error> {

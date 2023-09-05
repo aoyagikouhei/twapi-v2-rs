@@ -101,13 +101,12 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        let builder = client
-            .get(URL.replace(":username", &self.username))
-            .query(&query_parameters);
+        let url = URL.replace(":username", &self.username);
+        let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,
             "GET",
-            URL,
+            &url,
             &query_parameters
                 .iter()
                 .map(|it| (it.0, it.1.as_str()))
