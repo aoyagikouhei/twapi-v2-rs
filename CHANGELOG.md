@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.7.1 (2023/09/05)
+* modify calucurate oauth1.0a path paramter
+
 ### v0.7.0 (2023/09/05)
 * breaking change oauth11a to oauth10a
 * updated crates
