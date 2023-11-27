@@ -84,7 +84,7 @@ async fn main() {
 ### Twitter OAuth Web
 ```
 cd examples/oauth-web
-API_KEY_CODE=XXXX API_SECRET_CODE=XXXX cargo run
+API_KEY_CODE=XXXX API_SECRET_CODE=XXXX CALLBACK_URL=http://localhost:3000/oauth cargo run
 ```
 http://localhost:3000/
 
