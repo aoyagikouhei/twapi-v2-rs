@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.8.0 (2023/12/xx)
+* add v1 to v2 json parser
+
 ### v0.7.1 (2023/09/05)
 * modify calucurate oauth1.0a path paramter
 
