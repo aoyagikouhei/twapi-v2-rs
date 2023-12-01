@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct NoteTweet {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entities: Option<Entities>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

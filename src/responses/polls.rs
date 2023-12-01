@@ -6,8 +6,11 @@ use serde::{Deserialize, Serialize};
 pub struct Polls {
     pub id: String,
     pub options: Vec<Options>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub duration_minutes: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_datetime: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub voting_status: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

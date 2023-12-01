@@ -4,20 +4,32 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Users {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created_at: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entities: Option<UserEntities>,
     pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pinned_tweet_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub profile_image_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub protected: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub public_metrics: Option<PublicMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
     pub username: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub verified: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub verified_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub withheld: Option<Withheld>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
@@ -50,9 +62,13 @@ impl Users {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct PublicMetrics {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub followers_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub following_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tweet_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub listed_count: Option<i64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

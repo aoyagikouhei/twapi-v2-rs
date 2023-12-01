@@ -5,11 +5,17 @@ use serde::{Deserialize, Serialize};
 pub struct Places {
     pub full_name: String,
     pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub contained_within: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub geo: Option<Geo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub place_type: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

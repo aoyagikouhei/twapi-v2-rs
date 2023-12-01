@@ -3,9 +3,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Meta {
     pub result_count: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub newest_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub oldest_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub next_token: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub previous_token: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

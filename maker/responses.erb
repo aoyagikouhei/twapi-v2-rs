@@ -71,7 +71,8 @@ extra_value = extra_list.present? ? " &&\n        #{extra_list.join(" &&\n      
 <% end %>use serde::{Serialize, Deserialize};USE_DATE<% end %>
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct <%= class_name %> {<% properties.each_pair do |key, value| %>
+pub struct <%= class_name %> {<% properties.each_pair do |key, value| %><% if !value[:required] %>
+    #[serde(skip_serializing_if = "Option::is_none")]<% end %>
     pub <%= key.to_s.make_name %>: <%= make_response_type(key, value) %>, <% end %>
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

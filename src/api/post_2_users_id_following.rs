@@ -45,7 +45,9 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<Data>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub errors: Option<Vec<Errors>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
@@ -73,7 +75,9 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub following: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pending_follow: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

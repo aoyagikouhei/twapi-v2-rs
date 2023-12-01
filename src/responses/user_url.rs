@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct UserUrl {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub urls: Option<Vec<Urls>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

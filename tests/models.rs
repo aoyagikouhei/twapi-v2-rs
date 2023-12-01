@@ -1,6 +1,9 @@
 // cargo test --all-features test_models_from_v1 --  --nocapture --test-threads=1
 
-use std::{fs::File, io::{BufReader, BufRead, Write}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader, Write},
+};
 
 use twapi_v2::models::TweetModel;
 

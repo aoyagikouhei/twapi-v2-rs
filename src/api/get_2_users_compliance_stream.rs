@@ -58,6 +58,7 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<Data>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
@@ -80,14 +81,23 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_delete: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_undelete: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_withheld: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_protect: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_unprotect: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_suspend: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_unsuspend: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scrub_geo: Option<Compliance>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user_profile_modification: Option<Compliance>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
