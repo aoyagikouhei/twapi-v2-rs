@@ -114,16 +114,76 @@ fn from_v1_edit_history_tweet_ids(src: &serde_json::Value) -> Vec<String> {
     }
 }
 
-fn from_v1_entities(src: &serde_json::Value) -> Option<crate::responses::entities::Entities> {
-    if src.is_object() {
-        Some(crate::responses::entities::Entities {
-            mentions: Some(from_v1_menthions(&src["user_mentions"])),
-            hashtags: Some(from_v1_hashtags(&src["hashtags"])),
-            urls: Some(from_v1_urls(&src["urls"])),
+fn from_v1_media(
+    src: &serde_json::Value,
+) -> (
+    Vec<crate::responses::urls::Urls>,
+    Option<crate::responses::attachments::Attachments>,
+) {
+    let mut media_keys = vec![];
+
+    let urls = if let Some(targets) = src.as_array() {
+        targets
+            .iter()
+            .map(|it| {
+                let indices = from_v1_indicies(it);
+                let media_type = match it["type"].as_str() {
+                    Some("photo") => "3",
+                    _ => "0",
+                };
+                let media_key = format!(
+                    "{}_{}",
+                    media_type,
+                    src["id_str"].as_str().unwrap_or_default()
+                );
+                media_keys.push(media_key.clone());
+                crate::responses::urls::Urls {
+                    url: it["url"].as_str().map(|it| it.to_owned()),
+                    display_url: it["display_url"].as_str().map(|it| it.to_owned()),
+                    expanded_url: it["expanded_url"].as_str().map(|it| it.to_owned()),
+                    media_key: Some(media_key),
+                    start: indices.0,
+                    end: indices.1,
+                    ..Default::default()
+                }
+            })
+            .collect()
+    } else {
+        vec![]
+    };
+
+    let attachments = if !media_keys.is_empty() {
+        Some(crate::responses::attachments::Attachments {
+            media_keys: Some(media_keys),
             ..Default::default()
         })
     } else {
         None
+    };
+    (urls, attachments)
+}
+
+fn from_v1_entities(
+    src: &serde_json::Value,
+) -> (
+    Option<crate::responses::entities::Entities>,
+    Option<crate::responses::attachments::Attachments>,
+) {
+    if src.is_object() {
+        let (mut urls1, attachments) = from_v1_media(&src["media"]);
+        let mut urls2 = from_v1_urls(&src["urls"]);
+        urls1.append(&mut urls2);
+        (
+            Some(crate::responses::entities::Entities {
+                mentions: Some(from_v1_menthions(&src["user_mentions"])),
+                hashtags: Some(from_v1_hashtags(&src["hashtags"])),
+                urls: Some(urls1),
+                ..Default::default()
+            }),
+            attachments,
+        )
+    } else {
+        (None, None)
     }
 }
 
@@ -173,9 +233,11 @@ fn from_v1_tweets(
     user_map: &mut HashMap<String, crate::responses::users::Users>,
 ) -> Option<crate::responses::tweets::Tweets> {
     if src.is_object() {
+        let (entities, attachments) = from_v1_entities(&src["entities"]);
         let mut data = crate::responses::tweets::Tweets {
             id: src["id_str"].as_str().unwrap_or_default().to_owned(),
             text: src["text"].as_str().unwrap_or_default().to_owned(),
+            attachments,
             source: src["source"].as_str().map(|it| it.to_owned()),
             author_id: src["user"]["id_str"].as_str().map(|it| it.to_owned()),
             conversation_id: src["edit_history"]["initial_tweet_id"]
@@ -186,7 +248,7 @@ fn from_v1_tweets(
             edit_history_tweet_ids: from_v1_edit_history_tweet_ids(
                 &src["edit_history"]["edit_tweet_ids"],
             ),
-            entities: from_v1_entities(&src["entities"]),
+            entities,
             in_reply_to_user_id: src["in_reply_to_user_id_str"]
                 .as_str()
                 .map(|it| it.to_owned()),

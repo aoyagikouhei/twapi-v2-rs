@@ -1,4 +1,4 @@
 /target/
 /results/
-v1.json
-v2.json
+/samples/
+result.json
