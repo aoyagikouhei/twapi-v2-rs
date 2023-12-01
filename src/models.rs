@@ -134,7 +134,7 @@ fn from_v1_media(
                 let media_key = format!(
                     "{}_{}",
                     media_type,
-                    src["id_str"].as_str().unwrap_or_default()
+                    it["id_str"].as_str().unwrap_or_default()
                 );
                 media_keys.push(media_key.clone());
                 crate::responses::urls::Urls {
