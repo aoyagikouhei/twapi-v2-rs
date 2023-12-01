@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 
 use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 
 pub type TweetModel = crate::api::get_2_tweets_id::Response;
 
 fn str_to_utc(src: &str) -> Option<DateTime<Utc>> {
-    DateTime::parse_from_str(src, "%a %b %d %H:%M:%S +0000 %Y")
+    DateTime::parse_from_str(src, "%a %b %d %T %z %Y")
         .ok()
         .map(|it| it.into())
 }
@@ -94,8 +95,13 @@ fn from_v1_edit_controls(
 ) -> Option<crate::responses::edit_controls::EditControls> {
     if src.is_object() {
         Some(crate::responses::edit_controls::EditControls {
-            editable_until: millis_to_utc(src["editable_until_ms"].as_i64().unwrap_or_default()),
-            edits_remaining: src["edits_remaining"].as_i64(),
+            editable_until: millis_to_utc(
+                src["edit_controls"]["editable_until_ms"]
+                    .as_i64()
+                    .unwrap_or_default(),
+            ),
+            edits_remaining: src["edit_controls"]["edits_remaining"].as_i64(),
+            is_edit_eligible: src["editable"].as_bool(),
             ..Default::default()
         })
     } else {
@@ -187,6 +193,73 @@ fn from_v1_entities(
     }
 }
 
+#[derive(Deserialize)]
+struct BoundingBox {
+    r#type: String,
+    coordinates: Vec<Vec<Vec<f64>>>,
+}
+
+impl BoundingBox {
+    fn coordinates(src: &serde_json::Value) -> Vec<f64> {
+        match serde_json::from_value::<BoundingBox>(src["bounding_box"].clone()) {
+            Ok(it) => {
+                let mut x0 = it.coordinates[0][0][0];
+                let mut y0 = it.coordinates[0][0][1];
+                let mut x1 = it.coordinates[0][0][0];
+                let mut y1 = it.coordinates[0][0][1];
+                for i in 1..4 {
+                    if x0 > it.coordinates[0][i][0] {
+                        x0 = it.coordinates[0][i][0];
+                    }
+                    if x1 < it.coordinates[0][i][0] {
+                        x1 = it.coordinates[0][i][0];
+                    }
+                    if y0 > it.coordinates[0][i][1] {
+                        y0 = it.coordinates[0][i][1];
+                    }
+                    if y1 < it.coordinates[0][i][1] {
+                        y1 = it.coordinates[0][i][1];
+                    }
+                }
+                vec![x0, y0, x1, y1]
+            }
+            Err(_) => vec![],
+        }
+    }
+}
+
+fn from_v1_place(
+    src: &serde_json::Value,
+) -> (
+    Option<crate::responses::places::Places>,
+    Option<crate::responses::geo::Geo>,
+) {
+    if src.is_object() {
+        let place_geo = crate::responses::geo::Geo {
+            r#type: Some("Feature".to_owned()),
+            bbox: Some(BoundingBox::coordinates(src)),
+            ..Default::default()
+        };
+        let place = crate::responses::places::Places {
+            id: src["id"].as_str().unwrap_or_default().to_owned(),
+            full_name: src["full_name"].as_str().unwrap_or_default().to_owned(),
+            country: src["country"].as_str().map(|it| it.to_owned()),
+            country_code: src["country_code"].as_str().map(|it| it.to_owned()),
+            name: src["name"].as_str().map(|it| it.to_owned()),
+            place_type: src["place_type"].as_str().map(|it| it.to_owned()),
+            geo: Some(place_geo),
+            ..Default::default()
+        };
+        let geo = crate::responses::geo::Geo {
+            place_id: Some(place.id.clone()),
+            ..Default::default()
+        };
+        (Some(place), Some(geo))
+    } else {
+        (None, None)
+    }
+}
+
 fn from_v1_public_metrics(
     src: &serde_json::Value,
 ) -> Option<crate::responses::public_metrics::PublicMetrics> {
@@ -231,9 +304,11 @@ fn from_v1_tweets(
     src: &serde_json::Value,
     tweet_map: &mut HashMap<String, crate::responses::tweets::Tweets>,
     user_map: &mut HashMap<String, crate::responses::users::Users>,
+    place_map: &mut HashMap<String, crate::responses::places::Places>,
 ) -> Option<crate::responses::tweets::Tweets> {
     if src.is_object() {
         let (entities, attachments) = from_v1_entities(&src["entities"]);
+        let (places, geo) = from_v1_place(&src["place"]);
         let mut data = crate::responses::tweets::Tweets {
             id: src["id_str"].as_str().unwrap_or_default().to_owned(),
             text: src["text"].as_str().unwrap_or_default().to_owned(),
@@ -244,11 +319,12 @@ fn from_v1_tweets(
                 .as_str()
                 .map(|it| it.to_owned()),
             created_at: str_to_utc(src["created_at"].as_str().unwrap_or_default()),
-            edit_controls: from_v1_edit_controls(&src["edit_controls"]),
+            edit_controls: from_v1_edit_controls(src),
             edit_history_tweet_ids: from_v1_edit_history_tweet_ids(
                 &src["edit_history"]["edit_tweet_ids"],
             ),
             entities,
+            geo,
             in_reply_to_user_id: src["in_reply_to_user_id_str"]
                 .as_str()
                 .map(|it| it.to_owned()),
@@ -258,9 +334,11 @@ fn from_v1_tweets(
             ..Default::default()
         };
 
-        // TODO : attachments
+        if let Some(places) = places {
+            place_map.insert(places.id.clone(), places);
+        }
 
-        // TODO : geo
+        // TODO : attachments
 
         // TODO : note_tweet
 
@@ -269,7 +347,9 @@ fn from_v1_tweets(
         let mut referenced_tweets = vec![];
 
         if src["retweeted_status"].is_object() {
-            if let Some(tweet) = from_v1_tweets(&src["retweeted_status"], tweet_map, user_map) {
+            if let Some(tweet) =
+                from_v1_tweets(&src["retweeted_status"], tweet_map, user_map, place_map)
+            {
                 referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
                     id: Some(tweet.id.clone()),
                     r#type: Some(crate::responses::referenced_tweets::Type::Retweeted),
@@ -280,12 +360,18 @@ fn from_v1_tweets(
         }
 
         if src["quoted_status"].is_object() {
-            if let Some(tweet) = from_v1_tweets(&src["quoted_status"], tweet_map, user_map) {
-                referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
-                    id: Some(tweet.id.clone()),
-                    r#type: Some(crate::responses::referenced_tweets::Type::Quoted),
-                    ..Default::default()
-                });
+            if let Some(tweet) =
+                from_v1_tweets(&src["quoted_status"], tweet_map, user_map, place_map)
+            {
+                // 引用をリポストされると、両方入ってくる。しかしこの引用はリポスト元の引用になる。
+                // よって、このポストの関連ポストにしない。
+                if !src["retweeted_status"].is_object() {
+                    referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
+                        id: Some(tweet.id.clone()),
+                        r#type: Some(crate::responses::referenced_tweets::Type::Quoted),
+                        ..Default::default()
+                    });
+                }
                 tweet_map.insert(tweet.id.clone(), tweet);
             }
         }
@@ -299,6 +385,8 @@ fn from_v1_tweets(
         let user = from_v1_users(&src["user"]);
         user_map.insert(user.id.clone(), user);
 
+        // TODO : 最後に自分自身を関連にいれるか検討。入れなくて良いと思うがV2はそういう構造になっている
+
         Some(data)
     } else {
         None
@@ -309,12 +397,14 @@ impl TweetModel {
     pub fn from_v1(src: &serde_json::Value) -> Self {
         let mut tweet_map = HashMap::new();
         let mut user_map = HashMap::new();
-        let data = from_v1_tweets(src, &mut tweet_map, &mut user_map);
+        let mut place_map = HashMap::new();
+        let data = from_v1_tweets(src, &mut tweet_map, &mut user_map, &mut place_map);
         Self {
             data,
             includes: Some(crate::responses::includes::Includes {
                 tweets: Some(tweet_map.into_values().collect()),
                 users: Some(user_map.into_values().collect()),
+                places: Some(place_map.into_values().collect()),
                 ..Default::default()
             }),
             ..Default::default()
