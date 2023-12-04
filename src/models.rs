@@ -28,40 +28,56 @@ fn from_v1_indicies(src: &serde_json::Value) -> (Option<i64>, Option<i64>) {
     }
 }
 
-fn from_v1_menthions(src: &serde_json::Value) -> Vec<crate::responses::mentions::Mentions> {
+fn from_v1_menthions(src: &serde_json::Value) -> Option<Vec<crate::responses::mentions::Mentions>> {
     match src.as_array() {
-        Some(user_mentions) => user_mentions
-            .iter()
-            .map(|it| {
-                let indices = from_v1_indicies(it);
-                crate::responses::mentions::Mentions {
-                    username: it["screen_name"].as_str().map(|it| it.to_owned()),
-                    id: it["id_str"].as_str().map(|it| it.to_owned()),
-                    start: indices.0,
-                    end: indices.1,
-                    ..Default::default()
-                }
-            })
-            .collect(),
-        None => vec![],
+        Some(targets) => {
+            if targets.is_empty() {
+                None
+            } else {
+                Some(
+                    targets
+                        .iter()
+                        .map(|it| {
+                            let indices = from_v1_indicies(it);
+                            crate::responses::mentions::Mentions {
+                                username: it["screen_name"].as_str().map(|it| it.to_owned()),
+                                id: it["id_str"].as_str().map(|it| it.to_owned()),
+                                start: indices.0,
+                                end: indices.1,
+                                ..Default::default()
+                            }
+                        })
+                        .collect(),
+                )
+            }
+        }
+        None => None,
     }
 }
 
-fn from_v1_hashtags(src: &serde_json::Value) -> Vec<crate::responses::hashtags::Hashtags> {
+fn from_v1_hashtags(src: &serde_json::Value) -> Option<Vec<crate::responses::hashtags::Hashtags>> {
     match src.as_array() {
-        Some(user_mentions) => user_mentions
-            .iter()
-            .map(|it| {
-                let indices = from_v1_indicies(it);
-                crate::responses::hashtags::Hashtags {
-                    tag: it["text"].as_str().map(|it| it.to_owned()),
-                    start: indices.0,
-                    end: indices.1,
-                    ..Default::default()
-                }
-            })
-            .collect(),
-        None => vec![],
+        Some(targets) => {
+            if targets.is_empty() {
+                None
+            } else {
+                Some(
+                    targets
+                        .iter()
+                        .map(|it| {
+                            let indices = from_v1_indicies(it);
+                            crate::responses::hashtags::Hashtags {
+                                tag: it["text"].as_str().map(|it| it.to_owned()),
+                                start: indices.0,
+                                end: indices.1,
+                                ..Default::default()
+                            }
+                        })
+                        .collect(),
+                )
+            }
+        }
+        None => None,
     }
 }
 
@@ -122,7 +138,9 @@ fn from_v1_edit_history_tweet_ids(src: &serde_json::Value) -> Vec<String> {
 
 fn from_v1_media_key(src: &serde_json::Value) -> String {
     let media_type = match src["type"].as_str() {
+        // gifもwebpもここに落ちた。
         Some("photo") => "3",
+        Some("video") => "7",
         Some("animated_gif") => "16",
         _ => "0",
     };
@@ -197,8 +215,8 @@ fn from_v1_entities(
         urls1.append(&mut urls2);
         (
             Some(crate::responses::entities::Entities {
-                mentions: Some(from_v1_menthions(&src["user_mentions"])),
-                hashtags: Some(from_v1_hashtags(&src["hashtags"])),
+                mentions: from_v1_menthions(&src["user_mentions"]),
+                hashtags: from_v1_hashtags(&src["hashtags"]),
                 urls: Some(urls1),
                 ..Default::default()
             }),
@@ -353,6 +371,7 @@ fn from_v1_exetend_entities_media(
         targets.iter().for_each(|it| {
             let (width, height) = from_v1_exetend_entities_media_size(&it["sizes"]);
             let media = crate::responses::media::Media {
+                duration_ms: it["video_info"]["duration_millis"].as_i64(),
                 media_key: Some(from_v1_media_key(it)),
                 width,
                 height,
@@ -495,10 +514,26 @@ impl TweetModel {
         Self {
             data,
             includes: Some(crate::responses::includes::Includes {
-                tweets: Some(tweet_map.into_values().collect()),
-                users: Some(user_map.into_values().collect()),
-                places: Some(place_map.into_values().collect()),
-                media: Some(media_map.into_values().collect()),
+                tweets: if tweet_map.is_empty() {
+                    None
+                } else {
+                    Some(tweet_map.into_values().collect())
+                },
+                users: if user_map.is_empty() {
+                    None
+                } else {
+                    Some(user_map.into_values().collect())
+                },
+                places: if place_map.is_empty() {
+                    None
+                } else {
+                    Some(place_map.into_values().collect())
+                },
+                media: if media_map.is_empty() {
+                    None
+                } else {
+                    Some(media_map.into_values().collect())
+                },
                 ..Default::default()
             }),
             ..Default::default()
