@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use chrono::prelude::*;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 pub type TweetModel = crate::api::get_2_tweets_id::Response;
 
@@ -120,8 +120,22 @@ fn from_v1_edit_history_tweet_ids(src: &serde_json::Value) -> Vec<String> {
     }
 }
 
-fn from_v1_media(
+fn from_v1_media_key(src: &serde_json::Value) -> String {
+    let media_type = match src["type"].as_str() {
+        Some("photo") => "3",
+        Some("animated_gif") => "16",
+        _ => "0",
+    };
+    format!(
+        "{}_{}",
+        media_type,
+        src["id_str"].as_str().unwrap_or_default()
+    )
+}
+
+fn from_v1_media_url(
     src: &serde_json::Value,
+    media_map: &mut HashMap<String, crate::responses::media::Media>,
 ) -> (
     Vec<crate::responses::urls::Urls>,
     Option<crate::responses::attachments::Attachments>,
@@ -133,15 +147,16 @@ fn from_v1_media(
             .iter()
             .map(|it| {
                 let indices = from_v1_indicies(it);
-                let media_type = match it["type"].as_str() {
-                    Some("photo") => "3",
-                    _ => "0",
+                let id = it["id_str"].as_str().unwrap_or_default().to_owned();
+                let media_key = if let Some(media) = media_map.get(&id) {
+                    if let Some(media_key) = &media.media_key {
+                        media_key.clone()
+                    } else {
+                        from_v1_media_key(it)
+                    }
+                } else {
+                    from_v1_media_key(it)
                 };
-                let media_key = format!(
-                    "{}_{}",
-                    media_type,
-                    it["id_str"].as_str().unwrap_or_default()
-                );
                 media_keys.push(media_key.clone());
                 crate::responses::urls::Urls {
                     url: it["url"].as_str().map(|it| it.to_owned()),
@@ -171,12 +186,13 @@ fn from_v1_media(
 
 fn from_v1_entities(
     src: &serde_json::Value,
+    media_map: &mut HashMap<String, crate::responses::media::Media>,
 ) -> (
     Option<crate::responses::entities::Entities>,
     Option<crate::responses::attachments::Attachments>,
 ) {
     if src.is_object() {
-        let (mut urls1, attachments) = from_v1_media(&src["media"]);
+        let (mut urls1, attachments) = from_v1_media_url(&src["media"], media_map);
         let mut urls2 = from_v1_urls(&src["urls"]);
         urls1.append(&mut urls2);
         (
@@ -195,6 +211,7 @@ fn from_v1_entities(
 
 #[derive(Deserialize)]
 struct BoundingBox {
+    #[allow(dead_code)]
     r#type: String,
     coordinates: Vec<Vec<Vec<f64>>>,
 }
@@ -300,15 +317,70 @@ fn from_v1_users(src: &serde_json::Value) -> crate::responses::users::Users {
     }
 }
 
+fn from_v1_exetend_entities_media_size(src: &serde_json::Value) -> (Option<i64>, Option<i64>) {
+    if let Some(sizes) = src["medium"].as_object() {
+        (sizes["w"].as_i64(), sizes["h"].as_i64())
+    } else if let Some(sizes) = src["small"].as_object() {
+        (sizes["w"].as_i64(), sizes["h"].as_i64())
+    } else if let Some(sizes) = src["large"].as_object() {
+        (sizes["w"].as_i64(), sizes["h"].as_i64())
+    } else if let Some(sizes) = src["thumb"].as_object() {
+        (sizes["w"].as_i64(), sizes["h"].as_i64())
+    } else {
+        (None, None)
+    }
+}
+
+fn from_v1_variants(src: &serde_json::Value) -> Option<Vec<crate::responses::variants::Variants>> {
+    src["video_info"]["variants"].as_array().map(|targets| {
+        targets
+            .iter()
+            .map(|it| crate::responses::variants::Variants {
+                bit_rate: it["bitrate"].as_i64(),
+                content_type: it["content_type"].as_str().map(|it| it.to_owned()),
+                url: it["url"].as_str().map(|it| it.to_owned()),
+                ..Default::default()
+            })
+            .collect()
+    })
+}
+
+fn from_v1_exetend_entities_media(
+    src: &serde_json::Value,
+    media_map: &mut HashMap<String, crate::responses::media::Media>,
+) {
+    if let Some(targets) = src["extended_entities"]["media"].as_array() {
+        targets.iter().for_each(|it| {
+            let (width, height) = from_v1_exetend_entities_media_size(&it["sizes"]);
+            let media = crate::responses::media::Media {
+                media_key: Some(from_v1_media_key(it)),
+                width,
+                height,
+                preview_image_url: it["media_url_https"].as_str().map(|it| it.to_owned()),
+                r#type: it["type"].as_str().map(|it| it.to_owned()),
+                variants: from_v1_variants(it),
+                ..Default::default()
+            };
+            media_map.insert(it["id_str"].as_str().unwrap_or_default().to_owned(), media);
+        })
+    }
+}
+
 fn from_v1_tweets(
     src: &serde_json::Value,
     tweet_map: &mut HashMap<String, crate::responses::tweets::Tweets>,
     user_map: &mut HashMap<String, crate::responses::users::Users>,
     place_map: &mut HashMap<String, crate::responses::places::Places>,
+    media_map: &mut HashMap<String, crate::responses::media::Media>,
 ) -> Option<crate::responses::tweets::Tweets> {
     if src.is_object() {
-        let (entities, attachments) = from_v1_entities(&src["entities"]);
+        // extend_entities/media
+        // entitiesのURLのmedia_keyを先に計算する必要があるのでここでやる
+        from_v1_exetend_entities_media(src, media_map);
+
+        let (entities, attachments) = from_v1_entities(&src["entities"], media_map);
         let (places, geo) = from_v1_place(&src["place"]);
+
         let mut data = crate::responses::tweets::Tweets {
             id: src["id_str"].as_str().unwrap_or_default().to_owned(),
             text: src["text"].as_str().unwrap_or_default().to_owned(),
@@ -338,8 +410,6 @@ fn from_v1_tweets(
             place_map.insert(places.id.clone(), places);
         }
 
-        // TODO : attachments
-
         // TODO : note_tweet
 
         // TODO : withheld
@@ -347,9 +417,13 @@ fn from_v1_tweets(
         let mut referenced_tweets = vec![];
 
         if src["retweeted_status"].is_object() {
-            if let Some(tweet) =
-                from_v1_tweets(&src["retweeted_status"], tweet_map, user_map, place_map)
-            {
+            if let Some(tweet) = from_v1_tweets(
+                &src["retweeted_status"],
+                tweet_map,
+                user_map,
+                place_map,
+                media_map,
+            ) {
                 referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
                     id: Some(tweet.id.clone()),
                     r#type: Some(crate::responses::referenced_tweets::Type::Retweeted),
@@ -360,9 +434,13 @@ fn from_v1_tweets(
         }
 
         if src["quoted_status"].is_object() {
-            if let Some(tweet) =
-                from_v1_tweets(&src["quoted_status"], tweet_map, user_map, place_map)
-            {
+            if let Some(tweet) = from_v1_tweets(
+                &src["quoted_status"],
+                tweet_map,
+                user_map,
+                place_map,
+                media_map,
+            ) {
                 // 引用をリポストされると、両方入ってくる。しかしこの引用はリポスト元の引用になる。
                 // よって、このポストの関連ポストにしない。
                 if !src["retweeted_status"].is_object() {
@@ -376,7 +454,15 @@ fn from_v1_tweets(
             }
         }
 
-        // TODO : replay_status
+        // リプライ
+        // リプライのリツイートはこの値がセットされていない
+        if let Some(id) = src["in_reply_to_status_id_str"].as_str() {
+            referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
+                id: Some(id.to_owned()),
+                r#type: Some(crate::responses::referenced_tweets::Type::RepliedTo),
+                ..Default::default()
+            });
+        }
 
         if !referenced_tweets.is_empty() {
             data.referenced_tweets = Some(referenced_tweets);
@@ -398,13 +484,21 @@ impl TweetModel {
         let mut tweet_map = HashMap::new();
         let mut user_map = HashMap::new();
         let mut place_map = HashMap::new();
-        let data = from_v1_tweets(src, &mut tweet_map, &mut user_map, &mut place_map);
+        let mut media_map = HashMap::new();
+        let data = from_v1_tweets(
+            src,
+            &mut tweet_map,
+            &mut user_map,
+            &mut place_map,
+            &mut media_map,
+        );
         Self {
             data,
             includes: Some(crate::responses::includes::Includes {
                 tweets: Some(tweet_map.into_values().collect()),
                 users: Some(user_map.into_values().collect()),
                 places: Some(place_map.into_values().collect()),
+                media: Some(media_map.into_values().collect()),
                 ..Default::default()
             }),
             ..Default::default()
