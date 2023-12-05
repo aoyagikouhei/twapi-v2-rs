@@ -4,6 +4,7 @@
 * add v1 to v2 json parser
 * skip_serializing_if Option::is_none
 * add poll_ids in attatchments 
+* add like_count in users public_metrics
 
 ### v0.7.1 (2023/09/05)
 * modify calucurate oauth1.0a path paramter
