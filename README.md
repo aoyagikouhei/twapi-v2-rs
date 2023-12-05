@@ -85,6 +85,24 @@ async fn main() {
 }
 ```
 
+### V1 parse
+```rust
+use std::{fs::File, io::{Read, Write}};
+use twapi_v2::models::TweetModel;
+
+#[tokio::main]
+async fn main() {
+    let mut file = File::open("samples/v1_tweet.json").unwrap();
+    let mut data = String::new();
+    file.read_to_string(&mut data).unwrap();
+    let src = serde_json::from_str::<serde_json::Value>(&data).unwrap();
+    let res = TweetModel::from_v1(&src);
+    let mut file = File::create("result.json").unwrap();
+    write!(file, "{}", serde_json::to_string_pretty(&res).unwrap()).unwrap();
+    file.flush().unwrap();
+}
+```
+
 ### Twitter OAuth Web
 ```
 cd examples/oauth-web
