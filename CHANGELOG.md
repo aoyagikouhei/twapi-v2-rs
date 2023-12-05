@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.8.1 (2023/12/06)
+* feature models
+
 ### v0.8.0 (2023/12/06)
 * add v1 to v2 json parser
 * skip_serializing_if Option::is_none

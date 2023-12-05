@@ -11,6 +11,7 @@ Twitter API v2 library.
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
+- Optional v1 to v2 parser
 - Streaming example
 - **Experimental** type support.
 
@@ -31,6 +32,9 @@ Twitter API v2 library.
 
 ### oauth10a
 - Use api by OAuth1.0a
+
+### models
+- From v1 to v2
 
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)

@@ -14,7 +14,8 @@
 		"rust-analyzer.cargo.features": [
 			"oauth10a",
 			"oauth",
-			"retry"
+			"retry",
+			"models"
 		],
 		"rust-analyzer.linkedProjects": [
 			"./Cargo.toml",

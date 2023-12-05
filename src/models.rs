@@ -429,10 +429,6 @@ fn from_v1_tweets(
             place_map.insert(places.id.clone(), places);
         }
 
-        // TODO : note_tweet
-
-        // TODO : withheld
-
         let mut referenced_tweets = vec![];
 
         if src["retweeted_status"].is_object() {

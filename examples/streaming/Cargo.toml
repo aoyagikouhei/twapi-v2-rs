@@ -17,3 +17,4 @@ twapi-v2 = { path="../..", features = ["retry", "oauth", "oauth10a"] }
 retry = []
 oauth = []
 oauth10a = []
+models = []
