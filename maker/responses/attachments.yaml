@@ -11,3 +11,7 @@ response:
       type: array
       items:
         type: string
+    poll_ids: 
+      type: array
+      items:
+        type: string

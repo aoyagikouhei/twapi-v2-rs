@@ -6,6 +6,8 @@ pub struct Attachments {
     pub media_keys: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub card_ids: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poll_ids: Option<Vec<String>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
