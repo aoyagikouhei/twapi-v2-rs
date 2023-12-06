@@ -14,3 +14,10 @@ jobs:
     steps:
     - name: print log
       run: echo "Hello! ${{ github.event.inputs.name }}"
+  
+  printLog2:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: print log
+      run: echo "Hello2! ${{ github.event.inputs.name }}"
