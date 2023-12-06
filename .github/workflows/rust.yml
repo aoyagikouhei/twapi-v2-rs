@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
@@ -17,6 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --all-features --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: CONSUMER_KEY=${{ secrets.CONSUMER_KEY }} CONSUMER_SECRET=${{ secrets.CONSUMER_SECRET }} ACCESS_KEY=${{ secrets.ACCESS_KEY }} ACCESS_SECRET=${{ secrets.ACCESS_SECRET }} cargo test test_get_2_tweets_id_oauth --all-features -- --nocapture --test-threads=1
