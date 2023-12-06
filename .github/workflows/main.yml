@@ -1,0 +1,16 @@
+name: Main
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Name'
+        required: true
+
+jobs:
+  printLog:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: print log
+      run: echo "Hello! ${{ github.event.inputs.name }}"
