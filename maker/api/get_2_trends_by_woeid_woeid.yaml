@@ -1,0 +1,13 @@
+---
+
+url: https://api.twitter.com/2/trends/by/woeid/:woeid
+method: get
+paths:
+  - name: woeid
+    type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: trends

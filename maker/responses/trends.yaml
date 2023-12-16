@@ -1,0 +1,9 @@
+---
+
+response:
+  type: object
+  properties:
+    trend_name:
+      type: string
+    tweet_count:
+      type: integer

@@ -38,6 +38,7 @@ pub mod spaces;
 pub mod streams;
 pub mod summary;
 pub mod topics;
+pub mod trends;
 pub mod tweets;
 pub mod urls;
 pub mod user_entities;

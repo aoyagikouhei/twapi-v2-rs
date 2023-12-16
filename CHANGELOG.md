@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.9.0 (2023/12/16)
+* add get /2/users/search
+- add get /2/trend/by/woeid/:woeid
+
 ### v0.8.1 (2023/12/06)
 * feature models
 

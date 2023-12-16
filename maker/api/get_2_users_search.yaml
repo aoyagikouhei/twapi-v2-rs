@@ -1,0 +1,40 @@
+---
+
+url: https://api.twitter.com/2/users/search
+method: get
+queries:
+  - name: query
+    type: string
+    required: true
+  - name: expansions
+    type: enum
+    value: pinned_tweet_id
+  - name: max_results
+    type: integer
+    max: 1000
+    min: 1
+  - name: next_token
+    type: string
+  - name: tweet.fields
+    type: enum
+  - name: user.fields
+    type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: users
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
+    meta:
+      type: object
+      ref: meta

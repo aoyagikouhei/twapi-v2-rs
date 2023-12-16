@@ -1,6 +1,6 @@
 [package]
 name = "twapi-v2"
-version = "0.8.1"
+version = "0.9.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
 edition = "2021"
