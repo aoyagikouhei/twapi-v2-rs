@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.10.0 (2024/01/22)
+* add user filed connection_status and most_recent_tweet_id
+
 ### v0.9.0 (2023/12/16)
 * add get /2/users/search
 - add get /2/trend/by/woeid/:woeid
