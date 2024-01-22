@@ -3,6 +3,8 @@ use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum UserFields {
+    #[serde(rename = "connection_status")]
+    ConnectionStatus,
     #[serde(rename = "created_at")]
     CreatedAt,
     #[serde(rename = "description")]
@@ -13,6 +15,8 @@ pub enum UserFields {
     Id,
     #[serde(rename = "location")]
     Location,
+    #[serde(rename = "most_recent_tweet_id")]
+    MostRecentTweetId,
     #[serde(rename = "name")]
     Name,
     #[serde(rename = "pinned_tweet_id")]
@@ -38,11 +42,13 @@ pub enum UserFields {
 impl UserFields {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
+        result.insert(Self::ConnectionStatus);
         result.insert(Self::CreatedAt);
         result.insert(Self::Description);
         result.insert(Self::Entities);
         result.insert(Self::Id);
         result.insert(Self::Location);
+        result.insert(Self::MostRecentTweetId);
         result.insert(Self::Name);
         result.insert(Self::PinnedTweetId);
         result.insert(Self::ProfileImageUrl);
@@ -60,11 +66,13 @@ impl UserFields {
 impl std::fmt::Display for UserFields {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
+            Self::ConnectionStatus => write!(f, "connection_status"),
             Self::CreatedAt => write!(f, "created_at"),
             Self::Description => write!(f, "description"),
             Self::Entities => write!(f, "entities"),
             Self::Id => write!(f, "id"),
             Self::Location => write!(f, "location"),
+            Self::MostRecentTweetId => write!(f, "most_recent_tweet_id"),
             Self::Name => write!(f, "name"),
             Self::PinnedTweetId => write!(f, "pinned_tweet_id"),
             Self::ProfileImageUrl => write!(f, "profile_image_url"),
@@ -81,6 +89,6 @@ impl std::fmt::Display for UserFields {
 
 impl Default for UserFields {
     fn default() -> Self {
-        Self::CreatedAt
+        Self::ConnectionStatus
     }
 }

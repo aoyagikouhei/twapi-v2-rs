@@ -1,3 +1,3 @@
 ---
 
-value: created_at, description, entities, id, location, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, verified_type, withheld
+value: connection_status, created_at, description, entities, id, location, most_recent_tweet_id, name, pinned_tweet_id, profile_image_url, protected, public_metrics, url, username, verified, verified_type, withheld

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_users, BearerAuthentication};
 
-// BEARER_CODE=XXXXX cargo test test_get_2_users_users -- --nocapture --test-threads=1
+// BEARER_CODE=XXXXX cargo test test_get_2_users_users --all-features -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_users_users() -> Result<()> {
