@@ -3,6 +3,10 @@
 response:
   type: object
   properties:
+    connection_status:
+      type: array
+      items:
+        type: string
     created_at:
       type: date
     description:
@@ -14,6 +18,8 @@ response:
       type: string
       required: true
     location:
+      type: string
+    most_recent_tweet_id:
       type: string
     name:
       type: string

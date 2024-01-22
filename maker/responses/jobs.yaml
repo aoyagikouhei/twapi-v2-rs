@@ -8,7 +8,7 @@ response:
     created_at: 
       type: date
     type: 
-      type: enum_string
+      type: enum_single
       value: tweets, users
     name: 
       type: string

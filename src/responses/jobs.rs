@@ -8,7 +8,7 @@ pub struct Jobs {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub created_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<String>,
+    pub r#type: Option<Type>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -38,6 +38,29 @@ impl Jobs {
             println!("Jobs {:?}", self.extra);
         }
         res
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum Type {
+    #[serde(rename = "tweets")]
+    Tweets,
+    #[serde(rename = "users")]
+    Users,
+}
+
+impl std::fmt::Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Tweets => write!(f, "tweets"),
+            Self::Users => write!(f, "users"),
+        }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Self::Tweets
     }
 }
 

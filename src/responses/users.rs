@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Users {
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub connection_status: Option<Vec<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub created_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -13,6 +15,8 @@ pub struct Users {
     pub id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub most_recent_tweet_id: Option<String>,
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinned_tweet_id: Option<String>,
