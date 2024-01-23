@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.10.1 (2024/01/23)
+* modify trend response
+
 ### v0.10.0 (2024/01/22)
 * add user filed connection_status and most_recent_tweet_id
 
