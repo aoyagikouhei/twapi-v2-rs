@@ -39,7 +39,7 @@ impl Api {
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Trends>,
+    pub data: Option<Vec<Trends>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -50,7 +50,7 @@ impl Response {
             && self
                 .data
                 .as_ref()
-                .map(|it| it.is_empty_extra())
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
                 .unwrap_or(true);
         if !res {
             println!("Response {:?}", self.extra);

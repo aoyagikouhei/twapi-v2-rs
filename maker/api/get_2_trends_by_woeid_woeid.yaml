@@ -9,5 +9,7 @@ response:
   type: object
   properties:
     data:
-      type: object
-      ref: trends
+      type: array
+      items:
+        type: object
+        ref: trends
