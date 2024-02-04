@@ -27,7 +27,7 @@ def make_response_type(key, value)
   when "bool" then
     "boolean"
   when "json" then
-    "[index: string]: string | number | boolean"
+    "any"
   when "object" then
     if value[:ref].present?
       value[:ref].ucc
@@ -36,8 +36,7 @@ def make_response_type(key, value)
       key.to_s.ucc
     end
   when "enum_single" then
-    @enums[key] = value
-    key.to_s.ucc
+    value[:value].split(/, ?/).map{|it| "\"#{it}\""}.join(' | ')
   else
     "string"
   end

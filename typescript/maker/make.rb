@@ -57,7 +57,7 @@ def execute_responses(path)
     res = res + "\n" + responses
   end
 
-  File.write("#{__dir__}/../responses/#{name}.ts", res.gsub(/USE_DATE/, @date_flag ? "\nuse chrono::prelude::*;" : ""))
+  File.write("#{__dir__}/../src/responses/#{name}.ts", res.gsub(/USE_DATE/, @date_flag ? "\nuse chrono::prelude::*;" : ""))
 end
 
 Dir.glob("#{__dir__}/../../maker/responses/*.yaml").each do |path|

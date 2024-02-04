@@ -1,5 +1,5 @@
 
 export interface ReferencedTweets {
   id: string | undefined;
-  type: Type | undefined;
+  type: "retweeted" | "quoted" | "replied_to" | undefined;
 }

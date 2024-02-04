@@ -13,7 +13,7 @@ export interface Spaces {
   scheduledStart: string | undefined;
   speakerIds: string[] | undefined;
   startedAt: string | undefined;
-  state: State;
+  state: "live" | "scheduled";
   subscriberCount: number | undefined;
   topicIds: string[] | undefined;
   topics: Topics[] | undefined;

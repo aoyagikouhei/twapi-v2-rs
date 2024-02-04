@@ -6,5 +6,5 @@ export interface Geo {
   containedWithin: string[] | undefined;
   coordinates: Coordinates | undefined;
   placeId: string | undefined;
-  properties: [index: string]: string | number | boolean | undefined;
+  properties: any | undefined;
 }
