@@ -1,0 +1,72 @@
+<%
+def make_items_type(items)
+  case items[:type]
+  when "integer" then
+    "number"
+  when "object" then
+    items[:ref].ucc
+  when "float" then
+    "number"
+  when "date" then
+    "string"
+  else
+    "string"
+  end
+end
+
+def make_response_type(key, value)
+  res = case value[:type]
+  when "integer" then
+    "number"
+  when "float" then
+    "number"
+  when "array" then
+    "#{make_items_type(value[:items])}[]"
+  when "date" then
+    "string"
+  when "bool" then
+    "boolean"
+  when "json" then
+    "[index: string]: string | number | boolean"
+  when "object" then
+    if value[:ref].present?
+      value[:ref].ucc
+    else
+      @inner_map[key] = value
+      key.to_s.ucc
+    end
+  when "enum_single" then
+    @enums[key] = value
+    key.to_s.ucc
+  else
+    "string"
+  end
+  if value[:required] == true
+    res
+  else
+    "#{res} | undefined"
+  end
+end
+extra_list = []
+properties.each_pair do |key, value|
+  if value[:type] == "object"
+    if value[:required] == true
+      extra_list << "self.#{key}.is_empty_extra()"
+    else
+      extra_list << "self.#{key}.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true)"
+    end
+  elsif value[:type] == "array" && value[:items][:type] == "object"
+    if value[:required] == true
+      extra_list << "self.#{key}.iter().all(|it| it.is_empty_extra())"
+    else
+      extra_list << "self.#{key}.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true)"
+    end
+  end
+end
+extra_value = extra_list.present? ? " &&\n        #{extra_list.join(" &&\n        ")}" : ""
+
+%><% refs.each do | ref | %>import { <%= ref.ucc %> } from "./<%= ref %>";
+<% end %>
+export interface <%= class_name %> {<% properties.each_pair do |key, value| %>
+  <%= key.to_s.lcc %>: <%= make_response_type(key, value) %>;<% end %>
+}

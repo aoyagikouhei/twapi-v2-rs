@@ -1,0 +1,12 @@
+{
+  "name": "tw",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc index.ts && node index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

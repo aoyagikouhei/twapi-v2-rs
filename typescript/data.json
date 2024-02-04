@@ -1,0 +1,65 @@
+{
+  "author_id": "1171992161442680832",
+  "context_annotations": [
+    {
+      "domain": {
+        "description": "A taxonomy of user interests. ",
+        "id": "131",
+        "name": "Unified Twitter Taxonomy"
+      },
+      "entity": {
+        "description": "Science",
+        "id": "854692455005921281",
+        "name": "Science"
+      }
+    },
+    {
+      "domain": {
+        "description": "Cities around the world",
+        "id": "156",
+        "name": "Cities"
+      },
+      "entity": {
+        "description": "Tokyo",
+        "id": "855095546553393152",
+        "name": "Tokyo"
+      }
+    }
+  ],
+  "conversation_id": "1754276074786328993",
+  "created_at": "2024-02-04T22:49:43.000Z",
+  "edit_controls": {
+    "editable_until": "2024-02-04T23:49:43.000Z",
+    "edits_remaining": 5,
+    "is_edit_eligible": false
+  },
+  "edit_history_tweet_ids": ["1754276074786328993"],
+  "entities": {
+    "annotations": [
+      {
+        "end": 90,
+        "normalized_text": "東京",
+        "probability": 0.9263,
+        "start": 89,
+        "type": "Place"
+      }
+    ],
+    "mentions": [
+      { "end": 11, "id": "129374952", "start": 3, "username": "kuma25n" }
+    ]
+  },
+  "id": "1754276074786328993",
+  "lang": "ja",
+  "possibly_sensitive": false,
+  "public_metrics": {
+    "bookmark_count": 0,
+    "impression_count": 0,
+    "like_count": 0,
+    "quote_count": 0,
+    "reply_count": 0,
+    "retweet_count": 81
+  },
+  "referenced_tweets": [{ "id": "1754234117192097807", "type": "retweeted" }],
+  "reply_settings": "everyone",
+  "text": "RT @kuma25n: おはようございます☀️*ﾟ\n\n今日の夜から明日にかけて\n大雪☃️☃︎.*⋆̩予報の出てる都内です💦\n\n積もらないといいんですが、\n雪にめちゃくちゃ弱い東京の交通網…\n皆さまどうぞ十分ご用心ください😂💦\n\n今週もよろしくお願いします\n*˙︶˙*)ﾉ\" h…"
+}
