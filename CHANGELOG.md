@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.10.2 (2024/xx/xx)
+* add media_source_tweet_id in attachments
+
 ### v0.10.1 (2024/01/23)
 * modify trend response
 

@@ -15,3 +15,7 @@ response:
       type: array
       items:
         type: string
+    media_source_tweet_id: 
+      type: array
+      items:
+        type: string
