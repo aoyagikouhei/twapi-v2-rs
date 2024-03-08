@@ -5,7 +5,7 @@ Twitter API v2 library.
 [Documentation](https://docs.rs/twapi-v2)
 
 - Request builder
-- Retrive rate limit from response headers
+- Retrive response headers
 - Convenience setted parameter methods
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
@@ -56,8 +56,9 @@ async fn main() {
     let res = get_2_tweets_id::Api::open(&tweet_id)
         .execute(&auth)
         .await;
-    if let Some((val, rate_limit)) = res {
+    if let Some((val, headers)) = res {
         println!("{:?}", val);
+        println!("{}", headers);
     }
 }
 ```
@@ -79,8 +80,9 @@ async fn main() {
     let res = get_2_tweets_id::Api::open(&tweet_id)
         .execute(&auth)
         .await;
-    if let Some((val, rate_limit)) = res {
+    if let Some((val, headers)) = res {
         println!("{:?}", val);
+        println!("{}", headers);
     }
 }
 ```
