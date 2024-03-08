@@ -1,0 +1,34 @@
+---
+keys:
+  - name: x-access-level
+    type: string
+  - name: x-app-limit-24hour-limit
+    type: integer
+  - name: x-app-limit-24hour-reset
+    type: unixtimestamp
+  - name: x-app-limit-24hour-remaining
+    type: integer
+  - name: x-connection-hash
+    type: string
+  - name: x-content-type-options
+    type: string
+  - name: x-frame-options
+    type: string
+  - name: x-rate-limit-limit
+    type: integer
+  - name: x-rate-limit-reset
+    type: unixtimestamp
+  - name: x-rate-limit-remaining
+    type: integer
+  - name: x-response-time
+    type: integer
+  - name: x-transaction-id
+    type: string
+  - name: x-user-limit-24hour-limit
+    type: integer
+  - name: x-user-limit-24hour-reset
+    type: unixtimestamp
+  - name: x-user-limit-24hour-remaining
+    type: integer
+  - name: x-xss-protection
+    type: integer

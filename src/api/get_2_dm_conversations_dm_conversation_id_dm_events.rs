@@ -6,7 +6,7 @@ use crate::responses::{dm_events::DmEvents, errors::Errors, includes::Includes, 
 use crate::{
     api::{execute_twitter, Authentication},
     error::Error,
-    rate_limit::RateLimit,
+    headers::Headers,
 };
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -211,7 +211,7 @@ impl Api {
     pub async fn execute(
         self,
         authentication: &impl Authentication,
-    ) -> Result<(Response, Option<RateLimit>), Error> {
+    ) -> Result<(Response, Headers), Error> {
         execute_twitter(self.build(authentication)).await
     }
 }

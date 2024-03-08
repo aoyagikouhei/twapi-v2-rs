@@ -2,7 +2,7 @@ use crate::responses::trends::Trends;
 use crate::{
     api::{execute_twitter, Authentication},
     error::Error,
-    rate_limit::RateLimit,
+    headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -31,7 +31,7 @@ impl Api {
     pub async fn execute(
         self,
         authentication: &impl Authentication,
-    ) -> Result<(Response, Option<RateLimit>), Error> {
+    ) -> Result<(Response, Headers), Error> {
         execute_twitter(self.build(authentication)).await
     }
 }

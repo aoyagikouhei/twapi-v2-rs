@@ -3,7 +3,7 @@ use serde::de::DeserializeOwned;
 use std::time::Duration;
 use tokio::time::{sleep, timeout};
 
-use crate::{api::execute_twitter, error::Error, rate_limit::RateLimit};
+use crate::{api::execute_twitter, error::Error, headers::Headers};
 
 pub trait RetryLogger {
     fn log(&self, builder: &RequestBuilder);
@@ -16,7 +16,7 @@ pub async fn execute_retry<T>(
     retry_logger: Option<&impl RetryLogger>,
     timeout_duration: Option<Duration>,
     retry_delay_secound_count: Option<u64>,
-) -> Result<(T, Option<RateLimit>), Error>
+) -> Result<(T, Headers), Error>
 where
     T: DeserializeOwned,
 {

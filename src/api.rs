@@ -3,7 +3,7 @@ use serde::de::DeserializeOwned;
 
 use crate::{
     error::{Error, TwitterError},
-    rate_limit::RateLimit,
+    headers::Headers,
 };
 
 pub mod delete_2_lists_id;
@@ -121,23 +121,23 @@ impl Authentication for BearerAuthentication {
     }
 }
 
-pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Option<RateLimit>), Error>
+pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Headers), Error>
 where
     T: DeserializeOwned,
 {
     let response = builder.send().await?;
     let status_code = response.status();
     let header = response.headers();
-    let rate_limit = RateLimit::new(header);
+    let headers = Headers::new(header);
 
     if status_code.is_success() {
-        Ok((response.json::<T>().await?, rate_limit))
+        Ok((response.json::<T>().await?, headers))
     } else {
         match response.json::<serde_json::Value>().await {
             Ok(value) => Err(Error::Twitter(
                 TwitterError::new(&value, status_code),
                 value,
-                rate_limit,
+                Box::new(headers),
             )),
             Err(err) => Err(Error::Other(format!("{:?}", err), Some(status_code))),
         }

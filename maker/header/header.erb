@@ -1,0 +1,76 @@
+<%
+def make_type(it)
+  case it[:type]
+  when "integer" then
+    "u64"
+  when "unixtimestamp" then
+    "DateTime<Utc>"
+  else
+    "String"
+  end
+end
+%>use chrono::prelude::*;
+use std::collections::HashMap;
+
+<% yml[:keys].each do |it| %>const <%= it[:name].gsub(/-/, "_").upcase %>: &str = "<%= it[:name] %>";
+<% end  %>
+
+const KEYS: [&str; <%= yml[:keys].count %>] = [<% yml[:keys].each do |it| %>
+    <%= it[:name].gsub(/-/, "_").upcase %>,<% end %>
+];
+
+
+#[derive(Debug, Clone)]
+pub struct Headers {<% yml[:keys].each do |it| %>
+    pub <%= it[:name].gsub(/-/, "_").downcase %>: Option<<%= make_type(it) %>>,<% end  %>
+    pub extra: HashMap<String, String>,
+}
+
+impl Headers {
+    pub fn new(header: &reqwest::header::HeaderMap) -> Self {
+        let mut extra = HashMap::new();
+        for (name, value) in header.iter() {
+            if !KEYS.contains(&name.as_str()) {
+                if let Ok(value) = value.to_str() {
+                    extra.insert(name.as_str().to_string(), value.to_string());
+                }
+            }
+        }
+        Self {<% yml[:keys].each do |it| %>
+            <%= it[:name].gsub(/-/, "_").downcase %>: get_<%= it[:type] %>_value(header, <%= it[:name].gsub(/-/, "_").upcase %>),<% end %>
+            extra,
+        }
+    }
+}
+
+impl std::fmt::Display for Headers {
+    // This trait requires `fmt` with this exact signature.
+    // このトレイトは`fmt`が想定通りのシグネチャであることを要求します。
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+fn get_integer_value(header: &reqwest::header::HeaderMap, key: &str) -> Option<u64> {
+    let Some(res) = header.get(key) else {
+        return None;
+    };
+    let Ok(res) = res.to_str() else {
+        return None;
+    };
+    res.parse().ok()
+}
+
+fn get_string_value(header: &reqwest::header::HeaderMap, key: &str) -> Option<String> {
+    let Some(res) = header.get(key) else {
+        return None;
+    };
+    res.to_str().ok().map(|it| it.to_string())
+}
+
+fn get_unixtimestamp_value(header: &reqwest::header::HeaderMap, key: &str) -> Option<DateTime<Utc>> {
+    let Some(res) = get_integer_value(header, key) else {
+        return None;
+    };
+    Utc.timestamp_opt(res as i64, 0).single()
+}

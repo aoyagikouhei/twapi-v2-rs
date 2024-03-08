@@ -1,7 +1,9 @@
 ## Changes
 
-### v0.10.2 (2024/xx/xx)
+### v0.11.0 (2024/03/08)
 * add media_source_tweet_id in attachments
+* remove rate_limit
+* add headers
 
 ### v0.10.1 (2024/01/23)
 * modify trend response

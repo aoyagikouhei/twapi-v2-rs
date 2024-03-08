@@ -1,7 +1,7 @@
 use reqwest::StatusCode;
 use thiserror::Error;
 
-use crate::rate_limit::RateLimit;
+use crate::headers::Headers;
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -17,8 +17,8 @@ pub enum Error {
     #[error("serde json {0}")]
     Json(#[from] serde_json::Error),
 
-    #[error("TwitterError {0:?}, {1:?}")]
-    Twitter(TwitterError, serde_json::Value, Option<RateLimit>),
+    #[error("TwitterError {0:?}, {1:?}, {1:?}")]
+    Twitter(TwitterError, serde_json::Value, Box<Headers>),
 }
 
 #[derive(Debug, Clone)]
