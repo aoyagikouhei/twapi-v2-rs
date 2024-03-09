@@ -1,6 +1,6 @@
 ---
 
-url: https://api.twitter.com/2/users/:id/tweets
+url: /2/users/:id/tweets
 method: get
 paths:
   - name: id

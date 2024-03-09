@@ -1,12 +1,12 @@
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/users/:id/likes/:tweet_id";
+const URL: &str = "/2/users/:id/likes/:tweet_id";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -24,9 +24,10 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = URL
-            .replace(":id", &self.id)
-            .replace(":tweet_id", &self.tweet_id);
+        let url = make_url(
+            URL.replace(":id", &self.id)
+                .replace(":tweet_id", &self.tweet_id),
+        );
         let builder = client.delete(&url);
         authentication.execute(builder, "DELETE", &url, &[])
     }

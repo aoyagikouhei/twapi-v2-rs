@@ -1,13 +1,13 @@
 use crate::responses::compliance::Compliance;
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/tweets/compliance/stream";
+const URL: &str = "/2/tweets/compliance/stream";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -35,7 +35,7 @@ impl Api {
             query_parameters.push(("backfill_minutes", backfill_minutes.to_string()));
         }
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

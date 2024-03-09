@@ -87,6 +87,22 @@ pub mod post_2_users_id_retweets;
 pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
+const ENV_KEY: &str = "TWAPI_V2_TWITTER_API_PREFIX_API";
+const PREFIX_URL_TWITTER: &str = "https://api.twitter.com";
+
+pub fn clear_prefix_url() {
+    std::env::set_var(ENV_KEY, PREFIX_URL_TWITTER);
+}
+
+pub fn setup_prefix_url(url: &str) {
+    std::env::set_var(ENV_KEY, url);
+}
+
+pub(crate) fn make_url<S: AsRef<str>>(post_url: S) -> String {
+    let prefix_url = std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_TWITTER.to_owned());
+    format!("{}{}", prefix_url, post_url.as_ref())
+}
+
 pub trait Authentication {
     fn execute(
         &self,
@@ -133,7 +149,8 @@ where
     if status_code.is_success() {
         Ok((response.json::<T>().await?, headers))
     } else {
-        match response.json::<serde_json::Value>().await {
+        let text = response.text().await?;
+        match serde_json::from_str(&text) {
             Ok(value) => Err(Error::Twitter(
                 TwitterError::new(&value, status_code),
                 value,

@@ -1,6 +1,6 @@
 use crate::responses::{errors::Errors, streams::Streams};
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
@@ -8,7 +8,7 @@ use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/tweets/search/stream/rules";
+const URL: &str = "/2/tweets/search/stream/rules";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -33,7 +33,7 @@ impl Api {
             query_parameters.push(("ids", ids));
         }
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

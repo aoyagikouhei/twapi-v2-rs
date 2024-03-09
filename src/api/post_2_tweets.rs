@@ -1,13 +1,13 @@
 use crate::responses::errors::Errors;
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/tweets";
+const URL: &str = "/2/tweets";
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Geo {
@@ -90,7 +90,7 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.post(&url).json(&self.body);
         authentication.execute(builder, "POST", &url, &[])
     }

@@ -1,12 +1,12 @@
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/dm_conversations";
+const URL: &str = "/2/dm_conversations";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ConversationType {
@@ -60,7 +60,7 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.post(&url).json(&self.body);
         authentication.execute(builder, "POST", &url, &[])
     }

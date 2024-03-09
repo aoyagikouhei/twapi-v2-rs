@@ -1,6 +1,6 @@
 ---
 
-url: https://api.twitter.com/2/lists/:id
+url: /2/lists/:id
 method: delete
 paths:
   - name: id

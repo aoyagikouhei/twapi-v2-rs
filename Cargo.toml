@@ -1,6 +1,6 @@
 [package]
 name = "twapi-v2"
-version = "0.11.0"
+version = "0.12.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
 edition = "2021"
@@ -35,8 +35,9 @@ oauth10a = ["base64", "hmac", "rand", "sha1", "url"]
 models = []
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros"] }
 anyhow = "1"
+mockito = "1.4"
+tokio = { version = "1", features = ["macros"] }
 
 [package.metadata.docs.rs]
 all-features = true

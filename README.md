@@ -13,6 +13,7 @@ Twitter API v2 library.
 - Optional OAuth with web example
 - Optional v1 to v2 parser
 - Streaming example
+- Supported mocks. For example, mockito.
 - **Experimental** type support.
 
 ## Features
@@ -116,4 +117,36 @@ http://localhost:3000/
 ```
 cd examples/streaming
 BEARER_CODE=XXXXX cargo run
+```
+
+### Mock(Use mockito)
+```rust
+#[tokio::test]
+async fn test_mock_get_2_tweets_search_recent_oauth() -> Result<()> {
+    let mut server = Server::new_async().await;
+    api::setup_prefix_url(&server.url());
+
+    let mock = server
+        .mock("GET", "/2/tweets/search/recent")
+        .match_query(mockito::Matcher::Any)
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body("{ \"origin\": \"0.0.0.0\" }")
+        .create_async()
+        .await;
+
+    let auth = OAuthAuthentication::new(
+        std::env::var("CONSUMER_KEY").unwrap_or_default(),
+        std::env::var("CONSUMER_SECRET").unwrap_or_default(),
+        std::env::var("ACCESS_KEY").unwrap_or_default(),
+        std::env::var("ACCESS_SECRET").unwrap_or_default(),
+    );
+    let builder = get_2_tweets_search_recent::Api::open("東京")
+        .max_results(10)
+        .build(&auth);
+    let (res, _headers) = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await?;
+    assert_eq!(res.extra.get("origin"), Some(&json!("0.0.0.0")));
+    mock.assert();
+    Ok(())
+}
 ```

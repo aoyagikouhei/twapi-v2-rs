@@ -1,6 +1,6 @@
 use crate::responses::{counts::Counts, errors::Errors, meta_count::MetaCount};
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
@@ -8,7 +8,7 @@ use chrono::prelude::*;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/tweets/counts/all";
+const URL: &str = "/2/tweets/counts/all";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Granularity {
@@ -101,7 +101,7 @@ impl Api {
             query_parameters.push(("until_id", until_id));
         }
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

@@ -1,13 +1,13 @@
 use crate::responses::{jobs::Jobs, meta::Meta};
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/compliance/jobs";
+const URL: &str = "/2/compliance/jobs";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
@@ -87,7 +87,7 @@ impl Api {
             query_parameters.push(("status", status.to_string()));
         }
         let client = reqwest::Client::new();
-        let url = URL.to_string();
+        let url = make_url(URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

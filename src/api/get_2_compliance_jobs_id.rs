@@ -1,13 +1,13 @@
 use crate::responses::jobs::Jobs;
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/compliance/jobs/:id";
+const URL: &str = "/2/compliance/jobs/:id";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -21,7 +21,7 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = URL.replace(":id", &self.id);
+        let url = make_url(URL.replace(":id", &self.id));
         let builder = client.get(&url);
         authentication.execute(builder, "GET", &url, &[])
     }

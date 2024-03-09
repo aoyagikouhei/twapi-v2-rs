@@ -1,7 +1,7 @@
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, meta::Meta, users::Users};
 use crate::{
-    api::{execute_twitter, Authentication},
+    api::{execute_twitter, make_url, Authentication},
     error::Error,
     headers::Headers,
 };
@@ -10,7 +10,7 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-const URL: &str = "https://api.twitter.com/2/tweets/:id/liking_users";
+const URL: &str = "/2/tweets/:id/liking_users";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
@@ -123,7 +123,7 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        let url = URL.replace(":id", &self.id);
+        let url = make_url(URL.replace(":id", &self.id));
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

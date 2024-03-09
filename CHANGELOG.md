@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.12.0 (2024/03/09)
+* Supported mocks. For example, mockito.
+
 ### v0.11.0 (2024/03/08)
 * add media_source_tweet_id in attachments
 * remove rate_limit

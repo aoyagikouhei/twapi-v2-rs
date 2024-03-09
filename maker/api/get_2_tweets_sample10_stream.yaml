@@ -1,6 +1,6 @@
 ---
 
-url: https://api.twitter.com/2/tweets/sample10/stream
+url: /2/tweets/sample10/stream
 method: get
 queries:
   - name: partition
