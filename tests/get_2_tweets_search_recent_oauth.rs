@@ -2,6 +2,7 @@ use anyhow::Result;
 use mockito::Server;
 use serde_json::json;
 use twapi_v2::api::{self, execute_twitter, get_2_tweets_search_recent};
+use twapi_v2::error::Error;
 use twapi_v2::oauth10a::OAuthAuthentication;
 
 // CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_tweets_search_recent_oauth --all-features -- --nocapture --test-threads=1
@@ -26,7 +27,7 @@ async fn test_get_2_tweets_search_recent_oauth() -> Result<()> {
     Ok(())
 }
 
-// CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_mock_get_2_tweets_search_recent_oauth --all-features -- --nocapture --test-threads=1
+// CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_tweets_search_recent_oauth_mock --all-features -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
@@ -57,17 +58,24 @@ async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
     Ok(())
 }
 
+// CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_tweets_search_recent_oauth_mock_rate_limet --all-features -- --nocapture --test-threads=1
+
 #[tokio::test]
-async fn test_get_2_tweets_search_recent_oauth_mock2() -> Result<()> {
+async fn test_get_2_tweets_search_recent_oauth_mock_rate_limet() -> Result<()> {
     let mut server = Server::new_async().await;
     api::setup_prefix_url(&server.url());
+
+    let data = json!({
+        "status": "error",
+        "title": "Too Many Requests",
+    });
 
     let mock = server
         .mock("GET", "/2/tweets/search/recent")
         .match_query(mockito::Matcher::Any)
-        .with_status(200)
+        .with_status(429)
         .with_header("content-type", "application/json")
-        .with_body("{ \"origin\": \"0.0.0.1\" }")
+        .with_body(data.to_string())
         .create_async()
         .await;
 
@@ -80,8 +88,14 @@ async fn test_get_2_tweets_search_recent_oauth_mock2() -> Result<()> {
     let builder = get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
         .build(&auth);
-    let (res, _headers) = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await?;
-    assert_eq!(res.extra.get("origin"), Some(&json!("0.0.0.1")));
+    let res = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await;
+    match res {
+        Err(Error::Twitter(e, _value, _headers)) => {
+            assert_eq!(e.status_code.as_u16(), 429);
+            assert_eq!(e.title, "Too Many Requests");
+        }
+        _ => panic!("unexpected error"),
+    }
     mock.assert();
     Ok(())
 }

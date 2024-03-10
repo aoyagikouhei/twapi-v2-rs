@@ -18,7 +18,7 @@ pub enum Error {
     Json(#[from] serde_json::Error),
 
     #[error("TwitterError {0:?}, {1:?}, {1:?}")]
-    Twitter(TwitterError, serde_json::Value, Box<Headers>),
+    Twitter(TwitterError, serde_json::Value, Box<Headers>), // https://rust-lang.github.io/rust-clippy/master/index.html#large_enum_variant
 }
 
 #[derive(Debug, Clone)]
