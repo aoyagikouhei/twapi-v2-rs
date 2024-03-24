@@ -99,28 +99,17 @@ impl std::fmt::Display for Headers {
 }
 
 fn get_integer_value(header: &reqwest::header::HeaderMap, key: &str) -> Option<u64> {
-    let Some(res) = header.get(key) else {
-        return None;
-    };
-    let Ok(res) = res.to_str() else {
-        return None;
-    };
-    res.parse().ok()
+    header.get(key)?.to_str().ok()?.parse().ok()
 }
 
 fn get_string_value(header: &reqwest::header::HeaderMap, key: &str) -> Option<String> {
-    let Some(res) = header.get(key) else {
-        return None;
-    };
-    res.to_str().ok().map(|it| it.to_string())
+    header.get(key)?.to_str().ok().map(|it| it.to_string())
 }
 
 fn get_unixtimestamp_value(
     header: &reqwest::header::HeaderMap,
     key: &str,
 ) -> Option<DateTime<Utc>> {
-    let Some(res) = get_integer_value(header, key) else {
-        return None;
-    };
+    let res = get_integer_value(header, key)?;
     Utc.timestamp_opt(res as i64, 0).single()
 }

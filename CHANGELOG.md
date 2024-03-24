@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.13.0 (2024/xx/xx)
+* updated reqwest 0.12
+
 ### v0.12.0 (2024/03/09)
 * Supported mocks. For example, mockito.
 

@@ -21,6 +21,7 @@ fn millis_to_utc(millis: i64) -> Option<DateTime<Utc>> {
 fn from_v1_indicies(src: &serde_json::Value) -> (Option<i64>, Option<i64>) {
     match src["indices"].as_array() {
         Some(indices) => (
+            #[allow(clippy::get_first)]
             indices.get(0).and_then(|it| it.as_i64()),
             indices.get(1).and_then(|it| it.as_i64()),
         ),

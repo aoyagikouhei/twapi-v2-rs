@@ -1,16 +1,12 @@
 use axum::{
-    http::Uri,
-    response::{Html, IntoResponse},
-    routing::get,
-    Json, Router,
+    extract::Query, response::{Html, IntoResponse}, routing::get, Json, Router
 };
-use std::{collections::HashMap, net::SocketAddr};
+use std::collections::HashMap;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use twapi_v2::{
     api::{get_2_users_me, BearerAuthentication},
     oauth::{TwitterOauth, TwitterScope},
 };
-use url::Url;
 
 pub const PKCE_VERIFIER: &str = "pkce_verifier";
 
@@ -21,11 +17,8 @@ async fn main() {
         .route("/", get(root))
         .layer(CookieManagerLayer::new());
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
 
 fn oauth_client() -> TwitterOauth {
@@ -45,13 +38,11 @@ async fn root(cookies: Cookies) -> impl IntoResponse {
     Html(format!("<a href='{}'>oauth<a>", res.oauth_url)).into_response()
 }
 
-async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
-    let url = Url::parse(&format!("http://localhost:3000{}", uri)).unwrap();
-    let hash_query: HashMap<_, _> = url.query_pairs().into_owned().collect();
+async fn oauth(Query(params): Query<HashMap<String, String>>, cookies: Cookies) -> impl IntoResponse {
     let pkce = cookies.get(PKCE_VERIFIER).unwrap();
     let oauth = oauth_client();
     let res = oauth
-        .token(pkce.value(), hash_query.get("code").unwrap())
+        .token(pkce.value(), params.get("code").unwrap())
         .await
         .unwrap();
     println!("{:?}", res);
