@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.13.1 (2024/03/25)
+* modify oauth with state
+
 ### v0.13.0 (2024/03/25)
 * updated reqwest 0.12
 
