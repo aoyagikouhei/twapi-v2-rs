@@ -139,12 +139,20 @@ impl TwitterOauth {
     }
 
     pub fn oauth_url(&self) -> OAuthUrlResult {
+        self.oauth_url_with_state(None)
+    }
+
+    pub fn oauth_url_with_state(&self, state: Option<String>) -> OAuthUrlResult {
         let (pkce_challenge, pkce_verifier) = oauth2::PkceCodeChallenge::new_random_sha256();
+        let csrf_token = match state {
+            Some(ref state_value) => CsrfToken::new(state_value.clone()),
+            None => CsrfToken::new_random(),
+        };
         let (auth_url, _csrf_token) = self
             .basic_client
             .clone()
             .set_redirect_uri(self.redirect_url.clone())
-            .authorize_url(CsrfToken::new_random)
+            .authorize_url(|| csrf_token)
             .add_scopes(self.scopes.clone())
             .set_pkce_challenge(pkce_challenge)
             .url();
