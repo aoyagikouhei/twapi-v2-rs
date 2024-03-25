@@ -19,5 +19,5 @@ pub mod oauth10a;
 #[cfg(feature = "models")]
 pub mod models;
 
-#[cfg(feature = "media")]
-pub mod media;
+#[cfg(feature = "upload")]
+pub mod upload;
