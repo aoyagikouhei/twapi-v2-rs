@@ -33,7 +33,7 @@ retry = ["tokio"]
 oauth = ["oauth2"]
 oauth10a = ["base64", "hmac", "rand", "sha1", "form_urlencoded"]
 models = []
-upload = []
+upload = ["reqwest/multipart"]
 
 [dev-dependencies]
 anyhow = "1"
