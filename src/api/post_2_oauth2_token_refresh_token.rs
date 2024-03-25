@@ -1,8 +1,12 @@
-use crate::{api::execute_twitter, error::Error, headers::Headers};
+use crate::{
+    api::{execute_twitter, make_url},
+    error::Error,
+    headers::Headers,
+};
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "https://api.twitter.com/2/oauth2/token";
+const URL: &str = "/2/oauth2/token";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -28,8 +32,9 @@ impl Api {
         ];
 
         let client = reqwest::Client::new();
+        let url = make_url(URL);
         client
-            .post(URL)
+            .post(url)
             .form(&form_parameters)
             .basic_auth(&self.api_key_code, Some(&self.api_secret_code))
     }
