@@ -15,7 +15,8 @@
 			"oauth10a",
 			"oauth",
 			"retry",
-			"models"
+			"media",
+			"models",
 		],
 		"rust-analyzer.linkedProjects": [
 			"./Cargo.toml",
