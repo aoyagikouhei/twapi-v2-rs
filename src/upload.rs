@@ -1,7 +1,20 @@
-use serde::{Deserialize, Serialize};
+use std::{
+    io::{BufReader, Cursor, Read},
+    path::PathBuf,
+};
 
-pub mod post_media_uploda_init;
+use crate::{api::Authentication, error::Error, headers::Headers};
 
+use self::media_category::MediaCategory;
+
+pub mod get_media_upload;
+pub mod media_category;
+pub mod post_media_upload_append;
+pub mod post_media_upload_finalize;
+pub mod post_media_upload_init;
+pub mod response;
+
+const POSTFIX_URL: &str = "/1.1/media/upload.json";
 const ENV_KEY: &str = "TWAPI_V2_MEDIA_API_PREFIX_API";
 const PREFIX_URL_MEDIA: &str = "https://upload.twitter.com";
 
@@ -13,77 +26,78 @@ pub fn setup_prefix_url(url: &str) {
     std::env::set_var(ENV_KEY, url);
 }
 
-pub(crate) fn make_url<S: AsRef<str>>(post_url: S) -> String {
+pub(crate) fn make_url() -> String {
     let prefix_url = std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_MEDIA.to_owned());
-    format!("{}{}", prefix_url, post_url.as_ref())
+    format!("{}{}", prefix_url, POSTFIX_URL)
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(rename_all = "snake_case")]
-pub enum MediaCategory {
-    AmplifyVideo,
-    TweetGif,
-    TweetImage,
-    TweetVideo,
+pub async fn upload_media(
+    path: &PathBuf,
+    media_type: &str,
+    media_category: Option<MediaCategory>,
+    additional_owners: Option<String>,
+    authentication: &impl Authentication,
+) -> Result<(response::Response, Headers), Error> {
+    // INIT
+    let metadata = std::fs::metadata(path)?;
+    let file_size = metadata.len();
+    let data = post_media_upload_init::Data {
+        total_bytes: file_size,
+        media_type: media_type.to_owned(),
+        media_category,
+        additional_owners,
+    };
+    let (response, _) = post_media_upload_init::Api::new(data)
+        .execute(authentication)
+        .await?;
+    let media_id = response.media_id_string;
+
+    // APPEND
+    execute_append(path, authentication, file_size, &media_id).await?;
+
+    // FINALIZE
+    let data = post_media_upload_finalize::Data {
+        media_id: media_id.clone(),
+    };
+    let response = post_media_upload_finalize::Api::new(data)
+        .execute(authentication)
+        .await?;
+    if response.0.processing_info.is_none() {
+        return Ok(response);
+    }
+
+    // ProgressInfo
+    get_media_upload::Api::new(media_id.clone())
+        .execute(authentication)
+        .await
 }
 
-impl std::fmt::Display for MediaCategory {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let value = match self {
-            Self::AmplifyVideo => "amplify_video",
-            Self::TweetGif => "tweet_gif",
-            Self::TweetImage => "tweet_image",
-            Self::TweetVideo => "tweet_video",
+async fn execute_append(
+    path: &PathBuf,
+    authentication: &impl Authentication,
+    file_size: u64,
+    media_id: &str,
+) -> Result<(), Error> {
+    let mut segment_index = 0;
+    let f = std::fs::File::open(path)?;
+    let mut reader = BufReader::new(f);
+    while segment_index * 5000000 < file_size {
+        let read_size: usize = if (segment_index + 1) * 5000000 < file_size {
+            5000000
+        } else {
+            (file_size - segment_index * 5000000) as usize
         };
-        write!(f, "{}", value)
+        let mut cursor = Cursor::new(vec![0; read_size]);
+        reader.read_exact(cursor.get_mut())?;
+        let data = post_media_upload_append::Data {
+            media_id: media_id.to_owned(),
+            segment_index,
+            cursor,
+        };
+        let _ = post_media_upload_append::Api::new(data)
+            .execute(authentication)
+            .await?;
+        segment_index += 1;
     }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct Image {
-    pub image_type: String,
-    pub w: u64,
-    pub h: u64,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct Video {
-    pub video_type: String,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct ProcessingInfo {
-    pub state: String,
-    pub check_after_secs: Option<u64>,
-    pub progress_percent: Option<u64>,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct Response {
-    pub media_id: u64,
-    pub media_id_string: String,
-    pub expires_after_secs: u64,
-    pub media_key: Option<String>,
-    pub size: Option<u64>,
-    pub image: Option<Image>,
-    pub video: Option<Video>,
-    pub processing_info: Option<ProcessingInfo>,
-    #[serde(flatten)]
-    pub extra: std::collections::HashMap<String, serde_json::Value>,
-}
-
-impl Response {
-    pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty();
-        if !res {
-            println!("Response {:?}", self.extra);
-        }
-        res
-    }
+    Ok(())
 }
