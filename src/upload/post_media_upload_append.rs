@@ -1,6 +1,11 @@
 use std::io::Cursor;
 
-use crate::{api::Authentication, error::Error, headers::Headers, upload::make_url};
+use crate::{
+    api::Authentication,
+    error::Error,
+    headers::Headers,
+    upload::{execute_no_response, make_url},
+};
 use reqwest::{
     multipart::{Form, Part},
     RequestBuilder,
@@ -41,14 +46,6 @@ impl Api {
     }
 
     pub async fn execute(self, authentication: &impl Authentication) -> Result<Headers, Error> {
-        let response = self.build(authentication).send().await?;
-        let status_code = response.status();
-        let header = response.headers();
-        let headers = Headers::new(header);
-        if status_code.is_success() {
-            Ok(headers)
-        } else {
-            Err(Error::Other("append error".to_owned(), Some(status_code)))
-        }
+        execute_no_response(self.build(authentication)).await
     }
 }

@@ -3,12 +3,16 @@ use std::{
     path::PathBuf,
 };
 
+use reqwest::RequestBuilder;
+
 use crate::{api::Authentication, error::Error, headers::Headers};
 
 use self::media_category::MediaCategory;
 
 pub mod get_media_upload;
 pub mod media_category;
+pub mod post_media_metadata_create;
+pub mod post_media_subtitles_create;
 pub mod post_media_upload_append;
 pub mod post_media_upload_finalize;
 pub mod post_media_upload_init;
@@ -27,8 +31,25 @@ pub fn setup_prefix_url(url: &str) {
 }
 
 pub(crate) fn make_url() -> String {
+    make_url_with_postfix(POSTFIX_URL)
+}
+
+pub(crate) fn make_url_with_postfix<S: AsRef<str>>(post_url: S) -> String {
     let prefix_url = std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_MEDIA.to_owned());
-    format!("{}{}", prefix_url, POSTFIX_URL)
+    format!("{}{}", prefix_url, post_url.as_ref())
+}
+
+pub(crate) async fn execute_no_response(builder: RequestBuilder) -> Result<Headers, Error> {
+    let response = builder.send().await?;
+    let status_code = response.status();
+    let header = response.headers();
+    let headers = Headers::new(header);
+    if status_code.is_success() {
+        Ok(headers)
+    } else {
+        let body = response.text().await?;
+        Err(Error::Other(body, Some(status_code)))
+    }
 }
 
 pub async fn upload_media(
