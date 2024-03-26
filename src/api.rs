@@ -47,6 +47,7 @@ pub mod get_2_tweets_search_all;
 pub mod get_2_tweets_search_recent;
 pub mod get_2_tweets_search_stream;
 pub mod get_2_tweets_search_stream_rules;
+pub mod get_2_usage_tweets;
 pub mod get_2_users;
 pub mod get_2_users_by;
 pub mod get_2_users_by_username_username;
