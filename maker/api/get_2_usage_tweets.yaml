@@ -1,0 +1,44 @@
+---
+
+url: /2/usage/tweets
+method: get
+queries:
+  - name: usage.fields
+    type: enum
+  - name: days
+    type: integer
+    max: 90
+    min: 1
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        cap_reset_day:
+          type: integer
+        daily_client_app_usage:
+          type: array
+          items:
+            type: object
+            ref: daily_client_app_usage
+        daily_project_usage:
+          type: object
+          ref: daily_project_usage
+        project_cap:
+          type: string
+        project_id:
+          type: string
+        project_usage:
+          type: string
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
+    meta:
+      type: object
+      ref: meta

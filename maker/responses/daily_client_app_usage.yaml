@@ -1,0 +1,14 @@
+---
+
+response:
+  type: object
+  properties:
+    client_app_id:
+      type: string
+    usage_result_count:
+      type: integer
+    usage:
+      type: array
+      items:
+        type: object
+        ref: usage

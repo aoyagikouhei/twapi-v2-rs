@@ -1,0 +1,12 @@
+---
+
+response:
+  type: object
+  properties:
+    project_id:
+      type: string
+    usage:
+      type: array
+      items:
+        type: object
+        ref: usage
