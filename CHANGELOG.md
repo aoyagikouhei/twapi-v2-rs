@@ -2,6 +2,7 @@
 
 ### v0.14.0 (2024/03/27)
 * add upload.twitter.com apis
+* add GET /2/usage/tweets
 
 ### v0.13.1 (2024/03/25)
 * modify oauth with state
