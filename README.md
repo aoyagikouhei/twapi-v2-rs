@@ -9,6 +9,7 @@ Twitter API v2 library.
 - Convenience setted parameter methods
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
+- Upload Media upload.twitter.com apis
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
 - Optional v1 to v2 parser
@@ -36,6 +37,9 @@ Twitter API v2 library.
 
 ### models
 - From v1 to v2
+
+### upload
+- Upload Media
 
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)

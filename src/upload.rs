@@ -80,15 +80,7 @@ pub async fn upload_media(
     let data = post_media_upload_finalize::Data {
         media_id: media_id.clone(),
     };
-    let response = post_media_upload_finalize::Api::new(data)
-        .execute(authentication)
-        .await?;
-    if response.0.processing_info.is_none() {
-        return Ok(response);
-    }
-
-    // ProgressInfo
-    get_media_upload::Api::new(media_id.clone())
+    post_media_upload_finalize::Api::new(data)
         .execute(authentication)
         .await
 }
