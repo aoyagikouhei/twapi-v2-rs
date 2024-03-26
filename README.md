@@ -110,6 +110,35 @@ async fn main() {
 }
 ```
 
+
+### Upload Media
+```rust
+use twapi_v2::{
+    oauth10a::OAuthAuthentication,
+    upload::{self, media_category::MediaCategory},
+};
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let auth = OAuthAuthentication::new(
+        std::env::var("CONSUMER_KEY").unwrap_or_default(),
+        std::env::var("CONSUMER_SECRET").unwrap_or_default(),
+        std::env::var("ACCESS_KEY").unwrap_or_default(),
+        std::env::var("ACCESS_SECRET").unwrap_or_default(),
+    );
+    let response = upload::upload_media(
+        &std::path::PathBuf::from("test.jpg"),
+        "image/jpeg",
+        Some(MediaCategory::TweetImage),
+        None,
+        &auth,
+    )
+    .await?;
+    println!("{:?}", response);
+    Ok(())
+}
+```
+
 ### Twitter OAuth Web
 ```
 cd examples/oauth-web
