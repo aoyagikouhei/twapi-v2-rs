@@ -31,6 +31,7 @@ async fn test_get_2_tweets_search_recent_oauth() -> Result<()> {
 
 #[tokio::test]
 async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
+    api::clear_prefix_url();
     let mut server = Server::new_async().await;
     api::setup_prefix_url(&server.url());
 
@@ -49,8 +50,14 @@ async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
+
+    let twapi_options = api::TwapiOptions {
+        prefix_url: Some(server.url()),
+    };
+
     let builder = get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
+        .twapi_options(twapi_options)
         .build(&auth);
     let (res, _headers) = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await?;
     assert_eq!(res.extra.get("origin"), Some(&json!("0.0.0.0")));

@@ -101,7 +101,7 @@ pub fn setup_prefix_url(url: &str) {
 
 #[derive(Debug, Clone, Default)]
 pub struct TwapiOptions {
-    prefix_url: Option<String>,
+    pub prefix_url: Option<String>,
 }
 
 fn get_prefix_url() -> String {
