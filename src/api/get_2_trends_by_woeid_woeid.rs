@@ -1,6 +1,6 @@
 use crate::responses::trends::Trends;
 use crate::{
-    api::{execute_twitter, make_url, Authentication},
+    api::{execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -12,18 +12,25 @@ const URL: &str = "/2/trends/by/woeid/:woeid";
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     woeid: String,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
     pub fn new(woeid: &str) -> Self {
         Self {
             woeid: woeid.to_owned(),
+            ..Default::default()
         }
+    }
+
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
     }
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = make_url(URL.replace(":woeid", &self.woeid));
+        let url = make_url(&self.twapi_options, URL.replace(":woeid", &self.woeid));
         let builder = client.get(&url);
         authentication.execute(builder, "GET", &url, &[])
     }

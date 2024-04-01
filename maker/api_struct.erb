@@ -24,4 +24,5 @@ def make_type(it)
 pub struct Api {<% (paths + queries + form.filter{|it| it[:alter].blank? && it[:constant].blank?}).each do |it| %>
     <%= it[:name].make_name.make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
     body: Body,<% end %>
+    twapi_options: Option<TwapiOptions>,
 }

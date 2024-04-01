@@ -1,6 +1,6 @@
 use crate::responses::{errors::Errors, streams::Streams};
 use crate::{
-    api::{execute_twitter, make_url, Authentication},
+    api::{execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -13,6 +13,7 @@ const URL: &str = "/2/tweets/search/stream/rules";
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     ids: Option<String>,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
@@ -27,13 +28,18 @@ impl Api {
         self
     }
 
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
+    }
+
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(ids) = self.ids {
             query_parameters.push(("ids", ids));
         }
         let client = reqwest::Client::new();
-        let url = make_url(URL);
+        let url = make_url(&self.twapi_options, URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

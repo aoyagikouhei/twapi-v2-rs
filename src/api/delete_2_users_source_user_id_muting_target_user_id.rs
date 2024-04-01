@@ -1,5 +1,5 @@
 use crate::{
-    api::{execute_twitter, make_url, Authentication},
+    api::{execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -12,6 +12,7 @@ const URL: &str = "/2/users/:source_user_id/muting/:target_user_id";
 pub struct Api {
     source_user_id: String,
     target_user_id: String,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
@@ -19,12 +20,19 @@ impl Api {
         Self {
             source_user_id: source_user_id.to_owned(),
             target_user_id: target_user_id.to_owned(),
+            ..Default::default()
         }
+    }
+
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
     }
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
         let url = make_url(
+            &self.twapi_options,
             URL.replace(":source_user_id", &self.source_user_id)
                 .replace(":target_user_id", &self.target_user_id),
         );

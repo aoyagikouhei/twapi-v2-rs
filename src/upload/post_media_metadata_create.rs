@@ -1,8 +1,8 @@
 use crate::{
-    api::Authentication,
+    api::{Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
-    upload::{execute_no_response, make_url_with_postfix},
+    upload::{execute_no_response, make_url},
 };
 use reqwest::RequestBuilder;
 use serde::Serialize;
@@ -23,16 +23,25 @@ pub struct Body {
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     body: Body,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
     pub fn new(body: Body) -> Self {
-        Self { body }
+        Self {
+            body,
+            ..Default::default()
+        }
+    }
+
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
     }
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = make_url_with_postfix(URL);
+        let url = make_url(&self.twapi_options, Some(URL));
         let builder = client.post(&url).json(&self.body);
         authentication.execute(builder, "POST", &url, &[])
     }

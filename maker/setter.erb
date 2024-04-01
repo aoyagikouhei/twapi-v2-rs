@@ -21,3 +21,8 @@ pub fn <%= it[:name].make_field %>(mut self, value: <%= make_field_type(it) %>) 
     self
 }
 <% end %>
+
+pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+    self.twapi_options = Some(value);
+    self
+}

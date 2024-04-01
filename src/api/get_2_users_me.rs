@@ -1,7 +1,7 @@
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, users::Users};
 use crate::{
-    api::{execute_twitter, make_url, Authentication},
+    api::{execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -45,6 +45,7 @@ pub struct Api {
     expansions: Option<HashSet<Expansions>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
@@ -59,6 +60,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             tweet_fields: Some(TweetFields::organic()),
             user_fields: Some(UserFields::all()),
+            ..Default::default()
         }
     }
 
@@ -67,6 +69,7 @@ impl Api {
             expansions: Some(Expansions::all()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::all()),
+            ..Default::default()
         }
     }
 
@@ -85,6 +88,11 @@ impl Api {
         self
     }
 
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
+    }
+
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(expansions) = self.expansions {
@@ -97,7 +105,7 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        let url = make_url(URL);
+        let url = make_url(&self.twapi_options, URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

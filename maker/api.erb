@@ -5,7 +5,7 @@ use std::collections::HashSet;
 <% end %><% if fields.present? %>use crate::fields::{<%= fields.map{|it| "#{it[:name].make_field()}::#{it[:name].ucc}"}.join(", ") %>};
 <% end %><% if refs.present? %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use reqwest::RequestBuilder;
-use crate::{error::Error, headers::Headers, api::{execute_twitter, Authentication, make_url}};
+use crate::{error::Error, headers::Headers, api::{execute_twitter, Authentication, make_url, TwapiOptions}};
 
 const URL: &str = "<%= yml[:url] %>";
 
@@ -21,7 +21,7 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
 <%= parameters %>
         let client = reqwest::Client::new();
-        let url = make_url(URL<%= paths.empty? ? "" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>);
+        let url = make_url(&self.twapi_options, URL<%= paths.empty? ? "" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>);
         let builder = client
             .<%= yml[:method] %>(&url)<% if queries.present? %>
             .query(&query_parameters)<% end %><% if form.present? %>

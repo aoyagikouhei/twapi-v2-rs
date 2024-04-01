@@ -99,9 +99,34 @@ pub fn setup_prefix_url(url: &str) {
     std::env::set_var(ENV_KEY, url);
 }
 
-pub(crate) fn make_url<S: AsRef<str>>(post_url: S) -> String {
-    let prefix_url = std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_TWITTER.to_owned());
-    format!("{}{}", prefix_url, post_url.as_ref())
+#[derive(Debug, Clone, Default)]
+pub struct TwapiOptions {
+    prefix_url: Option<String>,
+}
+
+fn get_prefix_url() -> String {
+    std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_TWITTER.to_owned())
+}
+
+pub(crate) fn make_url<S: AsRef<str>>(twapi_options: &Option<TwapiOptions>, post_url: S) -> String {
+    make_url_with_prefix(&get_prefix_url(), twapi_options, post_url.as_ref())
+}
+
+pub(crate) fn make_url_with_prefix(
+    default_perfix_url: &str,
+    twapi_options: &Option<TwapiOptions>,
+    post_url: &str,
+) -> String {
+    let prefix_url = if let Some(twapi_options) = twapi_options {
+        if let Some(prefix_url) = twapi_options.prefix_url.as_ref() {
+            prefix_url
+        } else {
+            default_perfix_url
+        }
+    } else {
+        default_perfix_url
+    };
+    format!("{}{}", prefix_url, post_url)
 }
 
 pub trait Authentication {

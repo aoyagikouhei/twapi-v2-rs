@@ -1,5 +1,8 @@
 use anyhow::Result;
-use twapi_v2::{api::{execute_twitter, get_2_users_me}, oauth10a::OAuthAuthentication};
+use twapi_v2::{
+    api::{execute_twitter, get_2_users_me},
+    oauth10a::OAuthAuthentication,
+};
 
 // CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_users_me_oauth --all-features -- --nocapture --test-threads=1
 

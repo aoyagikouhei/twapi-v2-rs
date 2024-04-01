@@ -1,7 +1,7 @@
 use crate::fields::{list_fields::ListFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, lists::Lists, meta::Meta};
 use crate::{
-    api::{execute_twitter, make_url, Authentication},
+    api::{execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -48,6 +48,7 @@ pub struct Api {
     max_results: Option<usize>,
     pagination_token: Option<String>,
     user_fields: Option<HashSet<UserFields>>,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
@@ -94,6 +95,11 @@ impl Api {
         self
     }
 
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
+    }
+
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(expansions) = self.expansions {
@@ -112,7 +118,7 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        let url = make_url(URL.replace(":id", &self.id));
+        let url = make_url(&self.twapi_options, URL.replace(":id", &self.id));
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

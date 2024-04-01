@@ -1,5 +1,5 @@
 use crate::{
-    api::{execute_twitter, make_url},
+    api::{execute_twitter, make_url, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -13,6 +13,7 @@ pub struct Api {
     api_key_code: String,
     api_secret_code: String,
     refresh_token: String,
+    twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
@@ -21,7 +22,13 @@ impl Api {
             api_key_code: api_key_code.to_owned(),
             api_secret_code: api_secret_code.to_owned(),
             refresh_token: refresh_token.to_owned(),
+            ..Default::default()
         }
+    }
+
+    pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
+        self.twapi_options = Some(value);
+        self
     }
 
     pub fn build(self) -> RequestBuilder {
@@ -32,7 +39,7 @@ impl Api {
         ];
 
         let client = reqwest::Client::new();
-        let url = make_url(URL);
+        let url = make_url(&self.twapi_options, URL);
         client
             .post(url)
             .form(&form_parameters)
