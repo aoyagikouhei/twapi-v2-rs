@@ -111,7 +111,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(
             &self.twapi_options,
-            URL.replace(":username", &self.username),
+            &URL.replace(":username", &self.username),
         );
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(

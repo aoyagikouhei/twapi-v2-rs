@@ -156,6 +156,7 @@ BEARER_CODE=XXXXX cargo run
 ```rust
 #[tokio::test]
 async fn test_mock_get_2_tweets_search_recent_oauth() -> Result<()> {
+    // Setup mock server
     let mut server = Server::new_async().await;
     let mock = server
         .mock("GET", "/2/tweets/search/recent")
@@ -166,14 +167,16 @@ async fn test_mock_get_2_tweets_search_recent_oauth() -> Result<()> {
         .create_async()
         .await;
 
-    // Setup prefix all apis
-    api::setup_prefix_url(&server.url());
+    // Setup OAuth
     let auth = OAuthAuthentication::new(
         std::env::var("CONSUMER_KEY").unwrap_or_default(),
         std::env::var("CONSUMER_SECRET").unwrap_or_default(),
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
+
+    // Setup prefix all APIs
+    api::setup_prefix_url(&server.url());
     let builder = get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
         .build(&auth);
@@ -181,8 +184,9 @@ async fn test_mock_get_2_tweets_search_recent_oauth() -> Result<()> {
     assert_eq!(res.extra.get("origin"), Some(&json!("0.0.0.0")));
     mock.assert();
 
-    // Setup prefix each apis
+    // Clear prefix url
     api::clear_prefix_url();
+    // Override prefix url
     let twapi_options = TwapiOptions {
         prefix_url: Some(server.url().clone())
     };

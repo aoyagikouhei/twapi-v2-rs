@@ -104,12 +104,12 @@ pub struct TwapiOptions {
     pub prefix_url: Option<String>,
 }
 
-fn get_prefix_url() -> String {
-    std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_TWITTER.to_owned())
-}
-
-pub(crate) fn make_url<S: AsRef<str>>(twapi_options: &Option<TwapiOptions>, post_url: S) -> String {
-    make_url_with_prefix(&get_prefix_url(), twapi_options, post_url.as_ref())
+pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, post_url: &str) -> String {
+    make_url_with_prefix(
+        &std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_TWITTER.to_owned()),
+        twapi_options,
+        post_url,
+    )
 }
 
 pub(crate) fn make_url_with_prefix(

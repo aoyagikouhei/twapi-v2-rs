@@ -203,7 +203,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(
             &self.twapi_options,
-            URL.replace(":dm_conversation_id", &self.dm_conversation_id),
+            &URL.replace(":dm_conversation_id", &self.dm_conversation_id),
         );
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(

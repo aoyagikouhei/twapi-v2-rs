@@ -37,7 +37,7 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = make_url(&self.twapi_options, URL.replace(":id", &self.id));
+        let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.post(&url).json(&self.body);
         authentication.execute(builder, "POST", &url, &[])
     }

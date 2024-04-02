@@ -203,7 +203,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(
             &self.twapi_options,
-            URL.replace(":participant_id", &self.participant_id),
+            &URL.replace(":participant_id", &self.participant_id),
         );
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(

@@ -21,7 +21,7 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
 <%= parameters %>
         let client = reqwest::Client::new();
-        let url = make_url(&self.twapi_options, URL<%= paths.empty? ? "" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>);
+        let url = make_url(&self.twapi_options, <%= paths.empty? ? "" : "&" %>URL<%= paths.empty? ? "" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>);
         let builder = client
             .<%= yml[:method] %>(&url)<% if queries.present? %>
             .query(&query_parameters)<% end %><% if form.present? %>

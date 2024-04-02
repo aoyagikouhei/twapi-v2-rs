@@ -34,7 +34,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(
             &self.twapi_options,
-            URL.replace(":source_user_id", &self.source_user_id)
+            &URL.replace(":source_user_id", &self.source_user_id)
                 .replace(":target_user_id", &self.target_user_id),
         );
         let builder = client.delete(&url);

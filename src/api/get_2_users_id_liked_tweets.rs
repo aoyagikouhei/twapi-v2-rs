@@ -197,7 +197,7 @@ impl Api {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
-        let url = make_url(&self.twapi_options, URL.replace(":id", &self.id));
+        let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             builder,

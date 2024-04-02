@@ -30,7 +30,7 @@ impl Api {
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
-        let url = make_url(&self.twapi_options, URL.replace(":woeid", &self.woeid));
+        let url = make_url(&self.twapi_options, &URL.replace(":woeid", &self.woeid));
         let builder = client.get(&url);
         authentication.execute(builder, "GET", &url, &[])
     }

@@ -43,20 +43,6 @@ pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, postfix_url: Option
     )
 }
 
-/*
-pub(crate) fn make_url_with_postfix<S: AsRef<str>>(
-    prefix_url: &Option<String>,
-    post_url: S,
-) -> String {
-    let prefix_url = if let Some(prefix_url) = prefix_url {
-        prefix_url.to_owned()
-    } else {
-        std::env::var(ENV_KEY).unwrap_or(PREFIX_URL_MEDIA.to_owned())
-    };
-    format!("{}{}", prefix_url, post_url.as_ref())
-}
- */
-
 pub(crate) async fn execute_no_response(builder: RequestBuilder) -> Result<Headers, Error> {
     let response = builder.send().await?;
     let status_code = response.status();
