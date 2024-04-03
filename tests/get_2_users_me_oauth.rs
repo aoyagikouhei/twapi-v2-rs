@@ -15,8 +15,9 @@ async fn test_get_2_users_me_oauth() -> Result<()> {
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
     let builder = get_2_users_me::Api::all().build(&auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+    let (res, rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
+    println!("{}", rate_limit);
     let response = serde_json::from_value::<get_2_users_me::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);
     Ok(())
