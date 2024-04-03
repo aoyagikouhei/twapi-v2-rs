@@ -9,13 +9,13 @@ Twitter API v2 library.
 - Convenience setted parameter methods
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
-- Upload Media upload.twitter.com apis
+- Upload Media upload.twitter.com APIs
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
 - Optional v1 to v2 parser
 - Streaming example
 - Supported mocks. For example, mockito.
-- **Experimental** type support.
+- Type support.
 
 ## Features
 ### default
@@ -110,33 +110,14 @@ async fn main() {
 }
 ```
 
-
 ### Upload Media
-```rust
-use twapi_v2::{
-    oauth10a::OAuthAuthentication,
-    upload::{self, media_category::MediaCategory},
-};
-
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let auth = OAuthAuthentication::new(
-        std::env::var("CONSUMER_KEY").unwrap_or_default(),
-        std::env::var("CONSUMER_SECRET").unwrap_or_default(),
-        std::env::var("ACCESS_KEY").unwrap_or_default(),
-        std::env::var("ACCESS_SECRET").unwrap_or_default(),
-    );
-    let response = upload::upload_media(
-        &std::path::PathBuf::from("test.jpg"),
-        "image/jpeg",
-        Some(MediaCategory::TweetImage),
-        None,
-        &auth,
-    )
-    .await?;
-    println!("{:?}", response);
-    Ok(())
-}
+```
+cd examples/post-media
+CONSUMER_KEY=xxx \
+CONSUMER_SECRET=xxx \
+ACCESS_KEY=xxx \
+ACCESS_SECRET=xxx \
+cargo run
 ```
 
 ### Twitter OAuth Web

@@ -54,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
         }),
         ..Default::default()
     };
-    let res = post_2_tweets::Api::new(body).execute(&auth).await?;
-    tracing::info!("{:?}", res);
+    let (response, _header) = post_2_tweets::Api::new(body).execute(&auth).await?;
+    tracing::info!(response =? response, "post_2_tweets");
     Ok(())
 }

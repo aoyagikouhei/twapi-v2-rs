@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.14.2 (2024/04/04)
+* Add check_processing for upload
+* Add post-media example
+
 ### v0.14.1 (2024/04/02)
 * Orverride prefix url for each APIs
 
