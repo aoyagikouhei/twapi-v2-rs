@@ -11,6 +11,9 @@ pub enum Error {
     #[error("Timeout")]
     Timeout,
 
+    #[error("Upload {0}")]
+    Upload(String),
+
     #[error("Other {0}")]
     Other(String, Option<StatusCode>),
 

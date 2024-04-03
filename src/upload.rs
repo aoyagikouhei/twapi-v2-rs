@@ -11,7 +11,7 @@ use crate::{
     headers::Headers,
 };
 
-use self::media_category::MediaCategory;
+use self::{media_category::MediaCategory, response::Response};
 
 pub mod get_media_upload;
 pub mod media_category;
@@ -76,6 +76,7 @@ pub async fn upload_media(
         .execute(authentication)
         .await?;
     let media_id = response.media_id_string;
+    tracing::info!(media_id = media_id, "post_media_upload_init");
 
     // APPEND
     execute_append(path, authentication, file_size, &media_id).await?;
@@ -84,9 +85,11 @@ pub async fn upload_media(
     let data = post_media_upload_finalize::Data {
         media_id: media_id.clone(),
     };
-    post_media_upload_finalize::Api::new(data)
+    let res = post_media_upload_finalize::Api::new(data)
         .execute(authentication)
-        .await
+        .await;
+    tracing::info!(media_id = media_id, "post_media_upload_finalize");
+    res
 }
 
 async fn execute_append(
@@ -114,7 +117,55 @@ async fn execute_append(
         let _ = post_media_upload_append::Api::new(data)
             .execute(authentication)
             .await?;
+        tracing::info!(
+            segment_index = segment_index,
+            media_id = media_id,
+            "post_media_upload_append"
+        );
         segment_index += 1;
     }
     Ok(())
+}
+
+pub async fn check_processing(
+    response: Response,
+    authentication: &impl Authentication,
+    f: Option<impl Fn(i64, &Response, &Headers) -> Result<(), Error>>,
+) -> Result<(), Error> {
+    let media_id = response.media_id_string.clone();
+    let mut processing_info = response.processing_info;
+    let mut count = 0;
+    loop {
+        let Some(ref info) = processing_info else {
+            return Ok(());
+        };
+        if !info.state.is_continue() {
+            return Ok(());
+        }
+
+        if let Some(check_after_secs) = info.check_after_secs {
+            tokio::time::sleep(std::time::Duration::from_secs(check_after_secs)).await;
+            let (res, header) = get_media_upload::Api::new(media_id.clone())
+                .execute(authentication)
+                .await?;
+            let progress_percent = res
+                .processing_info
+                .as_ref()
+                .map(|it| it.progress_percent.unwrap_or(0))
+                .unwrap_or(0);
+            tracing::info!(
+                count = count,
+                media_id = media_id,
+                progress_percent = progress_percent,
+                "get_media_upload"
+            );
+            if let Some(ref f) = f {
+                f(count, &res, &header)?;
+            }
+            processing_info = res.processing_info;
+        } else {
+            return Err(Error::Upload("check_ofter_secs not found".to_owned()));
+        }
+        count += 1;
+    }
 }

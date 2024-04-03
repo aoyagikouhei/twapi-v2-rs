@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "./examples/streaming"
+		},
+		{
+			"path": "./examples/post-media"
 		}
 	],
 	"settings": {
@@ -21,7 +24,8 @@
 		"rust-analyzer.linkedProjects": [
 			"./Cargo.toml",
 			"examples/oauth-web/Cargo.toml",
-			"examples/streaming/Cargo.toml"
+			"examples/post-media/Cargo.toml",
+			"examples/streaming/Cargo.toml",
 		],
 		"rust-analyzer.showUnlinkedFileNotification": false
 	}

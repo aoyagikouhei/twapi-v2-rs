@@ -24,6 +24,7 @@ serde_json = "1"
 sha1 = { version = "0.10", optional = true }
 thiserror = "1"
 tokio = { version = "1", features = ["time"], optional = true }
+tracing = "0.1"
 form_urlencoded = { version = "1.2", optional = true }
 
 [features]
@@ -33,7 +34,7 @@ retry = ["tokio"]
 oauth = ["oauth2"]
 oauth10a = ["base64", "hmac", "rand", "sha1", "form_urlencoded"]
 models = []
-upload = ["reqwest/multipart"]
+upload = ["reqwest/multipart", "tokio"]
 
 [dev-dependencies]
 anyhow = "1"
