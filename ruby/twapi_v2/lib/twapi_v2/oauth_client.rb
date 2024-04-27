@@ -16,5 +16,10 @@ module TwapiV2
       authorization_uri = @client.authorization_uri(scope: scopes)
       [authorization_uri, @client.code_verifier, @client.state]
     end
+
+    def access_token(code, code_verifier)
+      client.authorization_code = code
+      token_response = client.access_token! code_verifier
+    end
   end
 end
