@@ -23,4 +23,8 @@ module TwapiV2
     DmRead = :"dm.read"
     DmWrite = :"dm.write"
   end
+
+  module Scopes
+    FollowCheck = [TwapiV2::Scope::UsersRead, TwapiV2::Scope::OfflineAccess]
+  end
 end

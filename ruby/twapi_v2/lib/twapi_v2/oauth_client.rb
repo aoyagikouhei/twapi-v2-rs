@@ -11,5 +11,10 @@ module TwapiV2
         redirect_uri: redirect_uri
       )
     end
+
+    def oauth_url(scopes)
+      authorization_uri = @client.authorization_uri(scope: scopes)
+      [authorization_uri, @client.code_verifier, @client.state]
+    end
   end
 end
