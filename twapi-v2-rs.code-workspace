@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "./examples/post-media"
+		},
+		{
+			"path": "./ruby/twapi_v2"
 		}
 	],
 	"settings": {

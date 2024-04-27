@@ -5,7 +5,7 @@ RSpec.describe TwapiV2 do
     expect(TwapiV2::VERSION).not_to be nil
   end
 
-  it "does something useful" do
-    expect(TwapiV2::hello).to eq("Hello World")
+  it "scope" do
+    expect(TwapiV2::Scope::TweetRead).to eq(:"tweet.read")
   end
 end
