@@ -8,4 +8,8 @@ RSpec.describe TwapiV2 do
   it "scope" do
     expect(TwapiV2::Scope::TweetRead).to eq(:"tweet.read")
   end
+
+  it "client new" do
+    expect(TwapiV2::OauthClient::new("a", "b", "c")).not_to be nil
+  end
 end
