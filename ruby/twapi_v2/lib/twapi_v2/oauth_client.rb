@@ -18,8 +18,13 @@ module TwapiV2
     end
 
     def access_token(code, code_verifier)
-      client.authorization_code = code
-      token_response = client.access_token! code_verifier
+      @client.authorization_code = code
+      @client.access_token! code_verifier
+    end
+
+    def refresh(refresh_token)
+      @client.refresh_token = refresh_token
+      @client.access_token!
     end
   end
 end
