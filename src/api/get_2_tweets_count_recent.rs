@@ -1,6 +1,6 @@
 use crate::responses::{counts::Counts, errors::Errors, meta_count::MetaCount};
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -110,7 +110,7 @@ impl Api {
         let url = make_url(&self.twapi_options, URL);
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
-            builder,
+            apply_options(builder, &self.twapi_options),
             "GET",
             &url,
             &query_parameters

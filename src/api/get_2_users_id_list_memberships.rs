@@ -1,7 +1,7 @@
 use crate::fields::{list_fields::ListFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, memberships::Memberships, meta::Meta};
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -121,7 +121,7 @@ impl Api {
         let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
-            builder,
+            apply_options(builder, &self.twapi_options),
             "GET",
             &url,
             &query_parameters

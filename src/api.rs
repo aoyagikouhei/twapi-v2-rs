@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use reqwest::RequestBuilder;
 use serde::de::DeserializeOwned;
 
@@ -102,6 +104,7 @@ pub fn setup_prefix_url(url: &str) {
 #[derive(Debug, Clone, Default)]
 pub struct TwapiOptions {
     pub prefix_url: Option<String>,
+    pub timeout: Option<Duration>,
 }
 
 pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, post_url: &str) -> String {
@@ -185,4 +188,17 @@ where
             Err(err) => Err(Error::Other(format!("{:?}", err), Some(status_code))),
         }
     }
+}
+
+pub(crate) fn apply_options(
+    client: RequestBuilder,
+    options: &Option<TwapiOptions>,
+) -> RequestBuilder {
+    let Some(options) = options else {
+        return client;
+    };
+    let Some(timeout) = options.timeout else {
+        return client;
+    };
+    client.timeout(timeout)
 }

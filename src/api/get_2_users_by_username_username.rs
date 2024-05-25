@@ -1,7 +1,7 @@
 use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, users::Users};
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -115,7 +115,7 @@ impl Api {
         );
         let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
-            builder,
+            apply_options(builder, &self.twapi_options),
             "GET",
             &url,
             &query_parameters

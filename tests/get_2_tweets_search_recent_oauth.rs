@@ -53,6 +53,7 @@ async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
 
     let twapi_options = api::TwapiOptions {
         prefix_url: Some(server.url()),
+        ..Default::default()
     };
 
     let builder = get_2_tweets_search_recent::Api::open("東京")

@@ -1,6 +1,6 @@
 use crate::responses::jobs::Jobs;
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -64,7 +64,12 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
         let builder = client.post(&url).json(&self.body);
-        authentication.execute(builder, "POST", &url, &[])
+        authentication.execute(
+            apply_options(builder, &self.twapi_options),
+            "POST",
+            &url,
+            &[],
+        )
     }
 
     pub async fn execute(

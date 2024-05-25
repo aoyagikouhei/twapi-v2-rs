@@ -1,6 +1,6 @@
 use crate::responses::errors::Errors;
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -38,7 +38,12 @@ impl Api {
                 .replace(":target_user_id", &self.target_user_id),
         );
         let builder = client.delete(&url);
-        authentication.execute(builder, "DELETE", &url, &[])
+        authentication.execute(
+            apply_options(builder, &self.twapi_options),
+            "DELETE",
+            &url,
+            &[],
+        )
     }
 
     pub async fn execute(

@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.15.0 (2024/05/25)
+* Add timeout for api
+
 ### v0.14.2 (2024/04/04)
 * Add check_processing for upload
 * Add post-media example

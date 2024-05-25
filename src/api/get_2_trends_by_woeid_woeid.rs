@@ -1,6 +1,6 @@
 use crate::responses::trends::Trends;
 use crate::{
-    api::{execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
     headers::Headers,
 };
@@ -32,7 +32,12 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, &URL.replace(":woeid", &self.woeid));
         let builder = client.get(&url);
-        authentication.execute(builder, "GET", &url, &[])
+        authentication.execute(
+            apply_options(builder, &self.twapi_options),
+            "GET",
+            &url,
+            &[],
+        )
     }
 
     pub async fn execute(
