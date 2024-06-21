@@ -94,7 +94,8 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Meta {
-    pub result_count: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result_count: Option<i64>,
     pub sent: DateTime<Utc>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,

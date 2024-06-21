@@ -24,7 +24,6 @@ response:
       properties:
         result_count:
           type: integer
-          required: true
         sent:
           type: date
           required: true

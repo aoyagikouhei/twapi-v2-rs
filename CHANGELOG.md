@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.15.1 (2024/06/21)
+* Modify get_2_tweets_search_stream_rules response
+
 ### v0.15.0 (2024/05/25)
 * Add timeout for api
 
