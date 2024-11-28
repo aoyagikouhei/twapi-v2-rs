@@ -76,6 +76,8 @@ pub struct PublicMetrics {
     pub listed_count: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub like_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub media_count: Option<i64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

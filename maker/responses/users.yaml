@@ -43,6 +43,8 @@ response:
           type: integer
         like_count:
           type: integer
+        media_count:
+          type: integer
     url:
       type: string
     username:

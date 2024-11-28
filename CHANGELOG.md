@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.15.2 (2024/11/28)
+* Add media_count in users/public_metrics
+* Update crates
+
 ### v0.15.1 (2024/06/21)
 * Modify get_2_tweets_search_stream_rules response
 

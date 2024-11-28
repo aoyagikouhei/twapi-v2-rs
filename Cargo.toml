@@ -1,6 +1,6 @@
 [package]
 name = "twapi-v2"
-version = "0.15.1"
+version = "0.15.2"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
 edition = "2021"
@@ -15,14 +15,14 @@ documentation = "https://docs.rs/twapi-v2"
 base64 = { version = "0.22", optional = true }
 chrono = { version = "0.4", features = [ "serde" ] }
 hmac = { version = "0.12", optional = true }
-itertools = "0.12"
+itertools = "0.13"
 oauth2 = { version = "4.4", optional = true }
 rand = { version = "0.8", optional = true }
 reqwest = { version = "0.12", features = ["json"], default-features = false, optional = true }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha1 = { version = "0.10", optional = true }
-thiserror = "1"
+thiserror = "2"
 tokio = { version = "1", features = ["time"], optional = true }
 tracing = "0.1"
 form_urlencoded = { version = "1.2", optional = true }
@@ -38,7 +38,7 @@ upload = ["reqwest/multipart", "tokio"]
 
 [dev-dependencies]
 anyhow = "1"
-mockito = "1.4"
+mockito = "1.6"
 tokio = { version = "1", features = ["macros"] }
 
 [package.metadata.docs.rs]
