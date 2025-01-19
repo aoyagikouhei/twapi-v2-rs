@@ -1,6 +1,9 @@
 use anyhow::Result;
 use chrono::prelude::*;
-use twapi_v2::{api::{execute_twitter, post_2_tweets, }, oauth10a::OAuthAuthentication};
+use twapi_v2::{
+    api::{execute_twitter, post_2_tweets},
+    oauth10a::OAuthAuthentication,
+};
 
 // CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX TWEET_TEXT=hello cargo test test_post_2_tweets_oauth -- --nocapture --test-threads=1
 

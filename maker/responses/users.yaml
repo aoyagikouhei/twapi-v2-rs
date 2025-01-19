@@ -17,6 +17,8 @@ response:
     id:
       type: string
       required: true
+    is_identity_verified:
+      type: bool
     location:
       type: string
     most_recent_tweet_id:
@@ -25,6 +27,8 @@ response:
       type: string
       required: true
     pinned_tweet_id:
+      type: string
+    profile_banner_url:
       type: string
     profile_image_url:
       type: string
@@ -45,6 +49,10 @@ response:
           type: integer
         media_count:
           type: integer
+    receives_your_dm:
+      type: bool
+    subscription_type:
+      type: string
     url:
       type: string
     username:
