@@ -1,6 +1,6 @@
 ---
 
-url: /2/users/:id/bookmarks
+url: /2/tweets/:id/retweets
 method: get
 paths:
   - name: id

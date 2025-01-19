@@ -1,10 +1,7 @@
 ---
 
-url: /2/users/:id/bookmarks
+url: /2/users/reposts_of_me
 method: get
-paths:
-  - name: id
-    type: string
 queries:
   - name: expansions
     type: enum

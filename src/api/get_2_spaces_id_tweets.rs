@@ -17,10 +17,16 @@ const URL: &str = "/2/spaces/:id/tweets";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
-    #[serde(rename = "attachments.poll_ids")]
-    AttachmentsPollIds,
+    #[serde(rename = "article.cover_media")]
+    ArticleCoverMedia,
+    #[serde(rename = "article.media_entities")]
+    ArticleMediaEntities,
     #[serde(rename = "attachments.media_keys")]
     AttachmentsMediaKeys,
+    #[serde(rename = "attachments.media_source_tweet")]
+    AttachmentsMediaSourceTweet,
+    #[serde(rename = "attachments.poll_ids")]
+    AttachmentsPollIds,
     #[serde(rename = "author_id")]
     AuthorId,
     #[serde(rename = "edit_history_tweet_ids")]
@@ -31,6 +37,8 @@ pub enum Expansions {
     GeoPlaceId,
     #[serde(rename = "in_reply_to_user_id")]
     InReplyToUserId,
+    #[serde(rename = "entities.note.mentions.username")]
+    EntitiesNoteMentionsUsername,
     #[serde(rename = "referenced_tweets.id")]
     ReferencedTweetsId,
     #[serde(rename = "referenced_tweets.id.author_id")]
@@ -40,13 +48,17 @@ pub enum Expansions {
 impl Expansions {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
-        result.insert(Self::AttachmentsPollIds);
+        result.insert(Self::ArticleCoverMedia);
+        result.insert(Self::ArticleMediaEntities);
         result.insert(Self::AttachmentsMediaKeys);
+        result.insert(Self::AttachmentsMediaSourceTweet);
+        result.insert(Self::AttachmentsPollIds);
         result.insert(Self::AuthorId);
         result.insert(Self::EditHistoryTweetIds);
         result.insert(Self::EntitiesMentionsUsername);
         result.insert(Self::GeoPlaceId);
         result.insert(Self::InReplyToUserId);
+        result.insert(Self::EntitiesNoteMentionsUsername);
         result.insert(Self::ReferencedTweetsId);
         result.insert(Self::ReferencedTweetsIdAuthorId);
         result
@@ -56,13 +68,17 @@ impl Expansions {
 impl std::fmt::Display for Expansions {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::AttachmentsPollIds => write!(f, "attachments.poll_ids"),
+            Self::ArticleCoverMedia => write!(f, "article.cover_media"),
+            Self::ArticleMediaEntities => write!(f, "article.media_entities"),
             Self::AttachmentsMediaKeys => write!(f, "attachments.media_keys"),
+            Self::AttachmentsMediaSourceTweet => write!(f, "attachments.media_source_tweet"),
+            Self::AttachmentsPollIds => write!(f, "attachments.poll_ids"),
             Self::AuthorId => write!(f, "author_id"),
             Self::EditHistoryTweetIds => write!(f, "edit_history_tweet_ids"),
             Self::EntitiesMentionsUsername => write!(f, "entities.mentions.username"),
             Self::GeoPlaceId => write!(f, "geo.place_id"),
             Self::InReplyToUserId => write!(f, "in_reply_to_user_id"),
+            Self::EntitiesNoteMentionsUsername => write!(f, "entities.note.mentions.username"),
             Self::ReferencedTweetsId => write!(f, "referenced_tweets.id"),
             Self::ReferencedTweetsIdAuthorId => write!(f, "referenced_tweets.id.author_id"),
         }
@@ -71,7 +87,7 @@ impl std::fmt::Display for Expansions {
 
 impl Default for Expansions {
     fn default() -> Self {
-        Self::AttachmentsPollIds
+        Self::ArticleCoverMedia
     }
 }
 

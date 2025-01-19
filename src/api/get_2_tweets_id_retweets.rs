@@ -1,5 +1,8 @@
-use crate::fields::{tweet_fields::TweetFields, user_fields::UserFields};
-use crate::responses::{errors::Errors, includes::Includes, meta::Meta, users::Users};
+use crate::fields::{
+    media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
+    tweet_fields::TweetFields, user_fields::UserFields,
+};
+use crate::responses::{errors::Errors, includes::Includes, meta::Meta, tweets::Tweets};
 use crate::{
     api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
     error::Error,
@@ -10,24 +13,54 @@ use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-const URL: &str = "/2/users/:id/followers";
+const URL: &str = "/2/tweets/:id/retweets";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
-    #[serde(rename = "affiliation.user_id")]
-    AffiliationUserId,
-    #[serde(rename = "most_recent_tweet_id")]
-    MostRecentTweetId,
-    #[serde(rename = "pinned_tweet_id")]
-    PinnedTweetId,
+    #[serde(rename = "article.cover_media")]
+    ArticleCoverMedia,
+    #[serde(rename = "article.media_entities")]
+    ArticleMediaEntities,
+    #[serde(rename = "attachments.media_keys")]
+    AttachmentsMediaKeys,
+    #[serde(rename = "attachments.media_source_tweet")]
+    AttachmentsMediaSourceTweet,
+    #[serde(rename = "attachments.poll_ids")]
+    AttachmentsPollIds,
+    #[serde(rename = "author_id")]
+    AuthorId,
+    #[serde(rename = "edit_history_tweet_ids")]
+    EditHistoryTweetIds,
+    #[serde(rename = "entities.mentions.username")]
+    EntitiesMentionsUsername,
+    #[serde(rename = "geo.place_id")]
+    GeoPlaceId,
+    #[serde(rename = "in_reply_to_user_id")]
+    InReplyToUserId,
+    #[serde(rename = "entities.note.mentions.username")]
+    EntitiesNoteMentionsUsername,
+    #[serde(rename = "referenced_tweets.id")]
+    ReferencedTweetsId,
+    #[serde(rename = "referenced_tweets.id.author_id")]
+    ReferencedTweetsIdAuthorId,
 }
 
 impl Expansions {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
-        result.insert(Self::AffiliationUserId);
-        result.insert(Self::MostRecentTweetId);
-        result.insert(Self::PinnedTweetId);
+        result.insert(Self::ArticleCoverMedia);
+        result.insert(Self::ArticleMediaEntities);
+        result.insert(Self::AttachmentsMediaKeys);
+        result.insert(Self::AttachmentsMediaSourceTweet);
+        result.insert(Self::AttachmentsPollIds);
+        result.insert(Self::AuthorId);
+        result.insert(Self::EditHistoryTweetIds);
+        result.insert(Self::EntitiesMentionsUsername);
+        result.insert(Self::GeoPlaceId);
+        result.insert(Self::InReplyToUserId);
+        result.insert(Self::EntitiesNoteMentionsUsername);
+        result.insert(Self::ReferencedTweetsId);
+        result.insert(Self::ReferencedTweetsIdAuthorId);
         result
     }
 }
@@ -35,16 +68,26 @@ impl Expansions {
 impl std::fmt::Display for Expansions {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::AffiliationUserId => write!(f, "affiliation.user_id"),
-            Self::MostRecentTweetId => write!(f, "most_recent_tweet_id"),
-            Self::PinnedTweetId => write!(f, "pinned_tweet_id"),
+            Self::ArticleCoverMedia => write!(f, "article.cover_media"),
+            Self::ArticleMediaEntities => write!(f, "article.media_entities"),
+            Self::AttachmentsMediaKeys => write!(f, "attachments.media_keys"),
+            Self::AttachmentsMediaSourceTweet => write!(f, "attachments.media_source_tweet"),
+            Self::AttachmentsPollIds => write!(f, "attachments.poll_ids"),
+            Self::AuthorId => write!(f, "author_id"),
+            Self::EditHistoryTweetIds => write!(f, "edit_history_tweet_ids"),
+            Self::EntitiesMentionsUsername => write!(f, "entities.mentions.username"),
+            Self::GeoPlaceId => write!(f, "geo.place_id"),
+            Self::InReplyToUserId => write!(f, "in_reply_to_user_id"),
+            Self::EntitiesNoteMentionsUsername => write!(f, "entities.note.mentions.username"),
+            Self::ReferencedTweetsId => write!(f, "referenced_tweets.id"),
+            Self::ReferencedTweetsIdAuthorId => write!(f, "referenced_tweets.id.author_id"),
         }
     }
 }
 
 impl Default for Expansions {
     fn default() -> Self {
-        Self::AffiliationUserId
+        Self::ArticleCoverMedia
     }
 }
 
@@ -53,7 +96,10 @@ pub struct Api {
     id: String,
     expansions: Option<HashSet<Expansions>>,
     max_results: Option<usize>,
+    media_fields: Option<HashSet<MediaFields>>,
     pagination_token: Option<String>,
+    place_fields: Option<HashSet<PlaceFields>>,
+    poll_fields: Option<HashSet<PollFields>>,
     tweet_fields: Option<HashSet<TweetFields>>,
     user_fields: Option<HashSet<UserFields>>,
     twapi_options: Option<TwapiOptions>,
@@ -71,9 +117,12 @@ impl Api {
         Self {
             id: id.to_owned(),
             expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::all()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::organic()),
             user_fields: Some(UserFields::all()),
-            max_results: Some(1000),
+            max_results: Some(100),
             ..Default::default()
         }
     }
@@ -82,9 +131,12 @@ impl Api {
         Self {
             id: id.to_owned(),
             expansions: Some(Expansions::all()),
+            media_fields: Some(MediaFields::open()),
+            place_fields: Some(PlaceFields::all()),
+            poll_fields: Some(PollFields::all()),
             tweet_fields: Some(TweetFields::open()),
             user_fields: Some(UserFields::all()),
-            max_results: Some(1000),
+            max_results: Some(100),
             ..Default::default()
         }
     }
@@ -99,8 +151,23 @@ impl Api {
         self
     }
 
+    pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
+        self.media_fields = Some(value);
+        self
+    }
+
     pub fn pagination_token(mut self, value: &str) -> Self {
         self.pagination_token = Some(value.to_owned());
+        self
+    }
+
+    pub fn place_fields(mut self, value: HashSet<PlaceFields>) -> Self {
+        self.place_fields = Some(value);
+        self
+    }
+
+    pub fn poll_fields(mut self, value: HashSet<PollFields>) -> Self {
+        self.poll_fields = Some(value);
         self
     }
 
@@ -127,8 +194,17 @@ impl Api {
         if let Some(max_results) = self.max_results {
             query_parameters.push(("max_results", max_results.to_string()));
         }
+        if let Some(media_fields) = self.media_fields {
+            query_parameters.push(("media.fields", media_fields.iter().join(",")));
+        }
         if let Some(pagination_token) = self.pagination_token {
             query_parameters.push(("pagination_token", pagination_token));
+        }
+        if let Some(place_fields) = self.place_fields {
+            query_parameters.push(("place.fields", place_fields.iter().join(",")));
+        }
+        if let Some(poll_fields) = self.poll_fields {
+            query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
         }
         if let Some(tweet_fields) = self.tweet_fields {
             query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
@@ -161,7 +237,7 @@ impl Api {
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Vec<Users>>,
+    pub data: Option<Vec<Tweets>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub errors: Option<Vec<Errors>>,
     #[serde(skip_serializing_if = "Option::is_none")]
