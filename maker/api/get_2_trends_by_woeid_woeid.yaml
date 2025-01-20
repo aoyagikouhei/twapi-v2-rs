@@ -5,6 +5,13 @@ method: get
 paths:
   - name: woeid
     type: string
+queries:
+  - name: max_trends
+    type: integer
+    max: 50
+    min: 1
+  - name: trend.fields
+    type: enum
 response:
   type: object
   properties:
