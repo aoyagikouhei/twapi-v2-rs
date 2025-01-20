@@ -1,0 +1,12 @@
+---
+
+response:
+  type: object
+  properties:
+    check_after_secs:
+      type: integer
+    progress_percent:
+      type: string
+    state:
+      type: enum_string
+      value: succeeded, in_progress, pending, failed

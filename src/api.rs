@@ -28,6 +28,7 @@ pub mod get_2_lists_id;
 pub mod get_2_lists_id_followers;
 pub mod get_2_lists_id_members;
 pub mod get_2_lists_id_tweets;
+pub mod get_2_media_upload;
 pub mod get_2_spaces;
 pub mod get_2_spaces_by_creator_ids;
 pub mod get_2_spaces_id;

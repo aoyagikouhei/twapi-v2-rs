@@ -1,0 +1,24 @@
+---
+
+url: /2/media/upload
+method: get
+queries:
+  - name: media_id
+    type: integer
+  - name: command
+    type: enum_single
+    value: STATUS
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: media_upload
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
