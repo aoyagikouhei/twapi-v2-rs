@@ -5,7 +5,7 @@ method: get
 queries:
   - name: expansions
     type: enum
-    value: pinned_tweet_id
+    value: affiliation.user_id, most_recent_tweet_id, pinned_tweet_id
   - name: tweet.fields
     type: enum
   - name: user.fields

@@ -21,3 +21,5 @@ pub mod models;
 
 #[cfg(feature = "upload")]
 pub mod upload;
+
+pub mod upload_v2;

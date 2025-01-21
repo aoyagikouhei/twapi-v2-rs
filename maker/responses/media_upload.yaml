@@ -1,0 +1,16 @@
+---
+
+response:
+  type: object
+  properties:
+    expires_after_secs:
+      type: integer
+    id:
+      type: string
+    media_key:
+      type: string
+    processing_info:
+      type: object
+      ref: processing_info
+    size:
+      type: integer

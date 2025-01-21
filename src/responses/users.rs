@@ -14,6 +14,8 @@ pub struct Users {
     pub entities: Option<UserEntities>,
     pub id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub is_identity_verified: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub most_recent_tweet_id: Option<String>,
@@ -21,11 +23,17 @@ pub struct Users {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinned_tweet_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub profile_banner_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub profile_image_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub protected: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub public_metrics: Option<PublicMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub receives_your_dm: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub subscription_type: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
     pub username: String,

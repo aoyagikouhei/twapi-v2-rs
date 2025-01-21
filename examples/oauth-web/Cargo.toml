@@ -6,10 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = "0.7"
+axum = "0.8"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
-tower-cookies = "0.10.0"
+tower-cookies = "0.11.0"
 twapi-v2 = { path="../..", features = ["retry", "oauth", "oauth10a"] }
 
 [features]

@@ -10,7 +10,7 @@ queries:
     type: date
   - name: expansions
     type: enum
-    value: attachments.poll_ids, attachments.media_keys, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, referenced_tweets.id, referenced_tweets.id.author_id
+    value: article.cover_media, article.media_entities, attachments.media_keys, attachments.media_source_tweet, attachments.poll_ids, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, entities.note.mentions.username, referenced_tweets.id, referenced_tweets.id.author_id
   - name: max_results
     type: integer
     max: 500

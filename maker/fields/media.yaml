@@ -1,6 +1,6 @@
 ---
 
-value: duration_ms, height, media_key, preview_image_url, type, url, width, public_metrics, non_public_metrics, organic_metrics, promoted_metrics, alt_text, variants
+value: alt_text, duration_ms, height, media_key, non_public_metrics, organic_metrics, preview_image_url, promoted_metrics, public_metrics, type, url, variants, width
 methods:
   - name: open
-    value: duration_ms, height, media_key, preview_image_url, type, url, width, public_metrics, alt_text, variants
+    value: alt_text, duration_ms, height, media_key, preview_image_url, promoted_metrics, public_metrics, type, url, variants, width

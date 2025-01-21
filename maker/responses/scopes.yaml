@@ -1,0 +1,7 @@
+---
+
+response:
+  type: object
+  properties:
+    followers: # option
+      type: bool

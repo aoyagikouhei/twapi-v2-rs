@@ -12,7 +12,7 @@ queries:
     min: 1
   - name: expansions
     type: enum
-    value: pinned_tweet_id
+    value: affiliation.user_id, most_recent_tweet_id, pinned_tweet_id 
   - name: pagination_token
     type: string
   - name: tweet.fields

@@ -10,6 +10,7 @@ Twitter API v2 library.
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
 - Upload Media upload.twitter.com APIs
+- Upload Media v2 (However, when I executed it, I got a 403 and was not successful.)
 - Optional retriable and timeout and logging
 - Optional OAuth with web example
 - Optional v1 to v2 parser
@@ -110,7 +111,7 @@ async fn main() {
 }
 ```
 
-### Upload Media
+### Upload Media(v2)
 ```
 cd examples/post-media
 CONSUMER_KEY=xxx \

@@ -8,6 +8,10 @@ response:
       ref: attachments
     author_id:
       type: string
+    card_uri:
+      type: string
+    community_id:
+      type: string
     context_annotations:
       type: array
       items:
@@ -17,6 +21,10 @@ response:
       type: string
     created_at:
       type: date
+    display_text_range:
+      type: array
+      items:
+        type: integer
     edit_controls:
       type: object
       ref: edit_controls
@@ -38,11 +46,11 @@ response:
       type: string
     lang:
       type: string
-    possibly_sensitive:
-      type: bool
-    public_metrics:
-      type: object
-      ref: public_metrics
+    media_metadata:
+      type: array
+      items:
+        type: object
+        ref: media_metadata
     non_public_metrics:
       type: object
       ref: non_public_metrics
@@ -52,21 +60,32 @@ response:
     organic_metrics:
       type: object
       ref: organic_metrics
+    possibly_sensitive:
+      type: bool
     promoted_metrics:
       type: object
       ref: promoted_metrics
-    reply_settings:
-      type: string
+    public_metrics:
+      type: object
+      ref: public_metrics
     referenced_tweets:
       type: array
       items:
         type: object
         ref: referenced_tweets
+    reply_settings:
+      type: string
+    scopes:
+      type: object
+      ref: scopes
+    source:
+      type: string
     text:
       type: string
       required: true
+    username:
+      type: string
     withheld:
       type: object
       ref: withheld
-    source:
-      type: string
+    

@@ -14,6 +14,10 @@ const URL: &str = "/2/users/search";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
+    #[serde(rename = "affiliation.user_id")]
+    AffiliationUserId,
+    #[serde(rename = "most_recent_tweet_id")]
+    MostRecentTweetId,
     #[serde(rename = "pinned_tweet_id")]
     PinnedTweetId,
 }
@@ -21,6 +25,8 @@ pub enum Expansions {
 impl Expansions {
     pub fn all() -> HashSet<Self> {
         let mut result = HashSet::new();
+        result.insert(Self::AffiliationUserId);
+        result.insert(Self::MostRecentTweetId);
         result.insert(Self::PinnedTweetId);
         result
     }
@@ -29,6 +35,8 @@ impl Expansions {
 impl std::fmt::Display for Expansions {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
+            Self::AffiliationUserId => write!(f, "affiliation.user_id"),
+            Self::MostRecentTweetId => write!(f, "most_recent_tweet_id"),
             Self::PinnedTweetId => write!(f, "pinned_tweet_id"),
         }
     }
@@ -36,7 +44,7 @@ impl std::fmt::Display for Expansions {
 
 impl Default for Expansions {
     fn default() -> Self {
-        Self::PinnedTweetId
+        Self::AffiliationUserId
     }
 }
 

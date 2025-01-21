@@ -1,0 +1,46 @@
+---
+
+url: /2/tweets/:id/retweets
+method: get
+paths:
+  - name: id
+    type: string
+queries:
+  - name: expansions
+    type: enum
+    value: article.cover_media, article.media_entities, attachments.media_keys, attachments.media_source_tweet, attachments.poll_ids, author_id, edit_history_tweet_ids, entities.mentions.username, geo.place_id, in_reply_to_user_id, entities.note.mentions.username, referenced_tweets.id, referenced_tweets.id.author_id
+  - name: max_results
+    type: integer
+    max: 100
+    min: 1
+  - name: media.fields
+    type: enum
+  - name: pagination_token
+    type: string
+  - name: place.fields
+    type: enum
+  - name: poll.fields
+    type: enum
+  - name: tweet.fields
+    type: enum
+  - name: user.fields
+    type: enum
+response:
+  type: object
+  properties:
+    data:
+      type: array
+      items:
+        type: object
+        ref: tweets
+    errors:
+      type: array
+      items:
+        type: object
+        ref: errors
+    includes:
+      type: object
+      ref: includes
+    meta:
+      type: object
+      ref: meta
