@@ -15,6 +15,11 @@ use crate::{
     responses::processing_info::{ProcessingInfo, State},
 };
 
+fn get_file_size(path: &PathBuf) -> Result<u64, Error> {
+    let metadata = std::fs::metadata(path)?;
+    Ok(metadata.len())
+}
+
 pub async fn upload_media(
     path: &PathBuf,
     media_type: &str,
@@ -24,20 +29,16 @@ pub async fn upload_media(
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<(post_2_media_upload_finalize::Response, Headers), Error> {
     // INIT
-    let metadata = std::fs::metadata(path)?;
-    let file_size = metadata.len();
-    let data = post_2_media_upload_init::FormData {
-        total_bytes: file_size,
-        media_type: media_type.to_owned(),
+    let file_size = get_file_size(path)?;
+    let media_id = execute_init(
+        file_size,
+        media_type,
         media_category,
         additional_owners,
-    };
-    let mut api = post_2_media_upload_init::Api::new(data);
-    if let Some(twapi_options) = twapi_options {
-        api = api.twapi_options(twapi_options.clone());
-    }
-    let (response, _) = api.execute(authentication).await?;
-    let media_id = response.data.and_then(|it| it.id).unwrap_or_default();
+        authentication,
+        twapi_options,
+    )
+    .await?;
     tracing::info!(media_id = media_id, "post_media_upload_init");
 
     // APPEND
@@ -54,6 +55,29 @@ pub async fn upload_media(
     let res = api.execute(authentication).await;
     tracing::info!(media_id = media_id, "post_media_upload_finalize");
     res
+}
+
+async fn execute_init(
+    file_size: u64,
+    media_type: &str,
+    media_category: Option<MediaCategory>,
+    additional_owners: Option<String>,
+    authentication: &impl Authentication,
+    twapi_options: Option<&TwapiOptions>,
+) -> Result<String, Error> {
+    let data = post_2_media_upload_init::FormData {
+        total_bytes: file_size,
+        media_type: media_type.to_owned(),
+        media_category,
+        additional_owners,
+    };
+    let mut api = post_2_media_upload_init::Api::new(data);
+    if let Some(twapi_options) = twapi_options {
+        api = api.twapi_options(twapi_options.clone());
+    }
+    let (response, _) = api.execute(authentication).await?;
+    let media_id = response.data.and_then(|it| it.id).unwrap_or_default();
+    Ok(media_id)
 }
 
 pub fn get_media_id(response: &post_2_media_upload_finalize::Response) -> String {
@@ -145,9 +169,7 @@ pub async fn check_processing(
         if let Some(twapi_options) = twapi_options {
             api = api.twapi_options(twapi_options.clone());
         }
-        let (res, header) = api
-            .execute(authentication)
-            .await?;
+        let (res, header) = api.execute(authentication).await?;
         tracing::info!(
             count = count,
             media_id = media_id,

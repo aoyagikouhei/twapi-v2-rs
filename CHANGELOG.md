@@ -1,5 +1,12 @@
 ## Changes
 
+### v0.16.0 (2025/01/22)
+* Add community_id in tweets
+* Add max_trends in treand api
+* Add v2 media upload(However, when I executed it, I got a 403 and was not successful.)
+* Modify Tweet.fields, User.fields
+* Update crates
+
 ### v0.15.2 (2024/11/28)
 * Add media_count in users/public_metrics
 * Update crates
