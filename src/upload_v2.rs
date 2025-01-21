@@ -20,8 +20,8 @@ pub async fn upload_media(
     media_type: &str,
     media_category: Option<MediaCategory>,
     additional_owners: Option<String>,
-    twapi_options: &Option<TwapiOptions>,
     authentication: &impl Authentication,
+    twapi_options: Option<&TwapiOptions>,
 ) -> Result<(post_2_media_upload_finalize::Response, Headers), Error> {
     // INIT
     let metadata = std::fs::metadata(path)?;
@@ -56,12 +56,19 @@ pub async fn upload_media(
     res
 }
 
+pub fn get_media_id(response: &post_2_media_upload_finalize::Response) -> String {
+    let Some(data) = &response.data else {
+        return "".to_owned();
+    };
+    data.id.clone().unwrap_or_default()
+}
+
 async fn execute_append(
     path: &PathBuf,
     authentication: &impl Authentication,
     file_size: u64,
     media_id: &str,
-    twapi_options: &Option<TwapiOptions>,
+    twapi_options: Option<&TwapiOptions>,
 ) -> Result<(), Error> {
     let mut segment_index = 0;
     let f = std::fs::File::open(path)?;
@@ -119,6 +126,7 @@ pub async fn check_processing(
     response: post_2_media_upload_finalize::Response,
     authentication: &impl Authentication,
     f: Option<impl Fn(i64, &get_2_media_upload::Response, &Headers) -> Result<(), Error>>,
+    twapi_options: Option<&TwapiOptions>,
 ) -> Result<(), Error> {
     let Some(data) = response.data else {
         return Err(Error::Other("data not found".to_owned(), None));
@@ -133,7 +141,11 @@ pub async fn check_processing(
             return Ok(());
         };
         tokio::time::sleep(std::time::Duration::from_secs(check_after_secs as u64)).await;
-        let (res, header) = get_2_media_upload::Api::new(&media_id, Command::Status)
+        let mut api = get_2_media_upload::Api::new(&media_id, Command::Status);
+        if let Some(twapi_options) = twapi_options {
+            api = api.twapi_options(twapi_options.clone());
+        }
+        let (res, header) = api
             .execute(authentication)
             .await?;
         tracing::info!(
