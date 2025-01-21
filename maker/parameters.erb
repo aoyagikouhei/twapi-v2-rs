@@ -27,8 +27,10 @@ end
 let form_parameters = vec![<% form.each do |it| %>
     <%= make_form(it) %><% end %>
 ];
-<% end %><% if queries.present? %>let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
+<% end %><% if required_queries.present? && !non_required_queries.present? %>let query_parameters = vec![<% required_queries.each do |it| %>
+    ("<%= it[:name] %>", self.<%= it[:name].make_name.make_field %><%= make_query_value(it) %>),<% end %>
+];<% elsif queries.present? %>let mut query_parameters = vec![];<% required_queries.each do |it| %>
 query_parameters.push(("<%= it[:name] %>", self.<%= it[:name].make_name.make_field %><%= make_query_value(it) %>));<% end %><% non_required_queries.each do |it| %>
 if let Some(<%= it[:name].make_name.make_field %>) = self.<%= it[:name].make_name.make_field %> {
     query_parameters.push(("<%= it[:name] %>", <%= it[:name].make_name.make_field %><%= make_query_value(it) %>));
-}<% end %>
+}<% end %><% end %>

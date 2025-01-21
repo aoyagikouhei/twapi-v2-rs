@@ -51,9 +51,10 @@ impl Api {
     }
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
-        let mut query_parameters = vec![];
-        query_parameters.push(("media_id", self.media_id));
-        query_parameters.push(("command", self.command.to_string()));
+        let query_parameters = vec![
+            ("media_id", self.media_id),
+            ("command", self.command.to_string()),
+        ];
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
         let builder = client.get(&url).query(&query_parameters);
