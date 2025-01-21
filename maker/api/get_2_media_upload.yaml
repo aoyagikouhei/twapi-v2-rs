@@ -4,10 +4,12 @@ url: /2/media/upload
 method: get
 queries:
   - name: media_id
-    type: integer
+    type: string
+    required: true
   - name: command
     type: enum_single
     value: STATUS
+    required: true
 response:
   type: object
   properties:

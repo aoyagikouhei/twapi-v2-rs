@@ -6,7 +6,7 @@ response:
     check_after_secs:
       type: integer
     progress_percent:
-      type: string
+      type: integer
     state:
-      type: enum_string
+      type: enum_single
       value: succeeded, in_progress, pending, failed
