@@ -1,6 +1,8 @@
-use std::{
-    io::{BufReader, Cursor, Read},
-    path::PathBuf,
+use std::{io::Cursor, path::PathBuf};
+
+use tokio::{
+    fs::File,
+    io::{AsyncReadExt, BufReader},
 };
 
 use crate::{
@@ -95,7 +97,7 @@ async fn execute_append(
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<(), Error> {
     let mut segment_index = 0;
-    let f = std::fs::File::open(path)?;
+    let f = File::open(path).await?;
     let mut reader = BufReader::new(f);
     while segment_index * 5000000 < file_size {
         let read_size: usize = if (segment_index + 1) * 5000000 < file_size {
@@ -104,7 +106,7 @@ async fn execute_append(
             (file_size - segment_index * 5000000) as usize
         };
         let mut cursor = Cursor::new(vec![0; read_size]);
-        reader.read_exact(cursor.get_mut())?;
+        reader.read_exact(cursor.get_mut()).await?;
         let data = post_2_media_upload_append::FormData {
             media_id: media_id.to_owned(),
             segment_index,

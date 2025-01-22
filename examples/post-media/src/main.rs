@@ -56,7 +56,7 @@ async fn main() -> anyhow::Result<()> {
     .await?;
     let body = post_2_tweets::Body {
         text: Some(
-            "It's media v2 test using twapi-v2 Rust library. https://crates.io/crates/twapi-v2"
+            "It's media v2 test using twapi-v2 Rust library with file async. https://crates.io/crates/twapi-v2"
                 .to_string(),
         ),
         media: Some(Media {

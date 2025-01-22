@@ -1,6 +1,6 @@
 use oauth2::{
-    basic::BasicClient, reqwest::async_http_client, AuthUrl, AuthorizationCode, ClientId,
-    ClientSecret, CsrfToken, RedirectUrl, Scope, TokenResponse, TokenUrl,
+    basic::BasicClient, AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl,
+    Scope, TokenResponse, TokenUrl,
 };
 use std::time::Duration;
 use thiserror::Error;
@@ -93,6 +93,9 @@ pub enum OAuthError {
     #[error("Url {0}")]
     Url(#[from] oauth2::url::ParseError),
 
+    #[error("Reqwest {0}")]
+    Reqwest(#[from] reqwest::Error),
+
     #[error("Token {0}")]
     Token(String),
 }
@@ -111,7 +114,10 @@ pub struct TokenResult {
 }
 
 pub struct TwitterOauth {
-    basic_client: BasicClient,
+    client_id: ClientId,
+    client_secret: ClientSecret,
+    auth_url: AuthUrl,
+    token_url: TokenUrl,
     redirect_url: RedirectUrl,
     scopes: Vec<Scope>,
 }
@@ -123,19 +129,16 @@ impl TwitterOauth {
         callback_url: &str,
         scopes: Vec<TwitterScope>,
     ) -> Result<Self, OAuthError> {
-        let basic_client = BasicClient::new(
-            ClientId::new(api_key_code.to_owned()),
-            Some(ClientSecret::new(api_secret_code.to_owned())),
-            AuthUrl::new(AUTH_URL.to_owned())?,
-            Some(TokenUrl::new(TOKEN_URL.to_owned())?),
-        );
         let redirect_url = RedirectUrl::new(callback_url.to_string())?;
         let scopes: Vec<Scope> = scopes
             .into_iter()
             .map(|it| Scope::new(it.to_string()))
             .collect();
         Ok(Self {
-            basic_client,
+            client_id: ClientId::new(api_key_code.to_owned()),
+            client_secret: ClientSecret::new(api_secret_code.to_owned()),
+            auth_url: AuthUrl::new(AUTH_URL.to_owned())?,
+            token_url: TokenUrl::new(TOKEN_URL.to_owned())?,
             redirect_url,
             scopes,
         })
@@ -151,8 +154,13 @@ impl TwitterOauth {
             Some(ref state_value) => CsrfToken::new(state_value.clone()),
             None => CsrfToken::new_random(),
         };
-        let (auth_url, _csrf_token) = self
-            .basic_client
+
+        let client = BasicClient::new(self.client_id.clone())
+            .set_client_secret(self.client_secret.clone())
+            .set_auth_uri(self.auth_url.clone())
+            .set_token_uri(self.token_url.clone());
+
+        let (auth_url, _csrf_token) = client
             .clone()
             .set_redirect_uri(self.redirect_url.clone())
             .authorize_url(|| csrf_token)
@@ -173,13 +181,21 @@ impl TwitterOauth {
     ) -> Result<TokenResult, OAuthError> {
         let pkce_verifier = oauth2::PkceCodeVerifier::new(pkce_verifier_str.to_owned());
 
-        let token = self
-            .basic_client
+        let client = BasicClient::new(self.client_id.clone())
+            .set_client_secret(self.client_secret.clone())
+            .set_auth_uri(self.auth_url.clone())
+            .set_token_uri(self.token_url.clone());
+
+        let http_client = reqwest::ClientBuilder::new()
+            .redirect(reqwest::redirect::Policy::none())
+            .build()?;
+
+        let token = client
             .clone()
             .set_redirect_uri(self.redirect_url.clone())
             .exchange_code(AuthorizationCode::new(code.to_owned()))
             .set_pkce_verifier(pkce_verifier)
-            .request_async(async_http_client)
+            .request_async(&http_client)
             .await
             .map_err(|e| OAuthError::Token(format!("{:?}", e)))?;
         Ok(TokenResult {

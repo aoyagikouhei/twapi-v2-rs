@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.17.0 (2025/01/23)
+* Update Oauth2 v0.5.0
+* Modify support file reading async in upload_v2
+
 ### v0.16.1 (2025/01/23)
 * Add media.write in Scopes
 * modify api.x.com from api.twitter.com
