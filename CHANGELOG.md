@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.16.1 (2025/01/23)
+* Add media.write in Scopes
+* modify api.x.com from api.twitter.com
+
 ### v0.16.0 (2025/01/22)
 * Add community_id in tweets
 * Add max_trends in treand api

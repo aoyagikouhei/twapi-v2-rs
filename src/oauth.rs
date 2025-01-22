@@ -26,6 +26,7 @@ pub enum TwitterScope {
     BookmarkWrite,
     DmRead,
     DmWrite,
+    MediaWrite,
 }
 
 impl TwitterScope {
@@ -51,6 +52,7 @@ impl TwitterScope {
             Self::BookmarkWrite,
             Self::DmRead,
             Self::DmWrite,
+            Self::MediaWrite,
         ]
     }
 }
@@ -78,12 +80,13 @@ impl std::fmt::Display for TwitterScope {
             Self::BookmarkWrite => write!(f, "bookmark.write"),
             Self::DmRead => write!(f, "dm.read"),
             Self::DmWrite => write!(f, "dm.write"),
+            Self::MediaWrite => write!(f, "media.write"),
         }
     }
 }
 
-const AUTH_URL: &str = "https://twitter.com/i/oauth2/authorize";
-const TOKEN_URL: &str = "https://api.twitter.com/2/oauth2/token";
+const AUTH_URL: &str = "https://x.com/i/oauth2/authorize";
+const TOKEN_URL: &str = "https://api.x.com/2/oauth2/token";
 
 #[derive(Error, Debug)]
 pub enum OAuthError {

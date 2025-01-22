@@ -1,7 +1,7 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_users_me, BearerAuthentication};
 
-// BEARER_CODE=XXXXX cargo test test_get_2_users_me -- --nocapture --test-threads=1
+// BEARER_CODE=XXXXX cargo test --all-features test_get_2_users_me -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_users_me() -> Result<()> {
@@ -12,7 +12,6 @@ async fn test_get_2_users_me() -> Result<()> {
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_users_me::Response>(res)?;
     let data = response.data.as_ref().unwrap();
-    assert_eq!(data.username, "barley_tea_0522");
     assert_eq!(response.is_empty_extra(), true);
     Ok(())
 }

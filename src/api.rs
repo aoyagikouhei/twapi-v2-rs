@@ -97,7 +97,7 @@ pub mod put_2_lists_id;
 pub mod put_2_tweets_id_hidden;
 
 const ENV_KEY: &str = "TWAPI_V2_TWITTER_API_PREFIX_API";
-const PREFIX_URL_TWITTER: &str = "https://api.twitter.com";
+const PREFIX_URL_TWITTER: &str = "https://api.x.com";
 
 pub fn clear_prefix_url() {
     std::env::set_var(ENV_KEY, PREFIX_URL_TWITTER);
