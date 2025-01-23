@@ -1,7 +1,7 @@
 use std::{io::Cursor, path::PathBuf};
 
 use tokio::{
-    fs::File,
+    fs::{metadata, File},
     io::{AsyncReadExt, BufReader},
 };
 
@@ -17,8 +17,8 @@ use crate::{
     responses::processing_info::{ProcessingInfo, State},
 };
 
-fn get_file_size(path: &PathBuf) -> Result<u64, Error> {
-    let metadata = std::fs::metadata(path)?;
+async fn get_file_size(path: &PathBuf) -> Result<u64, Error> {
+    let metadata = metadata(path).await?;
     Ok(metadata.len())
 }
 
@@ -31,7 +31,7 @@ pub async fn upload_media(
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<(post_2_media_upload_finalize::Response, Headers), Error> {
     // INIT
-    let file_size = get_file_size(path)?;
+    let file_size = get_file_size(path).await?;
     let media_id = execute_init(
         file_size,
         media_type,
