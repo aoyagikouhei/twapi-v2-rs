@@ -11,6 +11,8 @@ pub mod coordinates;
 pub mod counts;
 pub mod daily_client_app_usage;
 pub mod daily_project_usage;
+pub mod deleted_subtitles;
+pub mod deleted_subtitles_item;
 pub mod description;
 pub mod dm_events;
 pub mod edit_controls;

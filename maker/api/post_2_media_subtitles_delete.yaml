@@ -1,0 +1,32 @@
+---
+
+url: /2/media/subtitles/delete
+method: post
+body:
+  type: object
+  properties:
+    - name: media_category
+      type: enum_single
+      value: amplify_video, tweet_gif, tweet_image, tweet_video, subtitles 
+      required: true
+    - name: media_id
+      type: string
+      required: true
+    - name: subtitle_info
+      type: object
+      properties:
+        - name: subtitles
+          type: array
+          items:
+            type: object
+            properties:
+              - name: language_code
+                type: string
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      ref: deleted_subtitles
+      required: true
+        

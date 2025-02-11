@@ -81,6 +81,7 @@ pub mod post_2_lists;
 pub mod post_2_lists_id_members;
 pub mod post_2_media_metadata_create;
 pub mod post_2_media_subtitles_create;
+pub mod post_2_media_subtitles_delete;
 pub mod post_2_media_upload_append;
 pub mod post_2_media_upload_finalize;
 pub mod post_2_media_upload_init;

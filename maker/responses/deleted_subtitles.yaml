@@ -1,0 +1,14 @@
+---
+
+response:
+  type: object
+  properties:
+    deleted_subtitles:
+      type: array
+      items:
+        ref: deleted_subtitles_item
+    id:
+      type: string
+    media_category:
+      type: enum_single
+      value: amplify_video, tweet_gif, tweet_image, tweet_video, subtitles
