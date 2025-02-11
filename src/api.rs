@@ -78,6 +78,7 @@ pub mod post_2_dm_conversations;
 pub mod post_2_dm_conversations_dm_conversation_id_message;
 pub mod post_2_dm_conversations_with_participant_id_message;
 pub mod post_2_lists;
+pub mod post_2_media_metadata_create;
 pub mod post_2_lists_id_members;
 pub mod post_2_media_upload_append;
 pub mod post_2_media_upload_finalize;

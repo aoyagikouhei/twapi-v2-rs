@@ -1,0 +1,25 @@
+---
+
+response:
+  type: object
+  properties:
+    aspect_ratio:
+      type: number
+    group_annotation_id:
+      type: number
+    id:
+      type: string
+    sticker_set_annotation_id:
+      type: number
+    transform_a:
+      type: number
+    transform_b:
+      type: number
+    transform_c:
+      type: number
+    transform_d:
+      type: number
+    transform_tx:
+      type: number
+    transform_ty:
+      type: number

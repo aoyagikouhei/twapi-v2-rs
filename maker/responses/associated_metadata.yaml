@@ -1,0 +1,34 @@
+---
+
+response:
+  type: object
+  properties:
+    allow_download_status:
+      type: object
+      properties:
+        allow_download:
+          type: boolean
+    alt_text:
+      type: object
+      properties:
+        text:
+          type: string
+    found_media_origin:
+      type: object
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+    sticker_info:
+      type: object
+      properties:
+        stickers:
+          type: array
+          items:
+            ref: stickers
+    upload_source:
+      type: object
+      properties:
+        text:
+          type: string

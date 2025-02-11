@@ -1,0 +1,78 @@
+---
+
+url: /2/media/metadata/create
+method: post
+body:
+  type: object
+  properties:
+    - name: media_id
+      type: string
+      required: true
+    - name: allow_download_status
+      type: object
+      properties:
+        - name: allow_download
+          type: bool
+          required: true
+    - name: alt_text
+      type: object
+      properties:
+        - name: text
+          type: string
+          maxLength: 1000
+          required: true
+    - name: found_media_origin
+      type: object
+      properties:
+        - name: id
+          type: string
+          required: true
+        - name: provider
+          type: string
+    - name: sticker_info
+      type: object
+      properties:
+        - name: stickers
+          type: array
+          items:
+            type: object
+            properties:
+              - name: aspect_ratio
+                type: number
+              - name: group_annotation_id
+                type: number
+              - name: id
+                type: string
+                required: true
+              - name: sticker_set_annotation_id
+                type: number
+              - name: transform_a
+                type: number
+              - name: transform_b
+                type: number
+              - name: transform_c
+                type: number
+              - name: transform_d
+                type: number
+              - name: transform_tx
+                type: number
+              - name: transform_ty
+                type: number
+    - name: upload_source
+      type: object
+      properties:
+        - name: text
+          type: string
+          required: true
+response:
+  type: object
+  properties:
+    data:
+      type: object
+      properties:
+        associated_metadata:
+          type: object
+          ref: associated_metadata
+        id:
+          type: string
+        

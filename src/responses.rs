@@ -1,4 +1,5 @@
 pub mod annotations;
+pub mod associated_metadata;
 pub mod attachments;
 pub mod cashtags;
 pub mod compliance;
@@ -41,6 +42,7 @@ pub mod public_metrics;
 pub mod referenced_tweets;
 pub mod scopes;
 pub mod spaces;
+pub mod stickers;
 pub mod streams;
 pub mod summary;
 pub mod topics;
