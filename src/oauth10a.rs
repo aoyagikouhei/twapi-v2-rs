@@ -2,7 +2,7 @@ use crate::api::Authentication;
 use base64::{engine::general_purpose, Engine as _};
 use chrono::prelude::*;
 use hmac::{Hmac, Mac};
-use rand::distributions::{Alphanumeric, DistString};
+use rand::distr::{Alphanumeric, SampleString};
 use reqwest::RequestBuilder;
 use sha1::Sha1;
 
@@ -103,7 +103,7 @@ fn calc_oauth_header(
 }
 
 fn nonce() -> String {
-    let mut rng = &mut rand::thread_rng();
+    let mut rng = &mut rand::rng();
     Alphanumeric.sample_string(&mut rng, 32)
 }
 

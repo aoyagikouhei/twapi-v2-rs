@@ -39,7 +39,7 @@ async fn main() -> anyhow::Result<()> {
         None,
     )
     .await?;
-    tracing::info!(response =? response, "upload_media");
+    tracing::info!(response =? response, "start upload_media");
     let media_id = get_media_id(&response);
     check_processing(
         response,
@@ -54,6 +54,24 @@ async fn main() -> anyhow::Result<()> {
         None,
     )
     .await?;
+    tracing::info!("end upload_media");
+
+    /*
+    let body = post_2_media_metadata_create::Body {
+        media_id: media_id.clone(),
+        alt_text: Some(post_2_media_metadata_create::AltText {
+            text: "test".to_owned(),
+        }),
+        ..Default::default()
+    };
+    tracing::info!(body =? body, "post_2_media_metadata_create");
+    let (response, _header) = post_2_media_metadata_create::Api::new(body)
+        .execute(&bearer_auth)
+        .await?;
+    tracing::info!(response =? response, "post_2_media_metadata_create");
+     */
+
+
     let body = post_2_tweets::Body {
         text: Some(
             "It's media v2 test using twapi-v2 Rust library with file async. https://crates.io/crates/twapi-v2"
@@ -67,5 +85,6 @@ async fn main() -> anyhow::Result<()> {
     };
     let (response, _header) = post_2_tweets::Api::new(body).execute(&bearer_auth).await?;
     tracing::info!(response =? response, "post_2_tweets");
+     
     Ok(())
 }

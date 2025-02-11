@@ -1,5 +1,11 @@
 ## Changes
 
+### v0.18.0 (2025/02/11)
+* Update rand 0.9
+* Add /2/media/metadata/create
+* Add /2/media/subtitles/create
+* Add /2/media/subtitles/delete
+
 ### v0.17.1 (2025/01/23)
 * Modify get metadata async in upload_v2
 

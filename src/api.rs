@@ -184,17 +184,23 @@ where
     let header = response.headers();
     let headers = Headers::new(header);
 
+    println!("status_code: {:?}", status_code);
+
     if status_code.is_success() {
         Ok((response.json::<T>().await?, headers))
     } else {
         let text = response.text().await?;
+        println!("text: {:?}", text);
         match serde_json::from_str(&text) {
             Ok(value) => Err(Error::Twitter(
                 TwitterError::new(&value, status_code),
                 value,
                 Box::new(headers),
             )),
-            Err(err) => Err(Error::Other(format!("{:?}", err), Some(status_code))),
+            Err(err) => Err(Error::Other(
+                format!("{:?}:{}", err, text),
+                Some(status_code),
+            )),
         }
     }
 }
