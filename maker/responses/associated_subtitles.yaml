@@ -1,0 +1,11 @@
+---
+
+response:
+  type: object
+  properties:
+    display_name:
+      type: string
+    language_code:
+      type: string
+    media_id:
+      type: string

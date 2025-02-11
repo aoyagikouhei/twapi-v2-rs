@@ -1,5 +1,6 @@
 pub mod annotations;
 pub mod associated_metadata;
+pub mod associated_subtitles;
 pub mod attachments;
 pub mod cashtags;
 pub mod compliance;
@@ -44,6 +45,7 @@ pub mod scopes;
 pub mod spaces;
 pub mod stickers;
 pub mod streams;
+pub mod subtitles;
 pub mod summary;
 pub mod topics;
 pub mod trends;

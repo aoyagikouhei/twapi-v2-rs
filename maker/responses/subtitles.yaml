@@ -1,0 +1,14 @@
+---
+
+response:
+  type: object
+  properties:
+    associated_subtitles:
+      type: array
+      items:
+        ref: associated_subtitles
+    id:
+      type: string
+    media_category:
+      type: enum_single
+      value: amplify_video, tweet_gif, tweet_image, tweet_video, subtitles
