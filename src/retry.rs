@@ -139,10 +139,9 @@ mod tests {
 
     use crate::{
         api::{
-            get_2_tweets_id::{Api, Response},
-            BearerAuthentication,
+            get_2_tweets_id::{Api, Response}, post_2_media_upload_init::{self, MediaCategory}, BearerAuthentication
         },
-        retry::execute_retry,
+        retry::{execute_retry, execute_retry_fn},
     };
 
     use super::RetryLogger;
@@ -180,5 +179,34 @@ mod tests {
             }
             _ => {}
         }
+    }
+
+    // BEARER_CODE=XXXXX TWEET_ID=XXXX cargo test --features retry -- --nocapture
+
+    #[tokio::test]
+    async fn it_works_fn() {
+        let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
+        let bearer_auth = BearerAuthentication::new(bearer_code);
+
+        let logger = Logger {};
+
+        let res = execute_retry_fn::<post_2_media_upload_init::Response>(
+            || {
+                let body = post_2_media_upload_init::FormData {
+                    media_category: Some(MediaCategory::TweetImage),
+                    media_type: "image/jpeg".to_string(),
+                    total_bytes: 10000,
+                    ..Default::default()
+                };
+                post_2_media_upload_init::Api::new(body).build(&bearer_auth)
+            },
+            2,
+            &vec![StatusCode::UNAUTHORIZED],
+            Some(&logger),
+            None,
+            None
+        ).await.unwrap();
+            
+        println!("{:?}", res.0);
     }
 }
