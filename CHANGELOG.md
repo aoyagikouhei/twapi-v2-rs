@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.18.1 (2025/02/13)
+* add retry fn
+
 ### v0.18.0 (2025/02/11)
 * Update rand 0.9
 * Add /2/media/metadata/create

@@ -9,6 +9,64 @@ pub trait RetryLogger {
     fn log(&self, builder: &RequestBuilder);
 }
 
+pub async fn execute_retry_fn<T>(
+    f: impl Fn() -> RequestBuilder,
+    retry_count: usize,
+    retryable_status_codes: &[StatusCode],
+    retry_logger: Option<&impl RetryLogger>,
+    timeout_duration: Option<Duration>,
+    retry_delay_secound_count: Option<u64>,
+) -> Result<(T, Headers), Error>
+where
+    T: DeserializeOwned,
+{
+    let mut count: usize = 0;
+
+    loop {
+        let target = f();
+        if let Some(retry_logger) = retry_logger {
+            retry_logger.log(&target);
+        }
+
+        let error = if let Some(timeout_duration) = timeout_duration {
+            match timeout(timeout_duration, execute_twitter(target)).await {
+                Ok(res) => match res {
+                    Ok(res) => return Ok(res),
+                    Err(err) => match &err {
+                        Error::Twitter(twitter_error, _, _) => {
+                            if !retryable_status_codes.contains(&twitter_error.status_code) {
+                                return Err(err);
+                            }
+                            err
+                        }
+                        _ => return Err(err),
+                    },
+                },
+                Err(_) => Error::Timeout,
+            }
+        } else {
+            match execute_twitter(target).await {
+                Ok(res) => return Ok(res),
+                Err(err) => match &err {
+                    Error::Twitter(twitter_error, _, _) => {
+                        if !retryable_status_codes.contains(&twitter_error.status_code) {
+                            return Err(err);
+                        }
+                        err
+                    }
+                    _ => return Err(err),
+                },
+            }
+        };
+        if count >= retry_count {
+            return Err(error);
+        }
+        count += 1;
+        sleep_sec(retry_delay_secound_count, count).await;
+    }
+}
+
+
 pub async fn execute_retry<T>(
     builder: RequestBuilder,
     retry_count: usize,
