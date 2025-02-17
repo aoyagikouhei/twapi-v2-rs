@@ -18,6 +18,10 @@ pub enum MediaCategory {
     TweetGif,
     TweetImage,
     TweetVideo,
+    DmVideo,
+    DmImage,
+    Subtitles,
+    DmGif,
 }
 
 impl std::fmt::Display for MediaCategory {
@@ -27,6 +31,10 @@ impl std::fmt::Display for MediaCategory {
             Self::TweetGif => "tweet_gif",
             Self::TweetImage => "tweet_image",
             Self::TweetVideo => "tweet_video",
+            Self::DmVideo => "dm_video",
+            Self::DmImage => "dm_image",
+            Self::Subtitles => "subtitles",
+            Self::DmGif => "dm_gif",
         };
         write!(f, "{}", value)
     }
