@@ -66,7 +66,6 @@ where
     }
 }
 
-
 pub async fn execute_retry<T>(
     builder: RequestBuilder,
     retry_count: usize,
@@ -139,7 +138,9 @@ mod tests {
 
     use crate::{
         api::{
-            get_2_tweets_id::{Api, Response}, post_2_media_upload_init::{self, MediaCategory}, BearerAuthentication
+            get_2_tweets_id::{Api, Response},
+            post_2_media_upload_init::{self, MediaCategory},
+            BearerAuthentication,
         },
         retry::{execute_retry, execute_retry_fn},
     };
@@ -204,9 +205,11 @@ mod tests {
             &vec![StatusCode::UNAUTHORIZED],
             Some(&logger),
             None,
-            None
-        ).await.unwrap();
-            
+            None,
+        )
+        .await
+        .unwrap();
+
         println!("{:?}", res.0);
     }
 }

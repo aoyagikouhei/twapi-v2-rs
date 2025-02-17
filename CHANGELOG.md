@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.18.2 (2025/02/17)
+* modify post_2_media_upload_init MediaCategory
+
 ### v0.18.1 (2025/02/13)
 * add retry fn
 
