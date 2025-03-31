@@ -178,7 +178,7 @@ impl TwitterOauth {
         &self,
         pkce_verifier_str: &str,
         code: &str,
-        timeout: Option<Duration>,
+        twapi_options: Option<&TwapiOptions>,
     ) -> Result<TokenResult, OAuthError> {
         let pkce_verifier = oauth2::PkceCodeVerifier::new(pkce_verifier_str.to_owned());
 
@@ -190,8 +190,8 @@ impl TwitterOauth {
         let mut client_builder = reqwest::ClientBuilder::new()
             .redirect(reqwest::redirect::Policy::none());
         
-        if let Some(timeout_duration) = timeout {
-            client_builder = client_builder.timeout(timeout_duration);
+        if let Some(twapi_options) = twapi_options {
+            client_builder = client_builder.timeout(twapi_options.timeout);
         }
 
         let http_client = client_builder.build()?;
