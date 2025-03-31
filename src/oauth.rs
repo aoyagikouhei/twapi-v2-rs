@@ -5,6 +5,8 @@ use oauth2::{
 use std::time::Duration;
 use thiserror::Error;
 
+use crate::api::TwapiOptions;
+
 pub enum TwitterScope {
     TweetRead,
     TweetWrite,
@@ -187,11 +189,13 @@ impl TwitterOauth {
             .set_auth_uri(self.auth_url.clone())
             .set_token_uri(self.token_url.clone());
 
-        let mut client_builder = reqwest::ClientBuilder::new()
-            .redirect(reqwest::redirect::Policy::none());
-        
+        let mut client_builder =
+            reqwest::ClientBuilder::new().redirect(reqwest::redirect::Policy::none());
+
         if let Some(twapi_options) = twapi_options {
-            client_builder = client_builder.timeout(twapi_options.timeout);
+            if let Some(timeout) = twapi_options.timeout {
+                client_builder = client_builder.timeout(timeout);
+            }
         }
 
         let http_client = client_builder.build()?;

@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.19.0 (2025/03/31)
+* add oauth token TwapiOptions
+
 ### v0.18.2 (2025/02/17)
 * modify post_2_media_upload_init MediaCategory
 

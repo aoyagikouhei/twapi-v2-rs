@@ -42,7 +42,7 @@ async fn oauth(Query(params): Query<HashMap<String, String>>, cookies: Cookies) 
     let pkce = cookies.get(PKCE_VERIFIER).unwrap();
     let oauth = oauth_client();
     let res = oauth
-        .token(pkce.value(), params.get("code").unwrap())
+        .token(pkce.value(), params.get("code").unwrap(), None)
         .await
         .unwrap();
     println!("{:?}", res);
