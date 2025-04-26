@@ -1,10 +1,10 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_users_id_followers, BearerAuthentication};
 
-// BEARER_CODE=XXXXX cargo test test_get_2_users_id_followers -- --nocapture --test-threads=1
+
+//BEARER_CODE=XXXXX cargo test --test get_2_users_id_followers --all-features -- --nocapture --test-threads=1
 
 #[tokio::test]
-#[ignore]
 async fn test_get_2_users_id_followers() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
