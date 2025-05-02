@@ -26,7 +26,7 @@ pub async fn upload_media(
     path: &PathBuf,
     media_type: &str,
     media_category: Option<MediaCategory>,
-    additional_owners: Option<String>,
+    additional_owners: Vec<String>,
     authentication: &impl Authentication,
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<(post_2_media_upload_id_finalize::Response, Headers), Error> {
@@ -60,7 +60,7 @@ async fn execute_init(
     file_size: u64,
     media_type: &str,
     media_category: Option<MediaCategory>,
-    additional_owners: Option<String>,
+    additional_owners: Vec<String>,
     authentication: &impl Authentication,
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<String, Error> {

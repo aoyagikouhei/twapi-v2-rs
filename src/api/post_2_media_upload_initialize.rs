@@ -28,7 +28,7 @@ pub struct Body {
     pub total_bytes: u64,
     pub media_type: String,
     pub media_category: Option<MediaCategory>,
-    pub additional_owners: Option<String>,
+    pub additional_owners: Vec<String>,
 }
 
 #[derive(Debug, Clone, Default)]

@@ -34,7 +34,7 @@ async fn main() -> anyhow::Result<()> {
         &std::path::PathBuf::from("test.mp4"),
         "video/mp4",
         Some(MediaCategory::AmplifyVideo),
-        None,
+        vec![],
         &bearer_auth,
         None,
     )
