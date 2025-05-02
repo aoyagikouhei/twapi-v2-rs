@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.20.0 (2025/05/02)
+* modify media upload
+
 ### v0.19.1 (2025/03/31)
 * add post_2_oauth2_token_refresh_token TwapiOptions
 
