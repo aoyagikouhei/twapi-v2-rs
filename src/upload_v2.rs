@@ -8,8 +8,8 @@ use tokio::{
 use crate::{
     api::{
         get_2_media_upload::{self, Command},
-        post_2_media_upload_append, post_2_media_upload_finalize,
-        post_2_media_upload_init::{self, MediaCategory},
+        post_2_media_upload_id_append, post_2_media_upload_id_finalize,
+        post_2_media_upload_initialize::{self, MediaCategory},
         Authentication, TwapiOptions,
     },
     error::Error,
@@ -29,7 +29,7 @@ pub async fn upload_media(
     additional_owners: Option<String>,
     authentication: &impl Authentication,
     twapi_options: Option<&TwapiOptions>,
-) -> Result<(post_2_media_upload_finalize::Response, Headers), Error> {
+) -> Result<(post_2_media_upload_id_finalize::Response, Headers), Error> {
     // INIT
     let file_size = get_file_size(path).await?;
     let media_id = execute_init(
@@ -47,10 +47,7 @@ pub async fn upload_media(
     execute_append(path, authentication, file_size, &media_id, twapi_options).await?;
 
     // FINALIZE
-    let data = post_2_media_upload_finalize::FormData {
-        media_id: media_id.clone(),
-    };
-    let mut api = post_2_media_upload_finalize::Api::new(data);
+    let mut api = post_2_media_upload_id_finalize::Api::new(&media_id);
     if let Some(twapi_options) = twapi_options {
         api = api.twapi_options(twapi_options.clone());
     }
@@ -67,13 +64,13 @@ async fn execute_init(
     authentication: &impl Authentication,
     twapi_options: Option<&TwapiOptions>,
 ) -> Result<String, Error> {
-    let data = post_2_media_upload_init::FormData {
+    let body = post_2_media_upload_initialize::Body {
         total_bytes: file_size,
         media_type: media_type.to_owned(),
         media_category,
         additional_owners,
     };
-    let mut api = post_2_media_upload_init::Api::new(data);
+    let mut api = post_2_media_upload_initialize::Api::new(body);
     if let Some(twapi_options) = twapi_options {
         api = api.twapi_options(twapi_options.clone());
     }
@@ -82,7 +79,7 @@ async fn execute_init(
     Ok(media_id)
 }
 
-pub fn get_media_id(response: &post_2_media_upload_finalize::Response) -> String {
+pub fn get_media_id(response: &post_2_media_upload_id_finalize::Response) -> String {
     let Some(data) = &response.data else {
         return "".to_owned();
     };
@@ -107,12 +104,11 @@ async fn execute_append(
         };
         let mut cursor = Cursor::new(vec![0; read_size]);
         reader.read_exact(cursor.get_mut()).await?;
-        let data = post_2_media_upload_append::FormData {
-            media_id: media_id.to_owned(),
+        let form = post_2_media_upload_id_append::FormData {
             segment_index,
             cursor,
         };
-        let mut api = post_2_media_upload_append::Api::new(data);
+        let mut api = post_2_media_upload_id_append::Api::new(media_id, form);
         if let Some(twapi_options) = twapi_options {
             api = api.twapi_options(twapi_options.clone());
         }
@@ -149,7 +145,7 @@ fn calc_progress_percent(res: &get_2_media_upload::Response) -> i64 {
 }
 
 pub async fn check_processing(
-    response: post_2_media_upload_finalize::Response,
+    response: post_2_media_upload_id_finalize::Response,
     authentication: &impl Authentication,
     f: Option<impl Fn(i64, &get_2_media_upload::Response, &Headers) -> Result<(), Error>>,
     twapi_options: Option<&TwapiOptions>,

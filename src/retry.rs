@@ -139,7 +139,7 @@ mod tests {
     use crate::{
         api::{
             get_2_tweets_id::{Api, Response},
-            post_2_media_upload_init::{self, MediaCategory},
+            post_2_media_upload_initialize::{self, MediaCategory},
             BearerAuthentication,
         },
         retry::{execute_retry, execute_retry_fn},
@@ -191,15 +191,15 @@ mod tests {
 
         let logger = Logger {};
 
-        let res = execute_retry_fn::<post_2_media_upload_init::Response>(
+        let res = execute_retry_fn::<post_2_media_upload_initialize::Response>(
             || {
-                let body = post_2_media_upload_init::FormData {
+                let body = post_2_media_upload_initialize::Body {
                     media_category: Some(MediaCategory::TweetImage),
                     media_type: "image/jpeg".to_string(),
                     total_bytes: 10000,
                     ..Default::default()
                 };
-                post_2_media_upload_init::Api::new(body).build(&bearer_auth)
+                post_2_media_upload_initialize::Api::new(body).build(&bearer_auth)
             },
             2,
             &vec![StatusCode::UNAUTHORIZED],

@@ -2,7 +2,7 @@ use tracing::Level;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
 use tracing_subscriber::{filter::Targets, layer::SubscriberExt, Registry};
 use twapi_v2::{
-    api::{post_2_media_upload_init::MediaCategory, post_2_tweets::{self, Media}, BearerAuthentication},
+    api::{post_2_media_upload_initialize::MediaCategory, post_2_tweets::{self, Media}, BearerAuthentication},
     error::Error,
     upload_v2::{check_processing, get_media_id, upload_media},
 };
@@ -74,7 +74,7 @@ async fn main() -> anyhow::Result<()> {
 
     let body = post_2_tweets::Body {
         text: Some(
-            "It's media v2 test using twapi-v2 Rust library with file async. https://crates.io/crates/twapi-v2"
+            "It's media v2 test using twapi-v2 Rust library with file async for new v2 endpoint. https://crates.io/crates/twapi-v2"
                 .to_string(),
         ),
         media: Some(Media {

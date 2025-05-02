@@ -5,35 +5,42 @@ use crate::{
     error::Error,
     headers::Headers,
 };
-use reqwest::multipart::Form;
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-const URL: &str = "/2/media/upload";
+const URL: &str = "/2/media/upload/initialize";
 
-#[derive(Debug, Clone, Default)]
-pub struct FormData {
-    pub media_id: String,
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum MediaCategory {
+    AmplifyVideo,
+    TweetGif,
+    TweetImage,
+    TweetVideo,
+    DmVideo,
+    DmImage,
+    Subtitles,
+    DmGif,
 }
 
-impl FormData {
-    fn make_form(self) -> Form {
-        Form::new()
-            .text("command", "FINALIZE")
-            .text("media_id", self.media_id)
-    }
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Body {
+    pub total_bytes: u64,
+    pub media_type: String,
+    pub media_category: Option<MediaCategory>,
+    pub additional_owners: Option<String>,
 }
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    form: FormData,
+    body: Body,
     twapi_options: Option<TwapiOptions>,
 }
 
 impl Api {
-    pub fn new(form: FormData) -> Self {
+    pub fn new(body: Body) -> Self {
         Self {
-            form,
+            body,
             ..Default::default()
         }
     }
@@ -46,7 +53,7 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
-        let builder = client.post(&url).multipart(self.form.make_form());
+        let builder = client.post(&url).json(&self.body);
         authentication.execute(
             apply_options(builder, &self.twapi_options),
             "POST",
