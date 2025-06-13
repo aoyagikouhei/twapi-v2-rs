@@ -5,7 +5,7 @@ use reqwest_builder_retry::RetryType;
 
 use crate::{
     error::{Error, TwitterError},
-    headers::Headers,
+    headers::Headers, retriable::calc_retry_type,
 };
 
 pub async fn execute_retry<F>(
@@ -71,15 +71,7 @@ async fn check_done(
                 Some(text) => serde_json::from_str::<serde_json::Value>(&text).ok(),
                 None => None,
             };
-            let retry_type = if status_code.is_client_error() {
-                if retryable_status_codes.contains(&status_code) {
-                    RetryType::Retry
-                } else {
-                    RetryType::Stop
-                }
-            } else {
-                RetryType::Retry
-            };
+            let retry_type = calc_retry_type(status_code, retryable_status_codes);
             match json {
                 Some(json) => Err((
                     retry_type,

@@ -79,52 +79,30 @@ where
             })?;
             if status_code.is_success() {
                 if let Ok(result) = serde_json::from_value::<T>(json.clone()) {
-                    Ok(RetryResult {
+                    return Ok(RetryResult {
                         result,
                         status_code,
                         headers,
-                    })
-                } else {
-                    Err((
-                        RetryType::Retry,
-                        Error::Twitter(
-                            TwitterError::new(&json, status_code),
-                            json,
-                            Box::new(headers),
-                        ),
-                    ))
+                    });
                 }
-            } else if status_code.is_client_error() {
-                if retryable_status_codes.contains(&status_code) {
-                    Err((
-                        RetryType::Retry,
-                        Error::Twitter(
-                            TwitterError::new(&json, status_code),
-                            json,
-                            Box::new(headers),
-                        ),
-                    ))
-                } else {
-                    Err((
-                        RetryType::Stop,
-                        Error::Twitter(
-                            TwitterError::new(&json, status_code),
-                            json,
-                            Box::new(headers),
-                        ),
-                    ))
-                }
-            } else {
-                Err((
-                    RetryType::Retry,
-                    Error::Twitter(
-                        TwitterError::new(&json, status_code),
-                        json,
-                        Box::new(headers),
-                    ),
-                ))
             }
+            Err((
+                calc_retry_type(status_code, retryable_status_codes),
+                Error::Twitter(
+                    TwitterError::new(&json, status_code),
+                    json,
+                    Box::new(headers),
+                ),
+            ))
         }
         Err(err) => Err((RetryType::Retry, Error::Other(err.to_string(), None))),
+    }
+}
+
+pub(crate) fn calc_retry_type(status_code: StatusCode, retryable_status_codes: &[StatusCode]) -> RetryType {
+    if retryable_status_codes.contains(&status_code) || status_code.is_success() {
+        RetryType::Retry
+    } else {
+        RetryType::Stop
     }
 }
