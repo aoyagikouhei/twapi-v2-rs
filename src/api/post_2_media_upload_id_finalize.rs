@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/media/upload/:id/finalize";
 
-
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     id: String,

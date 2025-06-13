@@ -1177,6 +1177,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "reqwest-builder-retry"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0122cafd4c5dd4a24ec37aee65e48491e820e060a1ddeda981ab2964c237569"
+dependencies = [
+ "rand 0.9.1",
+ "reqwest",
+ "thiserror 2.0.12",
+ "tokio",
+]
+
+[[package]]
 name = "ring"
 version = "0.17.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1719,6 +1731,7 @@ dependencies = [
  "oauth2",
  "rand 0.9.1",
  "reqwest",
+ "reqwest-builder-retry",
  "serde",
  "serde_json",
  "sha1",

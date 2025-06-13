@@ -1,5 +1,8 @@
 use anyhow::Result;
-use twapi_v2::{api::{execute_twitter, get_2_users_id_tweets, BearerAuthentication}, error::Error};
+use twapi_v2::{
+    api::{execute_twitter, get_2_users_id_tweets, BearerAuthentication},
+    error::Error,
+};
 
 //BEARER_CODE=XXXXX cargo test --test get_2_users_id_tweets --all-features -- --nocapture --test-threads=1
 
@@ -23,6 +26,6 @@ async fn test_get_2_users_id_tweets() -> Result<()> {
             println!("Error: {}", e);
         }
     }
-    
+
     Ok(())
 }

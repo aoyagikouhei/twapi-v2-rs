@@ -19,6 +19,7 @@ itertools = "0.14"
 oauth2 = { version = "5", optional = true }
 rand = { version = "0.9", optional = true }
 reqwest = { version = "0.12", features = ["json", "multipart"], default-features = false, optional = true }
+reqwest-builder-retry = { version = "0.6.0", features = ["convenience"], default-features = false, optional = true }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha1 = { version = "0.10", optional = true }
@@ -28,9 +29,9 @@ tracing = "0.1"
 form_urlencoded = { version = "1.2", optional = true }
 
 [features]
-default = ["reqwest/default-tls"]
-rustls-tls = ["reqwest/rustls-tls"]
-retry = []
+default = ["reqwest/default-tls", "reqwest-builder-retry/default"]
+rustls-tls = ["reqwest/rustls-tls", "reqwest-builder-retry/rustls-tls"]
+retry = ["reqwest-builder-retry"]
 oauth = ["oauth2"]
 oauth10a = ["base64", "hmac", "rand", "sha1", "form_urlencoded"]
 models = []
