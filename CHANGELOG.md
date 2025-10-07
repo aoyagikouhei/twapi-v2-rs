@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.21.0 (2025/10/07)
+* modify media upload by binary
+- modify date rfc3339
+
 ### v0.20.0 (2025/05/02)
 * modify media upload
 
