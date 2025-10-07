@@ -39,6 +39,10 @@ pub enum ReplySettings {
     Mentionedusers,
     #[serde(rename = "following")]
     Following,
+    #[serde(rename = "subscribers")]
+    Subscribers,
+    #[serde(rename = "verified")]
+    Verified,
 }
 
 impl std::fmt::Display for ReplySettings {
@@ -46,6 +50,8 @@ impl std::fmt::Display for ReplySettings {
         match self {
             Self::Mentionedusers => write!(f, "mentionedUsers"),
             Self::Following => write!(f, "following"),
+            Self::Subscribers => write!(f, "subscribers"),
+            Self::Verified => write!(f, "verified"),
         }
     }
 }

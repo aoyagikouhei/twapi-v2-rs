@@ -254,7 +254,10 @@ impl Api {
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
         if let Some(end_time) = self.end_time {
-            query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
+            query_parameters.push((
+                "end_time",
+                end_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
+            ));
         }
         if let Some(exclude) = self.exclude {
             query_parameters.push(("exclude", exclude.iter().join(",")));
@@ -283,7 +286,7 @@ impl Api {
         if let Some(start_time) = self.start_time {
             query_parameters.push((
                 "start_time",
-                start_time.format("%Y-%m-%dT%H%M%SZ").to_string(),
+                start_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
             ));
         }
         if let Some(tweet_fields) = self.tweet_fields {

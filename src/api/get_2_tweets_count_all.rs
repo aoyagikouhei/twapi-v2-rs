@@ -89,7 +89,10 @@ impl Api {
         let mut query_parameters = vec![];
         query_parameters.push(("query", self.query));
         if let Some(end_time) = self.end_time {
-            query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H%M%SZ").to_string()));
+            query_parameters.push((
+                "end_time",
+                end_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
+            ));
         }
         if let Some(granularity) = self.granularity {
             query_parameters.push(("granularity", granularity.to_string()));
@@ -100,7 +103,7 @@ impl Api {
         if let Some(start_time) = self.start_time {
             query_parameters.push((
                 "start_time",
-                start_time.format("%Y-%m-%dT%H%M%SZ").to_string(),
+                start_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
             ));
         }
         if let Some(until_id) = self.until_id {

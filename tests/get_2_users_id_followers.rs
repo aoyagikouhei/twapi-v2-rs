@@ -1,7 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_users_id_followers, BearerAuthentication};
 
-
 //BEARER_CODE=XXXXX cargo test --test get_2_users_id_followers --all-features -- --nocapture --test-threads=1
 
 #[tokio::test]
