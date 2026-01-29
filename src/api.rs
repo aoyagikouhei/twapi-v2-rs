@@ -103,11 +103,13 @@ const ENV_KEY: &str = "TWAPI_V2_TWITTER_API_PREFIX_API";
 const PREFIX_URL_TWITTER: &str = "https://api.x.com";
 
 pub fn clear_prefix_url() {
-    std::env::set_var(ENV_KEY, PREFIX_URL_TWITTER);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, PREFIX_URL_TWITTER) };
 }
 
 pub fn setup_prefix_url(url: &str) {
-    std::env::set_var(ENV_KEY, url);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, url) };
 }
 
 #[derive(Debug, Clone, Default)]

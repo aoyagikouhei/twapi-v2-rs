@@ -193,7 +193,7 @@ async fn execute_append_from_bytes(
 }
 
 fn get_check_after_secs(processing_info: &Option<ProcessingInfo>) -> Option<i64> {
-    let Some(ref processing_info) = processing_info else {
+    let Some(processing_info) = processing_info else {
         return None;
     };
     let state = &(processing_info.state.clone()?);
