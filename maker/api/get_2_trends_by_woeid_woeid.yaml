@@ -5,6 +5,11 @@ method: get
 paths:
   - name: woeid
     type: string
+queries:
+  - name: max_trends
+    type: integer
+    max: 49
+    min: 2
 response:
   type: object
   properties:

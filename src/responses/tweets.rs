@@ -21,7 +21,8 @@ pub struct Tweets {
     pub created_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edit_controls: Option<EditControls>,
-    pub edit_history_tweet_ids: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edit_history_tweet_ids: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub entities: Option<Entities>,
     #[serde(skip_serializing_if = "Option::is_none")]

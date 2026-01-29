@@ -27,4 +27,5 @@ export interface PublicMetrics {
   tweetCount: number | undefined;
   listedCount: number | undefined;
   likeCount: number | undefined;
+  mediaCount: number | undefined;
 }

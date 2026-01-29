@@ -12,6 +12,7 @@ const URL: &str = "/2/trends/by/woeid/:woeid";
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     woeid: String,
+    max_trends: Option<usize>,
     twapi_options: Option<TwapiOptions>,
 }
 
@@ -23,20 +24,32 @@ impl Api {
         }
     }
 
+    pub fn max_trends(mut self, value: usize) -> Self {
+        self.max_trends = Some(value);
+        self
+    }
+
     pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
         self.twapi_options = Some(value);
         self
     }
 
     pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
+        let mut query_parameters = vec![];
+        if let Some(max_trends) = self.max_trends {
+            query_parameters.push(("max_trends", max_trends.to_string()));
+        }
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, &URL.replace(":woeid", &self.woeid));
-        let builder = client.get(&url);
+        let builder = client.get(&url).query(&query_parameters);
         authentication.execute(
             apply_options(builder, &self.twapi_options),
             "GET",
             &url,
-            &[],
+            &query_parameters
+                .iter()
+                .map(|it| (it.0, it.1.as_str()))
+                .collect::<Vec<_>>(),
         )
     }
 

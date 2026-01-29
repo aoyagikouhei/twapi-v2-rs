@@ -22,7 +22,7 @@ response:
       ref: edit_controls
     edit_history_tweet_ids:
       type: array
-      required: true
+      required: false
       items:
         type: string
     entities:
