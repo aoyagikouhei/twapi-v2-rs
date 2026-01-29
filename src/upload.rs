@@ -28,11 +28,13 @@ const ENV_KEY: &str = "TWAPI_V2_MEDIA_API_PREFIX_API";
 const PREFIX_URL_MEDIA: &str = "https://upload.twitter.com";
 
 pub fn clear_prefix_url() {
-    std::env::set_var(ENV_KEY, PREFIX_URL_MEDIA);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, PREFIX_URL_MEDIA) };
 }
 
 pub fn setup_prefix_url(url: &str) {
-    std::env::set_var(ENV_KEY, url);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, url) };
 }
 
 pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, postfix_url: Option<&str>) -> String {
