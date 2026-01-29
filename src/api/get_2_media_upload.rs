@@ -9,9 +9,10 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/media/upload";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Command {
     #[serde(rename = "STATUS")]
+    #[default]
     Status,
 }
 
@@ -20,12 +21,6 @@ impl std::fmt::Display for Command {
         match self {
             Self::Status => write!(f, "STATUS"),
         }
-    }
-}
-
-impl Default for Command {
-    fn default() -> Self {
-        Self::Status
     }
 }
 

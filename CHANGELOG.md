@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.22.0 (2026/01/29)
+* edit_history_tweet_ids to option
+
 ### v0.21.0 (2025/10/07)
 * modify media upload by binary
 - modify date rfc3339

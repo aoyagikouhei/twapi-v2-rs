@@ -22,9 +22,10 @@ impl ProcessingInfo {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum State {
     #[serde(rename = "succeeded")]
+    #[default]
     Succeeded,
     #[serde(rename = "in_progress")]
     InProgress,
@@ -42,11 +43,5 @@ impl std::fmt::Display for State {
             Self::Pending => write!(f, "pending"),
             Self::Failed => write!(f, "failed"),
         }
-    }
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self::Succeeded
     }
 }

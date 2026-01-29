@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum PlaceFields {
     #[serde(rename = "contained_within")]
+    #[default]
     ContainedWithin,
     #[serde(rename = "country")]
     Country,
@@ -48,11 +49,5 @@ impl std::fmt::Display for PlaceFields {
             Self::Name => write!(f, "name"),
             Self::PlaceType => write!(f, "place_type"),
         }
-    }
-}
-
-impl Default for PlaceFields {
-    fn default() -> Self {
-        Self::ContainedWithin
     }
 }

@@ -8,9 +8,10 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/dm_conversations";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum ConversationType {
     #[serde(rename = "Group")]
+    #[default]
     Group,
 }
 
@@ -19,12 +20,6 @@ impl std::fmt::Display for ConversationType {
         match self {
             Self::Group => write!(f, "Group"),
         }
-    }
-}
-
-impl Default for ConversationType {
-    fn default() -> Self {
-        Self::Group
     }
 }
 

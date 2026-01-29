@@ -412,9 +412,9 @@ fn from_v1_tweets(
                 .map(|it| it.to_owned()),
             created_at: str_to_utc(src["created_at"].as_str().unwrap_or_default()),
             edit_controls: from_v1_edit_controls(src),
-            edit_history_tweet_ids: from_v1_edit_history_tweet_ids(
+            edit_history_tweet_ids: Some(from_v1_edit_history_tweet_ids(
                 &src["edit_history"]["edit_tweet_ids"],
-            ),
+            )),
             entities,
             geo,
             in_reply_to_user_id: src["in_reply_to_user_id_str"]
