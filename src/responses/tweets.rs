@@ -28,7 +28,8 @@ pub struct Tweets {
     pub display_text_range: Option<Vec<i64>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edit_controls: Option<EditControls>,
-    pub edit_history_tweet_ids: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edit_history_tweet_ids: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub entities: Option<Entities>,
     #[serde(skip_serializing_if = "Option::is_none")]
