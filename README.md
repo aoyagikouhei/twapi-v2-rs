@@ -12,8 +12,8 @@ Twitter API v2 library.
 - Upload Media upload.twitter.com APIs
 - Upload Media v2 (However, when I executed it, I got a 403 and was not successful.)
 - Optional retriable and timeout and logging
-- Optional OAuth2 with web example
 - Optional v1 to v2 parser
+- OAuth2 example
 - Streaming example
 - Supported mocks. For example, mockito.
 - Type support.
