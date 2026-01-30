@@ -1,7 +1,7 @@
 use crate::fields::{list_fields::ListFields, user_fields::UserFields};
 use crate::responses::{errors::Errors, includes::Includes, lists::Lists, meta::Meta};
 use crate::{
-    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };

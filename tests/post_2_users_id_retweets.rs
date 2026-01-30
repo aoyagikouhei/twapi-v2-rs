@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, post_2_users_id_retweets, BearerAuthentication};
+use twapi_v2::api::{BearerAuthentication, execute_twitter, post_2_users_id_retweets};
 
 // BEARER_CODE=XXXXX TWEET_ID=XXXXX cargo test test_post_2_users_id_retweets -- --nocapture --test-threads=1
 

@@ -16,7 +16,6 @@
 	"settings": {
 		"rust-analyzer.cargo.features": [
 			"oauth10a",
-			"oauth",
 			"retry",
 			"models",
 			"upload",

@@ -62,10 +62,10 @@ impl Headers {
     pub fn new(header: &reqwest::header::HeaderMap) -> Self {
         let mut extra = HashMap::new();
         for (name, value) in header.iter() {
-            if !KEYS.contains(&name.as_str()) {
-                if let Ok(value) = value.to_str() {
-                    extra.insert(name.as_str().to_string(), value.to_string());
-                }
+            if !KEYS.contains(&name.as_str())
+                && let Ok(value) = value.to_str()
+            {
+                extra.insert(name.as_str().to_string(), value.to_string());
             }
         }
         Self {

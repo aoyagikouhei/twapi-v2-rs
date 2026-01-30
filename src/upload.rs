@@ -6,7 +6,7 @@ use std::{
 use reqwest::RequestBuilder;
 
 use crate::{
-    api::{make_url_with_prefix, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, make_url_with_prefix},
     error::Error,
     headers::Headers,
 };

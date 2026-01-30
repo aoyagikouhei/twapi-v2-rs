@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.23.0 (2026/01/30)
+* Update Edtion 2024
+* Remove oauth feature. Instead of use [twapi-oauth2](https://crates.io/crates/twapi-oauth2)
+
 ### v0.22.0 (2026/01/29)
 * edit_history_tweet_ids to option
 

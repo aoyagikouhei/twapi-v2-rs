@@ -7,8 +7,8 @@ use crate::{
     upload::{execute_no_response, make_url},
 };
 use reqwest::{
-    multipart::{Form, Part},
     RequestBuilder,
+    multipart::{Form, Part},
 };
 
 #[derive(Debug, Clone, Default)]

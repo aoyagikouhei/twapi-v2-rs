@@ -4,7 +4,7 @@ use crate::fields::{
 };
 use crate::responses::{dm_events::DmEvents, errors::Errors, includes::Includes, meta::Meta};
 use crate::{
-    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };

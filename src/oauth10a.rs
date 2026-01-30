@@ -1,5 +1,5 @@
 use crate::api::Authentication;
-use base64::{engine::general_purpose, Engine as _};
+use base64::{Engine as _, engine::general_purpose};
 use chrono::prelude::*;
 use hmac::{Hmac, Mac};
 use rand::distr::{Alphanumeric, SampleString};

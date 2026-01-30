@@ -1,7 +1,7 @@
 use crate::responses::errors::Errors;
 use crate::responses::media_upload::MediaUpload;
 use crate::{
-    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };

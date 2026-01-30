@@ -1,9 +1,9 @@
 [package]
 name = "twapi-v2"
-version = "0.22.0"
+version = "0.23.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
-edition = "2021"
+edition = "2024"
 description = "Twitter API v2 library."
 repository = "https://github.com/aoyagikouhei/twapi-v2-rs"
 keywords = ["twitter", "v2", "api", "client", "oauth"]
@@ -16,9 +16,8 @@ base64 = { version = "0.22", optional = true }
 chrono = { version = "0.4", features = [ "serde" ] }
 hmac = { version = "0.12", optional = true }
 itertools = "0.14"
-oauth2 = { version = "5", optional = true }
 rand = { version = "0.9", optional = true }
-reqwest = { version = "0.12", features = ["json", "multipart"], default-features = false, optional = true }
+reqwest = { version = "0.13", features = ["json", "multipart", "query", "form", "stream"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sha1 = { version = "0.10", optional = true }
@@ -28,10 +27,8 @@ tracing = "0.1"
 form_urlencoded = { version = "1.2", optional = true }
 
 [features]
-default = ["reqwest/default-tls"]
-rustls-tls = ["reqwest/rustls-tls"]
+default = []
 retry = []
-oauth = ["oauth2"]
 oauth10a = ["base64", "hmac", "rand", "sha1", "form_urlencoded"]
 models = []
 upload = []
@@ -43,6 +40,6 @@ tokio = { version = "1", features = ["macros"] }
 
 [package.metadata.docs.rs]
 all-features = true
-features = ["retry", "oauth", "oauth10a", "rustls-tls", "models"]
+features = ["retry", "oauth10a", "models"]
 rustdoc-args = ["--cfg", "docsrs"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

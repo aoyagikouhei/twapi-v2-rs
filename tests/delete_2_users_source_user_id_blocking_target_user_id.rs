@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{
-    delete_2_users_source_user_id_blocking_target_user_id, execute_twitter, BearerAuthentication,
+    BearerAuthentication, delete_2_users_source_user_id_blocking_target_user_id, execute_twitter,
 };
 
 // BEARER_CODE=XXXXX TARGET_USER_ID=XXXXX cargo test test_delete_2_users_source_user_id_blocking_target_user_id -- --nocapture --test-threads=1

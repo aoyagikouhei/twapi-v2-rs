@@ -1,5 +1,5 @@
 use crate::{
-    api::{execute_twitter, make_url, TwapiOptions},
+    api::{TwapiOptions, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };

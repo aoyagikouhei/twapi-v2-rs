@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{execute_twitter, post_2_lists, BearerAuthentication};
+use twapi_v2::api::{BearerAuthentication, execute_twitter, post_2_lists};
 
 // BEARER_CODE=XXXXX LIST_NAME=XXXXX cargo test test_post_2_lists -- --nocapture --test-threads=1
 

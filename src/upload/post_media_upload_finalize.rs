@@ -1,10 +1,10 @@
 use crate::{
-    api::{execute_twitter, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, execute_twitter},
     error::Error,
     headers::Headers,
     upload::{make_url, response::Response},
 };
-use reqwest::{multipart::Form, RequestBuilder};
+use reqwest::{RequestBuilder, multipart::Form};
 
 #[derive(Debug, Clone, Default)]
 pub struct Data {

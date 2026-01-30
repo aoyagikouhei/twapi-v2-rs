@@ -1,16 +1,16 @@
 use std::{io::Cursor, path::PathBuf};
 
 use tokio::{
-    fs::{metadata, File},
+    fs::{File, metadata},
     io::{AsyncReadExt, BufReader},
 };
 
 use crate::{
     api::{
+        Authentication, TwapiOptions,
         get_2_media_upload::{self, Command},
         post_2_media_upload_id_append, post_2_media_upload_id_finalize,
         post_2_media_upload_initialize::{self, MediaCategory},
-        Authentication, TwapiOptions,
     },
     error::Error,
     headers::Headers,

@@ -6,7 +6,7 @@ use crate::responses::{
     errors::Errors, includes::Includes, matching_rules::MatchingRules, tweets::Tweets,
 };
 use crate::{
-    api::{apply_options, execute_twitter, make_url, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };

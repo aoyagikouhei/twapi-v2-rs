@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::{
-    api::{execute_twitter, get_2_spaces_id, BearerAuthentication},
+    api::{BearerAuthentication, execute_twitter, get_2_spaces_id},
     fields::space_fields::SpaceFields,
 };
 

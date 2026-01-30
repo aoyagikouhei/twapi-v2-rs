@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::{
-    api::{execute_twitter, get_2_users_id_tweets, BearerAuthentication},
+    api::{BearerAuthentication, execute_twitter, get_2_users_id_tweets},
     error::Error,
 };
 

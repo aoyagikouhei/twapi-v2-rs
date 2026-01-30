@@ -138,9 +138,9 @@ mod tests {
 
     use crate::{
         api::{
+            BearerAuthentication,
             get_2_tweets_id::{Api, Response},
             post_2_media_upload_initialize::{self, MediaCategory},
-            BearerAuthentication,
         },
         retry::{execute_retry, execute_retry_fn},
     };

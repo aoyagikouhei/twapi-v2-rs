@@ -1,5 +1,5 @@
 use anyhow::Result;
-use twapi_v2::api::{delete_2_lists_id, execute_twitter, BearerAuthentication};
+use twapi_v2::api::{BearerAuthentication, delete_2_lists_id, execute_twitter};
 
 // BEARER_CODE=XXXXX LIST_ID=XXXXX cargo test test_delete_2_lists_id -- --nocapture --test-threads=1
 

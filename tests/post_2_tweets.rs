@@ -1,6 +1,6 @@
 use anyhow::Result;
 use chrono::prelude::*;
-use twapi_v2::api::{execute_twitter, post_2_tweets, BearerAuthentication};
+use twapi_v2::api::{BearerAuthentication, execute_twitter, post_2_tweets};
 
 // BEARER_CODE=XXXXX TWEET_TEXT=hello cargo test test_post_2_tweets -- --nocapture --test-threads=1
 

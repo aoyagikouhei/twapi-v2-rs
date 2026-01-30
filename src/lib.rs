@@ -10,9 +10,6 @@ pub use reqwest;
 #[cfg(feature = "retry")]
 pub mod retry;
 
-#[cfg(feature = "oauth")]
-pub mod oauth;
-
 #[cfg(feature = "oauth10a")]
 pub mod oauth10a;
 

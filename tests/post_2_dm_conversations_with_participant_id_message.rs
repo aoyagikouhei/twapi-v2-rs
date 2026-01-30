@@ -1,7 +1,7 @@
 use anyhow::Result;
 use chrono::prelude::*;
 use twapi_v2::api::{
-    execute_twitter, post_2_dm_conversations_with_participant_id_message, BearerAuthentication,
+    BearerAuthentication, execute_twitter, post_2_dm_conversations_with_participant_id_message,
 };
 
 // BEARER_CODE=XXXXX PARTICIPANT_ID=XXXXX cargo test test_post_2_dm_conversations_with_participant_id_message -- --nocapture --test-threads=1

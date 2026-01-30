@@ -1,12 +1,12 @@
 use std::io::Cursor;
 
 use crate::{
-    api::{apply_options, make_url, Authentication, TwapiOptions},
+    api::{Authentication, TwapiOptions, apply_options, make_url},
     error::Error,
     headers::Headers,
 };
-use reqwest::multipart::{Form, Part};
 use reqwest::RequestBuilder;
+use reqwest::multipart::{Form, Part};
 
 const URL: &str = "/2/media/upload/:id/append";
 

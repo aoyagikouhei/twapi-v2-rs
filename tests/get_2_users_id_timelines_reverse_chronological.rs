@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{
-    execute_twitter, get_2_users_id_timelines_reverse_chronological, BearerAuthentication,
+    BearerAuthentication, execute_twitter, get_2_users_id_timelines_reverse_chronological,
 };
 
 // BEARER_CODE=XXXXX cargo test test_get_2_users_id_timelines_reverse_chronological -- --nocapture --test-threads=1

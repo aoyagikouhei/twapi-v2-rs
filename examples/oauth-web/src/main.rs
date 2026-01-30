@@ -5,8 +5,10 @@ use std::collections::HashMap;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use twapi_v2::{
     api::{get_2_users_me, BearerAuthentication},
-    oauth::{TwitterOauth, TwitterScope},
 };
+use twapi_oauth2::x::{XClient, XScope};
+
+// API_KEY_CODE=xxx API_SECRET_CODE=xxx CALLBACK_URL=http://localhost:3000/oauth cargo run
 
 pub const PKCE_VERIFIER: &str = "pkce_verifier";
 
@@ -21,32 +23,31 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-fn oauth_client() -> TwitterOauth {
-    TwitterOauth::new(
+fn oauth_client() -> XClient {
+    XClient::new(
         &std::env::var("API_KEY_CODE").unwrap(),
         &std::env::var("API_SECRET_CODE").unwrap(),
         &std::env::var("CALLBACK_URL").unwrap(),
-        TwitterScope::all(),
+        XScope::all(),
     )
-    .unwrap()
 }
 
 async fn root(cookies: Cookies) -> impl IntoResponse {
     let oauth = oauth_client();
-    let res = oauth.oauth_url();
-    cookies.add(Cookie::new(PKCE_VERIFIER, res.pkce_verifier.clone()));
-    Html(format!("<a href='{}'>oauth<a>", res.oauth_url)).into_response()
+    let (oauth_url, pkce_verifier) = oauth.authorize_url("state");
+    cookies.add(Cookie::new(PKCE_VERIFIER, pkce_verifier));
+    Html(format!("<a href='{}'>oauth<a>", oauth_url)).into_response()
 }
 
 async fn oauth(Query(params): Query<HashMap<String, String>>, cookies: Cookies) -> impl IntoResponse {
     let pkce = cookies.get(PKCE_VERIFIER).unwrap();
     let oauth = oauth_client();
     let res = oauth
-        .token(pkce.value(), params.get("code").unwrap(), None)
+        .token(params.get("code").unwrap(), pkce.value(), )
         .await
         .unwrap();
     println!("{:?}", res);
-    let auth = BearerAuthentication::new(res.access_token);
+    let auth = BearerAuthentication::new(res.0.access_token);
     let me = get_2_users_me::Api::all().execute(&auth).await.unwrap();
     Json(me.0).into_response()
 }

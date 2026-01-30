@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::api::{
-    execute_twitter, get_2_dm_conversations_with_participant_id_dm_events, BearerAuthentication,
+    BearerAuthentication, execute_twitter, get_2_dm_conversations_with_participant_id_dm_events,
 };
 
 // BEARER_CODE=XXXXX PARTICIPANT_ID=XXXXX cargo test test_get_2_dm_conversations_with_participant_id_dm_events -- --nocapture --test-threads=1
