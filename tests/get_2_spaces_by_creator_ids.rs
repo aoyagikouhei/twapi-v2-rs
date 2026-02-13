@@ -14,10 +14,9 @@ async fn test_get_2_spaces_by_creator_ids() -> Result<()> {
     let mut expantions = get_2_spaces_by_creator_ids::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces_by_creator_ids::Expansions::TopicsIds);
-    let builder = get_2_spaces_by_creator_ids::Api::all(&user_ids)
-        .expansions(expantions)
-        .build(&bearer_auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_spaces_by_creator_ids::Api::all(&user_ids)
+        .expansions(expantions.clone())
+        .build(&bearer_auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_spaces_by_creator_ids::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

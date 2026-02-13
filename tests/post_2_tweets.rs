@@ -17,8 +17,7 @@ async fn test_post_2_tweets() -> Result<()> {
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
-    let builder = post_2_tweets::Api::new(body).build(&bearer_auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| post_2_tweets::Api::new(body.clone()).build(&bearer_auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_tweets::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

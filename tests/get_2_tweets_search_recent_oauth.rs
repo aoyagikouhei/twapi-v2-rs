@@ -16,10 +16,9 @@ async fn test_get_2_tweets_search_recent_oauth() -> Result<()> {
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
-    let builder = get_2_tweets_search_recent::Api::open("東京")
+    let (res, headers) = execute_twitter::<serde_json::Value>(|| get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
-        .build(&auth);
-    let (res, headers) = execute_twitter::<serde_json::Value>(builder).await?;
+        .build(&auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     println!("{}", headers);
     let response = serde_json::from_value::<get_2_tweets_search_recent::Response>(res)?;
@@ -56,11 +55,10 @@ async fn test_get_2_tweets_search_recent_oauth_mock() -> Result<()> {
         ..Default::default()
     };
 
-    let builder = get_2_tweets_search_recent::Api::open("東京")
+    let (res, _headers) = execute_twitter::<get_2_tweets_search_recent::Response>(|| get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
-        .twapi_options(twapi_options)
-        .build(&auth);
-    let (res, _headers) = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await?;
+        .twapi_options(twapi_options.clone())
+        .build(&auth)).await?;
     assert_eq!(res.extra.get("origin"), Some(&json!("0.0.0.0")));
     mock.assert();
     Ok(())
@@ -93,10 +91,9 @@ async fn test_get_2_tweets_search_recent_oauth_mock_rate_limet() -> Result<()> {
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
-    let builder = get_2_tweets_search_recent::Api::open("東京")
+    let res = execute_twitter::<get_2_tweets_search_recent::Response>(|| get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)
-        .build(&auth);
-    let res = execute_twitter::<get_2_tweets_search_recent::Response>(builder).await;
+        .build(&auth)).await;
     match res {
         Err(Error::Twitter(e, _value, _headers)) => {
             assert_eq!(e.status_code.as_u16(), 429);

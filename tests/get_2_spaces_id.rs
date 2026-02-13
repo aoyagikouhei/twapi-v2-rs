@@ -20,11 +20,10 @@ async fn test_get_2_spaces_id() -> Result<()> {
     let mut spaces_fields = SpaceFields::all();
     // Setting this paramter is invalid.
     spaces_fields.remove(&SpaceFields::SubscriberCount);
-    let builder: reqwest::RequestBuilder = get_2_spaces_id::Api::all(&id)
-        .space_fields(spaces_fields)
-        .expansions(expantions)
-        .build(&bearer_auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_spaces_id::Api::all(&id)
+        .space_fields(spaces_fields.clone())
+        .expansions(expantions.clone())
+        .build(&bearer_auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_spaces_id::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

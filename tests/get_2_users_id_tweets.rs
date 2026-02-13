@@ -10,8 +10,7 @@ use twapi_v2::{
 async fn test_get_2_users_id_tweets() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
-    let builder = get_2_users_id_tweets::Api::all("19522946").build(&bearer_auth);
-    match execute_twitter::<serde_json::Value>(builder).await {
+    match execute_twitter::<serde_json::Value>(|| get_2_users_id_tweets::Api::all("19522946").build(&bearer_auth)).await {
         Ok((res, rate_limit)) => {
             println!("{}", serde_json::to_string(&res).unwrap());
             println!("{}", rate_limit);

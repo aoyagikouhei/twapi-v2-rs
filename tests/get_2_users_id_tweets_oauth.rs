@@ -14,8 +14,7 @@ async fn test_get_2_users_id_tweets_oauth() -> Result<()> {
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
-    let builder = get_2_users_id_tweets::Api::open("19522946").build(&auth);
-    let (res, headers) = execute_twitter::<serde_json::Value>(builder).await?;
+    let (res, headers) = execute_twitter::<serde_json::Value>(|| get_2_users_id_tweets::Api::open("19522946").build(&auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     println!("{}", headers);
     let response = serde_json::from_value::<get_2_users_id_tweets::Response>(res)?;

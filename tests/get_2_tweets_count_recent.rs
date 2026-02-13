@@ -10,8 +10,7 @@ async fn test_get_2_tweets_count_recent() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_auth = BearerAuthentication::new(app_bearer_code);
-    let builder = get_2_tweets_count_recent::Api::new("東京").build(&bearer_auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_tweets_count_recent::Api::new("東京").build(&bearer_auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_tweets_count_recent::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

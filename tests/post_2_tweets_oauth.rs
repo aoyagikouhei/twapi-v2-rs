@@ -24,8 +24,7 @@ async fn test_post_2_tweets_oauth() -> Result<()> {
         text: Some(format!("now! {}, {}", now, tweet_text)),
         ..Default::default()
     };
-    let builder = post_2_tweets::Api::new(body).build(&auth);
-    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(builder).await?;
+        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| post_2_tweets::Api::new(body.clone()).build(&auth)).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_tweets::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);
