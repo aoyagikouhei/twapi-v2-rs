@@ -1,6 +1,6 @@
 [package]
 name = "twapi-v2"
-version = "0.24.1"
+version = "0.25.0"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
 edition = "2024"
@@ -28,10 +28,8 @@ form_urlencoded = { version = "1.2", optional = true }
 
 [features]
 default = []
-retry = []
 oauth10a = ["base64", "hmac", "rand", "sha1", "form_urlencoded"]
 models = []
-upload = []
 
 [dev-dependencies]
 anyhow = "1"
@@ -40,6 +38,6 @@ tokio = { version = "1", features = ["macros"] }
 
 [package.metadata.docs.rs]
 all-features = true
-features = ["retry", "oauth10a", "models"]
+features = ["oauth10a", "models"]
 rustdoc-args = ["--cfg", "docsrs"]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

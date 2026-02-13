@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.25.0 (2026/02/14)
+* Remove retry and upload
+* Change default support retry
+
 ### v0.24.1 (2026/02/13)
 * Modify docs
 
