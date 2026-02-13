@@ -1,13 +1,13 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct DeletedSubtitles {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub deleted_subtitles: Option<Vec<String>>, 
+    pub deleted_subtitles: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>, 
+    pub id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub media_category: Option<MediaCategory>, 
+    pub media_category: Option<MediaCategory>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -16,15 +16,17 @@ impl DeletedSubtitles {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("DeletedSubtitles {:?}", self.extra);
+            println!("DeletedSubtitles {:?}", self.extra);
         }
         res
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
+    #[default]
     AmplifyVideo,
     #[serde(rename = "tweet_gif")]
     TweetGif,
@@ -48,6 +50,3 @@ impl std::fmt::Display for MediaCategory {
     }
 }
 
-impl Default for MediaCategory {
-    fn default() -> Self { Self::AmplifyVideo }
-}

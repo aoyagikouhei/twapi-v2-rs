@@ -1,7 +1,7 @@
 use crate::responses::errors::Errors;
 use crate::responses::media_upload::MediaUpload;
 use crate::{
-    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
+    api::{Authentication, TwapiOptions, execute_twitter, make_url},
     error::Error,
     headers::Headers,
 };
@@ -33,12 +33,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.post(&url);
-        authentication.execute(
-            apply_options(builder, &self.twapi_options),
-            "POST",
-            &url,
-            &[],
-        )
+        authentication.execute(builder, "POST", &url, &[])
     }
 
     pub async fn execute(

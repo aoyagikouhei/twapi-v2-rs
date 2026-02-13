@@ -1,13 +1,13 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Withheld {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub copyright: Option<bool>, 
+    pub copyright: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub country_codes: Option<Vec<String>>, 
+    pub country_codes: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub scope: Option<Scope>, 
+    pub scope: Option<Scope>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -16,15 +16,17 @@ impl Withheld {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("Withheld {:?}", self.extra);
+            println!("Withheld {:?}", self.extra);
         }
         res
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum Scope {
     #[serde(rename = "tweet")]
+    #[default]
     Tweet,
     #[serde(rename = "user")]
     User,
@@ -39,6 +41,3 @@ impl std::fmt::Display for Scope {
     }
 }
 
-impl Default for Scope {
-    fn default() -> Self { Self::Tweet }
-}

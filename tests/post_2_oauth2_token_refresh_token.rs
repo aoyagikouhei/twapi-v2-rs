@@ -17,12 +17,18 @@ async fn test_post_2_oauth2_token_refresh_token() -> Result<()> {
         Ok(refresh_token) => refresh_token,
         _ => return Ok(()),
     };
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| post_2_oauth2_token_refresh_token::Api::new(
-        &api_key_code,
-        &api_secret_code,
-        &refresh_token,
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || {
+            post_2_oauth2_token_refresh_token::Api::new(
+                &api_key_code,
+                &api_secret_code,
+                &refresh_token,
+            )
+            .build()
+        },
+        &None,
     )
-    .build(), &None).await?;
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_oauth2_token_refresh_token::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

@@ -1,7 +1,7 @@
 use std::io::Cursor;
 
 use crate::{
-    api::{Authentication, TwapiOptions, apply_options, make_url},
+    api::{Authentication, TwapiOptions, make_url},
     error::Error,
     headers::Headers,
 };
@@ -49,12 +49,7 @@ impl Api {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.post(&url).multipart(self.form.make_form());
-        authentication.execute(
-            apply_options(builder, &self.twapi_options),
-            "POST",
-            &url,
-            &[],
-        )
+        authentication.execute(builder, "POST", &url, &[])
     }
 
     pub async fn execute(&self, authentication: &impl Authentication) -> Result<Headers, Error> {

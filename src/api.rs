@@ -1,7 +1,8 @@
 use std::time::Duration;
 
-use reqwest::RequestBuilder;
+use reqwest::{RequestBuilder, StatusCode};
 use serde::de::DeserializeOwned;
+use tokio::time::sleep;
 
 use crate::{
     error::{Error, TwitterError},
@@ -116,6 +117,9 @@ pub fn setup_prefix_url(url: &str) {
 pub struct TwapiOptions {
     pub prefix_url: Option<String>,
     pub timeout: Option<Duration>,
+    pub try_count: Option<u32>,
+    pub retry_interval_duration: Option<Duration>,
+    pub retryable_status_codes: Option<Vec<u16>>,
 }
 
 pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, post_url: &str) -> String {
@@ -177,45 +181,70 @@ impl Authentication for BearerAuthentication {
     }
 }
 
-pub async fn execute_twitter<T>(f: impl Fn() -> RequestBuilder, twapi_options: &Option<TwapiOptions>) -> Result<(T, Headers), Error>
+pub async fn execute_twitter<T>(
+    f: impl Fn() -> RequestBuilder,
+    twapi_options: &Option<TwapiOptions>,
+) -> Result<(T, Headers), Error>
 where
     T: DeserializeOwned,
 {
-    let response = f().send().await?;
-    let status_code = response.status();
-    let header = response.headers();
-    let headers = Headers::new(header);
+    let mut count = 0;
+    #[allow(unused_assignments)]
+    let mut last_error: Option<Error> = None;
+    let default_retryable_status_codes: Vec<u16> = vec![StatusCode::INTERNAL_SERVER_ERROR.as_u16()];
+    let retryable_status_codes = twapi_options
+        .as_ref()
+        .and_then(|options| options.retryable_status_codes.as_ref())
+        .unwrap_or(default_retryable_status_codes.as_ref());
+    let retryable_interval_duration = twapi_options
+        .as_ref()
+        .and_then(|options| options.retry_interval_duration)
+        .unwrap_or(Duration::from_millis(100));
 
-    println!("status_code: {:?}", status_code);
-
-    if status_code.is_success() {
-        Ok((response.json::<T>().await?, headers))
-    } else {
-        let text = response.text().await?;
-        println!("text: {:?}", text);
-        match serde_json::from_str(&text) {
-            Ok(value) => Err(Error::Twitter(
-                TwitterError::new(&value, status_code),
-                value,
-                Box::new(headers),
-            )),
-            Err(err) => Err(Error::Other(
-                format!("{:?}:{}", err, text),
-                Some(status_code),
-            )),
+    loop {
+        let mut builder = f();
+        if let Some(timeout) = twapi_options.as_ref().and_then(|options| options.timeout) {
+            builder = builder.timeout(timeout);
         }
-    }
-}
 
-pub(crate) fn apply_options(
-    client: RequestBuilder,
-    options: &Option<TwapiOptions>,
-) -> RequestBuilder {
-    let Some(options) = options else {
-        return client;
-    };
-    let Some(timeout) = options.timeout else {
-        return client;
-    };
-    client.timeout(timeout)
+        let response = builder.send().await?;
+        let status_code = response.status();
+        let header = response.headers();
+        let headers = Headers::new(header);
+
+        if status_code.is_success() {
+            return Ok((response.json::<T>().await?, headers));
+        } else {
+            let text = response.text().await?;
+            last_error = Some(match serde_json::from_str(&text) {
+                Ok(value) => Error::Twitter(
+                    TwitterError::new(&value, status_code),
+                    value,
+                    Box::new(headers),
+                ),
+                Err(err) => Error::Other(format!("{:?}:{}", err, text), Some(status_code)),
+            });
+        }
+
+        if count
+            >= twapi_options
+                .as_ref()
+                .and_then(|options| options.try_count)
+                .unwrap_or(0)
+        {
+            break;
+        }
+
+        if !retryable_status_codes.contains(&status_code.as_u16()) {
+            break;
+        }
+
+        sleep(retryable_interval_duration * 2_u32.pow(count)).await;
+        count += 1;
+    }
+
+    Err(last_error.unwrap_or(Error::Other(
+        "Retry Over last_error is None".to_string(),
+        None,
+    )))
 }

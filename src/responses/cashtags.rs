@@ -1,15 +1,15 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Cashtags {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub start: Option<i64>, 
+    pub start: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub end: Option<i64>, 
+    pub end: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub cashtag: Option<String>, 
+    pub cashtag: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub tag: Option<String>, 
+    pub tag: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -18,7 +18,7 @@ impl Cashtags {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("Cashtags {:?}", self.extra);
+            println!("Cashtags {:?}", self.extra);
         }
         res
     }

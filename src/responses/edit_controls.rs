@@ -1,14 +1,14 @@
-use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct EditControls {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub editable_until: Option<DateTime<Utc>>, 
+    pub editable_until: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub edits_remaining: Option<i64>, 
+    pub edits_remaining: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub is_edit_eligible: Option<bool>, 
+    pub is_edit_eligible: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -17,7 +17,7 @@ impl EditControls {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("EditControls {:?}", self.extra);
+            println!("EditControls {:?}", self.extra);
         }
         res
     }

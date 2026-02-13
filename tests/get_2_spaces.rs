@@ -14,9 +14,15 @@ async fn test_get_2_spaces() -> Result<()> {
     let mut expantions = get_2_spaces::Expansions::all();
     // Setting this paramter is invalid.
     expantions.remove(&get_2_spaces::Expansions::TopicsIds);
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_spaces::Api::all(&ids)
-        .expansions(expantions.clone())
-        .build(&bearer_auth), &None).await?;
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || {
+            get_2_spaces::Api::all(&ids)
+                .expansions(expantions.clone())
+                .build(&bearer_auth)
+        },
+        &None,
+    )
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_spaces::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

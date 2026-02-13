@@ -1,12 +1,18 @@
-use serde::{Serialize, Deserialize};
+use crate::{
+    api::{Authentication, TwapiOptions, execute_twitter, make_url},
+    error::Error,
+    headers::Headers,
+};
 use reqwest::RequestBuilder;
-use crate::{error::Error, headers::Headers, api::{apply_options, execute_twitter, Authentication, make_url, TwapiOptions}};
+use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/dm_conversations";
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Default)]
 pub enum ConversationType {
     #[serde(rename = "Group")]
+    #[default]
     Group,
 }
 
@@ -18,9 +24,6 @@ impl std::fmt::Display for ConversationType {
     }
 }
 
-impl Default for ConversationType {
-    fn default() -> Self { Self::Group }
-}
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Attachment {
@@ -42,8 +45,6 @@ pub struct Body {
     pub message: Message,
 }
 
-
-
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     body: Body,
@@ -57,58 +58,56 @@ impl Api {
             ..Default::default()
         }
     }
-    
-    
+
     pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
         self.twapi_options = Some(value);
         self
     }
 
     pub fn build(&self, authentication: &impl Authentication) -> RequestBuilder {
-        
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
-        let builder = client
-            .post(&url)
-            .json(&self.body)
-        ;
-        authentication.execute(apply_options(builder, &self.twapi_options), "POST", &url, &[])
+        let builder = client.post(&url).json(&self.body);
+        authentication.execute(builder, "POST", &url, &[])
     }
 
-    pub async fn execute(&self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
+    pub async fn execute(
+        &self,
+        authentication: &impl Authentication,
+    ) -> Result<(Response, Headers), Error> {
         execute_twitter(|| self.build(authentication), &self.twapi_options).await
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Data>, 
+    pub data: Option<Data>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Data {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub dm_conversation_id: Option<String>, 
+    pub dm_conversation_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub dm_event_id: Option<String>, 
+    pub dm_event_id: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -117,7 +116,7 @@ impl Data {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("Data {:?}", self.extra);
+            println!("Data {:?}", self.extra);
         }
         res
     }

@@ -7,9 +7,15 @@ use twapi_v2::api::{BearerAuthentication, execute_twitter, get_2_trends_by_woeid
 async fn test_get_2_trends_by_woeid_woeid() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_trends_by_woeid_woeid::Api::new("1118370")
-        .max_trends(50)
-        .build(&bearer_auth), &None).await?;
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || {
+            get_2_trends_by_woeid_woeid::Api::new("1118370")
+                .max_trends(50)
+                .build(&bearer_auth)
+        },
+        &None,
+    )
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_trends_by_woeid_woeid::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

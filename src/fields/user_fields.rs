@@ -1,9 +1,11 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Default)]
 pub enum UserFields {
     #[serde(rename = "affiliation")]
+    #[default]
     Affiliation,
     #[serde(rename = "connection_status")]
     ConnectionStatus,
@@ -111,6 +113,3 @@ impl std::fmt::Display for UserFields {
     }
 }
 
-impl Default for UserFields {
-    fn default() -> Self { Self::Affiliation }
-}

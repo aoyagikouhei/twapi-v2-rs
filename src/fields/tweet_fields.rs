@@ -1,9 +1,11 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Default)]
 pub enum TweetFields {
     #[serde(rename = "article")]
+    #[default]
     Article,
     #[serde(rename = "attachments")]
     Attachments,
@@ -131,7 +133,6 @@ impl TweetFields {
         result.insert(Self::Withheld);
         result
     }
-    
 
     pub fn open() -> HashSet<Self> {
         let mut result = HashSet::new();
@@ -163,7 +164,6 @@ impl TweetFields {
         result.insert(Self::Withheld);
         result
     }
-    
 }
 
 impl std::fmt::Display for TweetFields {
@@ -202,6 +202,3 @@ impl std::fmt::Display for TweetFields {
     }
 }
 
-impl Default for TweetFields {
-    fn default() -> Self { Self::Article }
-}

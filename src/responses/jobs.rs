@@ -1,32 +1,32 @@
-use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Jobs {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<String>, 
+    pub id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub created_at: Option<DateTime<Utc>>, 
+    pub created_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<Type>, 
+    pub r#type: Option<Type>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>, 
+    pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub upload_url: Option<String>, 
+    pub upload_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub upload_expires_at: Option<DateTime<Utc>>, 
+    pub upload_expires_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub download_url: Option<String>, 
+    pub download_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub download_expires_at: Option<DateTime<Utc>>, 
+    pub download_expires_at: Option<DateTime<Utc>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub url: Option<String>, 
+    pub url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<Status>, 
+    pub status: Option<Status>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub error: Option<String>, 
+    pub error: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub resumable: Option<bool>, 
+    pub resumable: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -35,15 +35,17 @@ impl Jobs {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("Jobs {:?}", self.extra);
+            println!("Jobs {:?}", self.extra);
         }
         res
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum Type {
     #[serde(rename = "tweets")]
+    #[default]
     Tweets,
     #[serde(rename = "users")]
     Users,
@@ -58,13 +60,12 @@ impl std::fmt::Display for Type {
     }
 }
 
-impl Default for Type {
-    fn default() -> Self { Self::Tweets }
-}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Default)]
 pub enum Status {
     #[serde(rename = "created")]
+    #[default]
     Created,
     #[serde(rename = "in_progress")]
     InProgress,
@@ -85,6 +86,3 @@ impl std::fmt::Display for Status {
     }
 }
 
-impl Default for Status {
-    fn default() -> Self { Self::Created }
-}

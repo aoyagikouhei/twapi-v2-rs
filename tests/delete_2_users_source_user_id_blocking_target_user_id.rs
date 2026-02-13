@@ -13,11 +13,17 @@ async fn test_delete_2_users_source_user_id_blocking_target_user_id() -> Result<
     };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| delete_2_users_source_user_id_blocking_target_user_id::Api::new(
-        "1660518823991336966",
-        &target_user_id,
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || {
+            delete_2_users_source_user_id_blocking_target_user_id::Api::new(
+                "1660518823991336966",
+                &target_user_id,
+            )
+            .build(&bearer_auth)
+        },
+        &None,
     )
-    .build(&bearer_auth), &None).await?;
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<
         delete_2_users_source_user_id_blocking_target_user_id::Response,

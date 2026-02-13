@@ -36,7 +36,11 @@ async fn test_post_2_tweets_search_stream_rules() -> Result<()> {
         _ => return Ok(()),
     };
     let bearer_auth = BearerAuthentication::new(app_bearer_code);
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| post_2_tweets_search_stream_rules::Api::new(body.clone()).build(&bearer_auth), &None).await?;
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || post_2_tweets_search_stream_rules::Api::new(body.clone()).build(&bearer_auth),
+        &None,
+    )
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_tweets_search_stream_rules::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

@@ -6,8 +6,6 @@ use crate::{
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 
-use super::apply_options;
-
 const URL: &str = "/2/oauth2/token";
 
 #[derive(Debug, Clone, Default)]
@@ -42,9 +40,14 @@ impl Api {
 
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
-        apply_options(client.post(url), &self.twapi_options)
+        let mut builder = client
+            .post(url)
             .form(&form_parameters)
-            .basic_auth(&self.api_key_code, Some(&self.api_secret_code))
+            .basic_auth(&self.api_key_code, Some(&self.api_secret_code));
+        if let Some(timeout) = self.twapi_options.as_ref().and_then(|it| it.timeout) {
+            builder = builder.timeout(timeout);
+        }
+        builder
     }
 
     pub async fn execute(&self) -> Result<(Response, Headers), Error> {

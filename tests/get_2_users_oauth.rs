@@ -12,7 +12,11 @@ async fn test_get_2_users_users_oauth() -> Result<()> {
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
     );
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_users::Api::open("1660518823991336966,1524979284024078336").build(&auth), &None).await?;
+    let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
+        || get_2_users::Api::open("1660518823991336966,1524979284024078336").build(&auth),
+        &None,
+    )
+    .await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<get_2_users::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);
