@@ -70,7 +70,7 @@ extra_value = extra_list.present? ? " &&\n        #{extra_list.join(" &&\n      
 %><% if independence_flag %><% if refs.present?  %>use crate::responses::{<%= refs.map{|it| "#{it}::#{it.ucc}"}.join(", ") %>};
 <% end %>use serde::{Serialize, Deserialize};USE_DATE<% end %>
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct <%= class_name %> {<% properties.each_pair do |key, value| %><% if !value[:required] %>
     #[serde(skip_serializing_if = "Option::is_none")]<% end %>
     pub <%= key.to_s.make_name %>: <%= make_response_type(key, value) %>, <% end %>
@@ -89,7 +89,7 @@ impl <%= class_name %> {
 }
 <% @enums.each_pair do |key, value|
   ary = value[:value].split(/, /) %>
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum <%= key.to_s.ucc %> {<% ary.each do |it| %>
     #[serde(rename = "<%= it %>")]
     <%= it.ucc %>,<% end %>

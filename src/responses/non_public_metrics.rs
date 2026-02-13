@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct NonPublicMetrics {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub impression_count: Option<i64>,

@@ -95,7 +95,7 @@ impl Api {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     pub data: DeletedSubtitles,
     #[serde(flatten)]

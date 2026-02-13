@@ -99,7 +99,7 @@ impl Api {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     pub data: Subtitles,
     #[serde(flatten)]

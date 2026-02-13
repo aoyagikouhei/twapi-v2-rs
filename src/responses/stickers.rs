@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Stickers {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub aspect_ratio: Option<String>,

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct ReferencedTweets {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -20,7 +20,7 @@ impl ReferencedTweets {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Type {
     #[serde(rename = "retweeted")]
     #[default]

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct DeletedSubtitlesItem {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub language_code: Option<String>,

@@ -8,7 +8,7 @@ use crate::responses::{
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Tweets {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub attachments: Option<Attachments>,

@@ -48,6 +48,6 @@ async fn oauth(Query(params): Query<HashMap<String, String>>, cookies: Cookies) 
         .unwrap();
     println!("{:?}", res);
     let auth = BearerAuthentication::new(res.0.access_token);
-    let me = get_2_users_me::Api::all().execute(&auth).await.unwrap();
+    let me = get_2_users_me::Api::open().execute(&auth).await.unwrap();
     Json(me.0).into_response()
 }

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct ContextAnnotations {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub domain: Option<Domain>,
@@ -30,7 +30,7 @@ impl ContextAnnotations {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Domain {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -52,7 +52,7 @@ impl Domain {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Entity {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,

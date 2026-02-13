@@ -2,7 +2,7 @@ use crate::responses::{user_entities::UserEntities, withheld::Withheld};
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Users {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub connection_status: Option<Vec<String>>,
@@ -72,7 +72,7 @@ impl Users {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct PublicMetrics {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub followers_count: Option<i64>,

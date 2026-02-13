@@ -52,7 +52,7 @@ impl Api {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     pub access_token: Option<String>,
     pub refresh_token: Option<String>,

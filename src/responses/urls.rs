@@ -1,7 +1,7 @@
 use crate::responses::images::Images;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Urls {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub display_url: Option<String>,

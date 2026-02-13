@@ -1,7 +1,7 @@
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Jobs {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
@@ -41,7 +41,7 @@ impl Jobs {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Type {
     #[serde(rename = "tweets")]
     #[default]
@@ -59,7 +59,7 @@ impl std::fmt::Display for Type {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Status {
     #[serde(rename = "created")]
     #[default]

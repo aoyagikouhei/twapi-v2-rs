@@ -2,7 +2,7 @@ use crate::responses::options::Options;
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Polls {
     pub id: String,
     pub options: Vec<Options>,

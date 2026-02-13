@@ -1,7 +1,7 @@
 use crate::responses::{description::Description, user_url::UserUrl};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct UserEntities {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<UserUrl>,

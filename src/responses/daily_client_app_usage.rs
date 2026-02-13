@@ -1,7 +1,7 @@
 use crate::responses::usage::Usage;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct DailyClientAppUsage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub client_app_id: Option<String>,

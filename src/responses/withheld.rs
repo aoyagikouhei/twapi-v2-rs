@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Withheld {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub copyright: Option<bool>,
@@ -22,7 +22,7 @@ impl Withheld {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Scope {
     #[serde(rename = "tweet")]
     #[default]

@@ -1,7 +1,7 @@
 use crate::responses::geo::Geo;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Places {
     pub full_name: String,
     pub id: String,

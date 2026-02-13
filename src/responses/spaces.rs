@@ -2,7 +2,7 @@ use crate::responses::topics::Topics;
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Spaces {
     pub id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -57,7 +57,7 @@ impl Spaces {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum State {
     #[serde(rename = "live")]
     #[default]

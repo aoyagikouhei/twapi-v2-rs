@@ -72,7 +72,7 @@ impl Api {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<MediaUpload>,

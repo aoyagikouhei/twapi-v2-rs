@@ -1,7 +1,7 @@
 use crate::responses::{hashtags::Hashtags, mentions::Mentions, urls::Urls};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Description {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub urls: Option<Vec<Urls>>,

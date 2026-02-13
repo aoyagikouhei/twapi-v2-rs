@@ -1,7 +1,7 @@
 use crate::responses::processing_info::ProcessingInfo;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct MediaUpload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expires_after_secs: Option<i64>,

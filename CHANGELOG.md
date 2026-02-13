@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.24.0 (2026/02/33)
+* Add PartialEq in Responses
+
 ### v0.23.0 (2026/01/30)
 * Update Edtion 2024
 * Remove oauth feature. Instead of use [twapi-oauth2](https://crates.io/crates/twapi-oauth2)

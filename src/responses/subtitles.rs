@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Subtitles {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub associated_subtitles: Option<Vec<String>>,
@@ -22,7 +22,7 @@ impl Subtitles {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
     #[default]
