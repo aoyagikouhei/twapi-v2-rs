@@ -9,9 +9,7 @@ Twitter API v2 library.
 - Convenience setted parameter methods
 - Bearer authentication(OAuth 2.0 Authorization Code Flow with PKCE)
 - OAuth1.0a authentication(OAuth 1.0a User Contex)
-- Upload Media upload.twitter.com APIs
 - Upload Media v2 (However, when I executed it, I got a 403 and was not successful.)
-- Optional retriable and timeout and logging
 - Optional v1 to v2 parser
 - OAuth2 example
 - Streaming example
@@ -19,25 +17,12 @@ Twitter API v2 library.
 - Type support.
 
 ## Features
-### default
-- reqwest/default-tls
-
-### rustls-tls
-- reqwest/rustls-tls
-
-### retry
-- Retriable
-- Timeout
-- Logging
 
 ### oauth10a
 - Use api by OAuth1.0a
 
 ### models
 - From v1 to v2
-
-### upload
-- Upload Media
 
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/twapi-v2-rs/blob/main/CHANGELOG.md)
