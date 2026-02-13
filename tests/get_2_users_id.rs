@@ -1,6 +1,6 @@
 use anyhow::Result;
 use twapi_v2::{
-    api::{BearerAuthentication, execute_twitter, get_2_users_id},
+    api::{BearerAuthentication, TwapiOptions, execute_twitter, get_2_users_id},
     fields::user_fields::UserFields,
 };
 
@@ -10,13 +10,17 @@ use twapi_v2::{
 async fn test_get_2_users_id() -> Result<()> {
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
+    let twapi_option = TwapiOptions {
+        try_count: Some(4),
+        ..Default::default()
+    };
     let (res, _rate_limit) = execute_twitter::<serde_json::Value>(
         || {
-            get_2_users_id::Api::open("1660518823991336966")
+            get_2_users_id::Api::open("1")
                 .user_fields(UserFields::all())
                 .build(&bearer_auth)
         },
-        &None,
+        &Some(twapi_option),
     )
     .await?;
     println!("{}", serde_json::to_string(&res).unwrap());

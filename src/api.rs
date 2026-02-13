@@ -226,7 +226,7 @@ where
             });
         }
 
-        if count
+        if count + 1
             >= twapi_options
                 .as_ref()
                 .and_then(|options| options.try_count)

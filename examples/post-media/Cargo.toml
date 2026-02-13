@@ -14,7 +14,5 @@ tracing-subscriber = "0.3"
 twapi-v2 = { path="../..", features = [] }
 
 [features]
-retry = []
 oauth10a = []
 models = []
-upload = []
