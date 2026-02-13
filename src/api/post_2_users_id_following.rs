@@ -45,8 +45,8 @@ impl Api {
         authentication.execute(apply_options(builder, &self.twapi_options), "POST", &url, &[])
     }
 
-    pub async fn execute(self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
-        execute_twitter(self.build(authentication)).await
+    pub async fn execute(&self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
+        execute_twitter(|| self.build(authentication)).await
     }
 }
 

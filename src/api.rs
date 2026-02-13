@@ -177,11 +177,11 @@ impl Authentication for BearerAuthentication {
     }
 }
 
-pub async fn execute_twitter<T>(builder: RequestBuilder) -> Result<(T, Headers), Error>
+pub async fn execute_twitter<T>(f: impl Fn() -> RequestBuilder,) -> Result<(T, Headers), Error>
 where
     T: DeserializeOwned,
 {
-    let response = builder.send().await?;
+    let response = f().send().await?;
     let status_code = response.status();
     let header = response.headers();
     let headers = Headers::new(header);

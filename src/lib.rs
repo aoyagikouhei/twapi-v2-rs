@@ -7,16 +7,10 @@ pub mod responses;
 
 pub use reqwest;
 
-#[cfg(feature = "retry")]
-pub mod retry;
-
 #[cfg(feature = "oauth10a")]
 pub mod oauth10a;
 
 #[cfg(feature = "models")]
 pub mod models;
-
-#[cfg(feature = "upload")]
-pub mod upload;
 
 pub mod upload_v2;

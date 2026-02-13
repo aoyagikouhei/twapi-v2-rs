@@ -57,7 +57,7 @@ impl Api {
         )
     }
 
-    pub async fn execute(self, authentication: &impl Authentication) -> Result<Headers, Error> {
+    pub async fn execute(&self, authentication: &impl Authentication) -> Result<Headers, Error> {
         let response = self.build(authentication).send().await?;
         let status_code = response.status();
         let header = response.headers();
