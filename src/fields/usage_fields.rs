@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum UsageFields {
     #[serde(rename = "daily_client_app_usage")]
-    #[default]
     DailyClientAppUsage,
     #[serde(rename = "daily_project_usage")]
     DailyProjectUsage,
@@ -26,4 +25,8 @@ impl std::fmt::Display for UsageFields {
             Self::DailyProjectUsage => write!(f, "daily_project_usage"),
         }
     }
+}
+
+impl Default for UsageFields {
+    fn default() -> Self { Self::DailyClientAppUsage }
 }

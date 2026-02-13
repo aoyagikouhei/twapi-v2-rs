@@ -2,7 +2,7 @@ use anyhow::Result;
 use twapi_v2::api::{execute_twitter, get_2_users_by};
 use twapi_v2::oauth10a::OAuthAuthentication;
 
-// CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_users_by_by_oauth  --all-features -- --nocapture --test-threads=1
+// CONSUMER_KEY=XXXX CONSUMER_SECRET=XXXX ACCESS_KEY=XXXX ACCESS_SECRET=XXXX cargo test test_get_2_users_by_by_oauth --all-features -- --nocapture --test-threads=1
 
 #[tokio::test]
 async fn test_get_2_users_by_by_oauth() -> Result<()> {

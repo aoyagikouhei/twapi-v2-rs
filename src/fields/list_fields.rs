@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ListFields {
     #[serde(rename = "created_at")]
-    #[default]
     CreatedAt,
     #[serde(rename = "follower_count")]
     FollowerCount,
@@ -42,4 +41,8 @@ impl std::fmt::Display for ListFields {
             Self::OwnerId => write!(f, "owner_id"),
         }
     }
+}
+
+impl Default for ListFields {
+    fn default() -> Self { Self::CreatedAt }
 }

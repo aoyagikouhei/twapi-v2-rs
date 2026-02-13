@@ -1,27 +1,19 @@
-use crate::fields::{
-    media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields,
-    tweet_fields::TweetFields, user_fields::UserFields,
-};
-use crate::responses::{
-    errors::Errors, includes::Includes, matching_rules::MatchingRules, tweets::Tweets,
-};
-use crate::{
-    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
-    error::Error,
-    headers::Headers,
-};
 use chrono::prelude::*;
 use itertools::Itertools;
-use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
+use crate::fields::{media_fields::MediaFields, place_fields::PlaceFields, poll_fields::PollFields, tweet_fields::TweetFields, user_fields::UserFields};
+use crate::responses::{tweets::Tweets, errors::Errors, includes::Includes, matching_rules::MatchingRules};
+use reqwest::RequestBuilder;
+use crate::{error::Error, headers::Headers, api::{apply_options, execute_twitter, Authentication, make_url, TwapiOptions}};
 
 const URL: &str = "/2/tweets/search/stream";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     #[serde(rename = "article.cover_media")]
-    #[default]
     ArticleCoverMedia,
     #[serde(rename = "article.media_entities")]
     ArticleMediaEntities,
@@ -89,6 +81,10 @@ impl std::fmt::Display for Expansions {
     }
 }
 
+impl Default for Expansions {
+    fn default() -> Self { Self::ArticleCoverMedia }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     backfill_minutes: Option<usize>,
@@ -109,7 +105,7 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn all() -> Self {
         Self {
             expansions: Some(Expansions::all()),
@@ -121,7 +117,7 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn open() -> Self {
         Self {
             expansions: Some(Expansions::all()),
@@ -133,148 +129,125 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
     pub fn backfill_minutes(mut self, value: usize) -> Self {
         self.backfill_minutes = Some(value);
         self
     }
-
+    
     pub fn end_time(mut self, value: DateTime<Utc>) -> Self {
         self.end_time = Some(value);
         self
     }
-
+    
     pub fn expansions(mut self, value: HashSet<Expansions>) -> Self {
         self.expansions = Some(value);
         self
     }
-
+    
     pub fn media_fields(mut self, value: HashSet<MediaFields>) -> Self {
         self.media_fields = Some(value);
         self
     }
-
+    
     pub fn place_fields(mut self, value: HashSet<PlaceFields>) -> Self {
         self.place_fields = Some(value);
         self
     }
-
+    
     pub fn poll_fields(mut self, value: HashSet<PollFields>) -> Self {
         self.poll_fields = Some(value);
         self
     }
-
+    
     pub fn start_time(mut self, value: DateTime<Utc>) -> Self {
         self.start_time = Some(value);
         self
     }
-
+    
     pub fn tweet_fields(mut self, value: HashSet<TweetFields>) -> Self {
         self.tweet_fields = Some(value);
         self
     }
-
+    
     pub fn user_fields(mut self, value: HashSet<UserFields>) -> Self {
         self.user_fields = Some(value);
         self
     }
-
+    
+    
     pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
         self.twapi_options = Some(value);
         self
     }
 
-    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
+    pub fn build(&self, authentication: &impl Authentication) -> RequestBuilder {
         let mut query_parameters = vec![];
-        if let Some(backfill_minutes) = self.backfill_minutes {
+        if let Some(backfill_minutes) = self.backfill_minutes.as_ref() {
             query_parameters.push(("backfill_minutes", backfill_minutes.to_string()));
         }
-        if let Some(end_time) = self.end_time {
-            query_parameters.push((
-                "end_time",
-                end_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
-            ));
+        if let Some(end_time) = self.end_time.as_ref() {
+            query_parameters.push(("end_time", end_time.format("%Y-%m-%dT%H:%M:%SZ").to_string()));
         }
-        if let Some(expansions) = self.expansions {
+        if let Some(expansions) = self.expansions.as_ref() {
             query_parameters.push(("expansions", expansions.iter().join(",")));
         }
-        if let Some(media_fields) = self.media_fields {
+        if let Some(media_fields) = self.media_fields.as_ref() {
             query_parameters.push(("media.fields", media_fields.iter().join(",")));
         }
-        if let Some(place_fields) = self.place_fields {
+        if let Some(place_fields) = self.place_fields.as_ref() {
             query_parameters.push(("place.fields", place_fields.iter().join(",")));
         }
-        if let Some(poll_fields) = self.poll_fields {
+        if let Some(poll_fields) = self.poll_fields.as_ref() {
             query_parameters.push(("poll.fields", poll_fields.iter().join(",")));
         }
-        if let Some(start_time) = self.start_time {
-            query_parameters.push((
-                "start_time",
-                start_time.format("%Y-%m-%dT%H:%M:%SZ").to_string(),
-            ));
+        if let Some(start_time) = self.start_time.as_ref() {
+            query_parameters.push(("start_time", start_time.format("%Y-%m-%dT%H:%M:%SZ").to_string()));
         }
-        if let Some(tweet_fields) = self.tweet_fields {
+        if let Some(tweet_fields) = self.tweet_fields.as_ref() {
             query_parameters.push(("tweet.fields", tweet_fields.iter().join(",")));
         }
-        if let Some(user_fields) = self.user_fields {
+        if let Some(user_fields) = self.user_fields.as_ref() {
             query_parameters.push(("user.fields", user_fields.iter().join(",")));
         }
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
-        let builder = client.get(&url).query(&query_parameters);
-        authentication.execute(
-            apply_options(builder, &self.twapi_options),
-            "GET",
-            &url,
-            &query_parameters
-                .iter()
-                .map(|it| (it.0, it.1.as_str()))
-                .collect::<Vec<_>>(),
-        )
+        let builder = client
+            .get(&url)
+            .query(&query_parameters)
+        ;
+        authentication.execute(apply_options(builder, &self.twapi_options), "GET", &url, &query_parameters.iter().map(|it| (it.0, it.1.as_str())).collect::<Vec<_>>())
     }
 
-    pub async fn execute(
-        self,
-        authentication: &impl Authentication,
-    ) -> Result<(Response, Headers), Error> {
+    pub async fn execute(self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
         execute_twitter(self.build(authentication)).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Tweets>,
+    pub data: Option<Tweets>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub errors: Option<Vec<Errors>>,
+    pub errors: Option<Vec<Errors>>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub includes: Option<Includes>,
-    pub matching_rules: Vec<MatchingRules>,
+    pub includes: Option<Includes>, 
+    pub matching_rules: Vec<MatchingRules>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty()
-            && self
-                .data
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self
-                .errors
-                .as_ref()
-                .map(|it| it.iter().all(|item| item.is_empty_extra()))
-                .unwrap_or(true)
-            && self
-                .includes
-                .as_ref()
-                .map(|it| it.is_empty_extra())
-                .unwrap_or(true)
-            && self.matching_rules.iter().all(|it| it.is_empty_extra());
+        let res = self.extra.is_empty() &&
+        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.errors.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
+        self.includes.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true) &&
+        self.matching_rules.iter().all(|it| it.is_empty_extra());
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }

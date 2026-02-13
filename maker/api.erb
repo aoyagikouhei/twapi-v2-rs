@@ -18,7 +18,7 @@ const URL: &str = "<%= yml[:url] %>";
 impl Api {
 <%= api_new %>
 <%= setter %>
-    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
+    pub fn build(&self, authentication: &impl Authentication) -> RequestBuilder {
 <%= parameters %>
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, <%= paths.empty? ? "" : "&" %>URL<%= paths.empty? ? "" : paths.map{|it| ".replace(\":#{it[:name].make_field}\", &self.#{it[:name].make_field})"}.join("") %>);

@@ -33,11 +33,11 @@ impl Api {
         self
     }
 
-    pub fn build(self) -> RequestBuilder {
+    pub fn build(&self) -> RequestBuilder {
         let form_parameters = vec![
             ("client_id", self.api_key_code.clone()),
             ("grant_type", "refresh_token".to_owned()),
-            ("refresh_token", self.refresh_token),
+            ("refresh_token", self.refresh_token.to_string()),
         ];
 
         let client = reqwest::Client::new();

@@ -17,10 +17,10 @@ pub struct FormData {
 }
 
 impl FormData {
-    fn make_form(self) -> Form {
+    fn make_form(&self) -> Form {
         Form::new()
             .text("segment_index", self.segment_index.to_string())
-            .part("media", Part::bytes(self.cursor.into_inner()))
+            .part("media", Part::bytes(self.cursor.clone().into_inner()))
     }
 }
 
@@ -45,7 +45,7 @@ impl Api {
         self
     }
 
-    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
+    pub fn build(&self, authentication: &impl Authentication) -> RequestBuilder {
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, &URL.replace(":id", &self.id));
         let builder = client.post(&url).multipart(self.form.make_form());

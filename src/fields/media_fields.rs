@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum MediaFields {
     #[serde(rename = "alt_text")]
-    #[default]
     AltText,
     #[serde(rename = "duration_ms")]
     DurationMs,
@@ -66,6 +65,7 @@ impl MediaFields {
         result.insert(Self::Width);
         result
     }
+    
 }
 
 impl std::fmt::Display for MediaFields {
@@ -86,4 +86,8 @@ impl std::fmt::Display for MediaFields {
             Self::Width => write!(f, "width"),
         }
     }
+}
+
+impl Default for MediaFields {
+    fn default() -> Self { Self::AltText }
 }

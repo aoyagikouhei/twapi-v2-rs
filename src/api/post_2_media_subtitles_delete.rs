@@ -1,18 +1,13 @@
-use crate::responses::deleted_subtitles::DeletedSubtitles;
-use crate::{
-    api::{Authentication, TwapiOptions, apply_options, execute_twitter, make_url},
-    error::Error,
-    headers::Headers,
-};
+use serde::{Serialize, Deserialize};
+use crate::responses::{deleted_subtitles::DeletedSubtitles};
 use reqwest::RequestBuilder;
-use serde::{Deserialize, Serialize};
+use crate::{error::Error, headers::Headers, api::{apply_options, execute_twitter, Authentication, make_url, TwapiOptions}};
 
 const URL: &str = "/2/media/subtitles/delete";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
-    #[default]
     AmplifyVideo,
     #[serde(rename = "tweet_gif")]
     TweetGif,
@@ -36,6 +31,10 @@ impl std::fmt::Display for MediaCategory {
     }
 }
 
+impl Default for MediaCategory {
+    fn default() -> Self { Self::AmplifyVideo }
+}
+
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Subtitle {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -56,6 +55,8 @@ pub struct Body {
     pub subtitle_info: Option<SubtitleInfo>,
 }
 
+
+
 #[derive(Debug, Clone, Default)]
 pub struct Api {
     body: Body,
@@ -69,44 +70,44 @@ impl Api {
             ..Default::default()
         }
     }
-
+    
+    
     pub fn twapi_options(mut self, value: TwapiOptions) -> Self {
         self.twapi_options = Some(value);
         self
     }
 
-    pub fn build(self, authentication: &impl Authentication) -> RequestBuilder {
+    pub fn build(&self, authentication: &impl Authentication) -> RequestBuilder {
+        
         let client = reqwest::Client::new();
         let url = make_url(&self.twapi_options, URL);
-        let builder = client.post(&url).json(&self.body);
-        authentication.execute(
-            apply_options(builder, &self.twapi_options),
-            "POST",
-            &url,
-            &[],
-        )
+        let builder = client
+            .post(&url)
+            .json(&self.body)
+        ;
+        authentication.execute(apply_options(builder, &self.twapi_options), "POST", &url, &[])
     }
 
-    pub async fn execute(
-        self,
-        authentication: &impl Authentication,
-    ) -> Result<(Response, Headers), Error> {
+    pub async fn execute(self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
         execute_twitter(self.build(authentication)).await
     }
 }
 
+
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct Response {
-    pub data: DeletedSubtitles,
+    pub data: DeletedSubtitles, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() && self.data.is_empty_extra();
+        let res = self.extra.is_empty() &&
+        self.data.is_empty_extra();
         if !res {
-            println!("Response {:?}", self.extra);
+          println!("Response {:?}", self.extra);
         }
         res
     }

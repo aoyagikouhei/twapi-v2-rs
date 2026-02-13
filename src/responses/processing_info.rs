@@ -1,13 +1,13 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
 pub struct ProcessingInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub check_after_secs: Option<i64>,
+    pub check_after_secs: Option<i64>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub progress_percent: Option<i64>,
+    pub progress_percent: Option<i64>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub state: Option<State>,
+    pub state: Option<State>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -16,16 +16,15 @@ impl ProcessingInfo {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("ProcessingInfo {:?}", self.extra);
+          println!("ProcessingInfo {:?}", self.extra);
         }
         res
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum State {
     #[serde(rename = "succeeded")]
-    #[default]
     Succeeded,
     #[serde(rename = "in_progress")]
     InProgress,
@@ -44,4 +43,8 @@ impl std::fmt::Display for State {
             Self::Failed => write!(f, "failed"),
         }
     }
+}
+
+impl Default for State {
+    fn default() -> Self { Self::Succeeded }
 }
