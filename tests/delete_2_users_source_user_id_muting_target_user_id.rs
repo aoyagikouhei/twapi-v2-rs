@@ -17,7 +17,7 @@ async fn test_delete_2_users_source_user_id_muting_target_user_id() -> Result<()
         "1660518823991336966",
         &target_user_id,
     )
-    .build(&bearer_auth)).await?;
+    .build(&bearer_auth), &None).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<
         delete_2_users_source_user_id_muting_target_user_id::Response,

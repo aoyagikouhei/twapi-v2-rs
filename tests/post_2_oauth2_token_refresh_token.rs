@@ -22,7 +22,7 @@ async fn test_post_2_oauth2_token_refresh_token() -> Result<()> {
         &api_secret_code,
         &refresh_token,
     )
-    .build()).await?;
+    .build(), &None).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<post_2_oauth2_token_refresh_token::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

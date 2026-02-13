@@ -13,7 +13,7 @@ async fn test_get_2_users_me_oauth() -> Result<()> {
         std::env::var("CONSUMER_SECRET").unwrap_or_default(),
         std::env::var("ACCESS_KEY").unwrap_or_default(),
         std::env::var("ACCESS_SECRET").unwrap_or_default(),
-    );    let (res, rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_users_me::Api::all().build(&auth)).await?;
+    );    let (res, rate_limit) = execute_twitter::<serde_json::Value>(|| get_2_users_me::Api::all().build(&auth), &None).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     println!("{}", rate_limit);
     let response = serde_json::from_value::<get_2_users_me::Response>(res)?;

@@ -9,7 +9,7 @@ async fn test_put_2_tweets_id_hidden() -> Result<()> {
     let body = put_2_tweets_id_hidden::Body { hidden: true };
     let bearer_code = std::env::var("BEARER_CODE").unwrap_or_default();
     let bearer_auth = BearerAuthentication::new(bearer_code);
-        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| put_2_tweets_id_hidden::Api::new("1686166856519073792", body.clone()).build(&bearer_auth)).await?;
+        let (res, _rate_limit) = execute_twitter::<serde_json::Value>(|| put_2_tweets_id_hidden::Api::new("1686166856519073792", body.clone()).build(&bearer_auth), &None).await?;
     println!("{}", serde_json::to_string(&res).unwrap());
     let response = serde_json::from_value::<put_2_tweets_id_hidden::Response>(res)?;
     assert_eq!(response.is_empty_extra(), true);

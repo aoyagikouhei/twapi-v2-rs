@@ -225,7 +225,7 @@ impl Api {
     }
 
     pub async fn execute(&self, authentication: &impl Authentication) -> Result<(Response, Headers), Error> {
-        execute_twitter(|| self.build(authentication)).await
+        execute_twitter(|| self.build(authentication), &self.twapi_options).await
     }
 }
 

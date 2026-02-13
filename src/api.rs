@@ -177,7 +177,7 @@ impl Authentication for BearerAuthentication {
     }
 }
 
-pub async fn execute_twitter<T>(f: impl Fn() -> RequestBuilder,) -> Result<(T, Headers), Error>
+pub async fn execute_twitter<T>(f: impl Fn() -> RequestBuilder, twapi_options: &Option<TwapiOptions>) -> Result<(T, Headers), Error>
 where
     T: DeserializeOwned,
 {

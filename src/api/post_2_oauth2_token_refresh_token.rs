@@ -48,7 +48,7 @@ impl Api {
     }
 
     pub async fn execute(&self) -> Result<(Response, Headers), Error> {
-        execute_twitter(|| self.build()).await
+        execute_twitter(|| self.build(), &self.twapi_options).await
     }
 }
 
