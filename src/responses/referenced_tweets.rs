@@ -20,8 +20,7 @@ impl ReferencedTweets {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Type {
     #[serde(rename = "retweeted")]
     #[default]
@@ -41,4 +40,3 @@ impl std::fmt::Display for Type {
         }
     }
 }
-

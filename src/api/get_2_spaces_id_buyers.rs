@@ -12,8 +12,7 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/spaces/:id/buyers";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "affiliation.user_id")]
     #[default]
@@ -43,7 +42,6 @@ impl std::fmt::Display for Expansions {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {

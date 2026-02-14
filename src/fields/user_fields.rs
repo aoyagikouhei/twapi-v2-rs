@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum UserFields {
     #[serde(rename = "affiliation")]
     #[default]
@@ -112,4 +111,3 @@ impl std::fmt::Display for UserFields {
         }
     }
 }
-

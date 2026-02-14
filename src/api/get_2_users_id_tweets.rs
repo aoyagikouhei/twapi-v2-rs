@@ -16,8 +16,7 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/users/:id/tweets";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Exclude {
     #[serde(rename = "retweets")]
     #[default]
@@ -44,9 +43,7 @@ impl std::fmt::Display for Exclude {
     }
 }
 
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "article.cover_media")]
     #[default]
@@ -116,7 +113,6 @@ impl std::fmt::Display for Expansions {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {

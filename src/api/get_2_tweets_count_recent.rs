@@ -10,8 +10,7 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/tweets/counts/recent";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Granularity {
     #[serde(rename = "minute")]
     #[default]
@@ -31,7 +30,6 @@ impl std::fmt::Display for Granularity {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {

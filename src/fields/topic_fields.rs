@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum TopicFields {
     #[serde(rename = "id")]
     #[default]
@@ -32,4 +31,3 @@ impl std::fmt::Display for TopicFields {
         }
     }
 }
-

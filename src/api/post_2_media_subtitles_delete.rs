@@ -9,8 +9,7 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/media/subtitles/delete";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
     #[default]
@@ -36,7 +35,6 @@ impl std::fmt::Display for MediaCategory {
         }
     }
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Subtitle {

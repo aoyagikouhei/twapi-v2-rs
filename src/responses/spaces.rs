@@ -57,8 +57,7 @@ impl Spaces {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum State {
     #[serde(rename = "live")]
     #[default]
@@ -75,4 +74,3 @@ impl std::fmt::Display for State {
         }
     }
 }
-

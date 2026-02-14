@@ -14,6 +14,7 @@ Twitter API v2 library.
 - OAuth2 example
 - Streaming example
 - Supported mocks. For example, mockito.
+- Retriable
 - Type support.
 
 ## Features
@@ -153,6 +154,7 @@ async fn test_mock_get_2_tweets_search_recent_oauth() -> Result<()> {
     // Override prefix url
     let twapi_options = TwapiOptions {
         prefix_url: Some(server.url().clone())
+        ..Default::default()
     };
     let builder = get_2_tweets_search_recent::Api::open("東京")
         .max_results(10)

@@ -11,12 +11,14 @@ async fn test_get_2_tweets_tweets() -> Result<()> {
     let bearer_auth = BearerAuthentication::new(bearer_code);
     let twapi_option = TwapiOptions {
         try_count: Some(4),
-        retryable_status_codes: Some(vec![500, 502, 503, 504, 401]),
         retry_interval_duration: Some(Duration::from_millis(1000)),
+        retriable_fn: Some(|status_code, _header| {
+            status_code.is_server_error() || status_code.as_u16() == 400
+        }),
         ..Default::default()
     };
     let (res, rate_limit) = execute_twitter::<serde_json::Value>(
-        || get_2_tweets::Api::all("1,2").build(&bearer_auth),
+        || get_2_tweets::Api::all("-1,-2").build(&bearer_auth),
         &Some(twapi_option),
     )
     .await?;

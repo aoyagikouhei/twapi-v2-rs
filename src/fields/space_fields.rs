@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum SpaceFields {
     #[serde(rename = "host_ids")]
     #[default]
@@ -88,4 +87,3 @@ impl std::fmt::Display for SpaceFields {
         }
     }
 }
-

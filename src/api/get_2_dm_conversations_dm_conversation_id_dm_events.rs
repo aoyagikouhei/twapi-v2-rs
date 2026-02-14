@@ -15,8 +15,7 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/dm_conversations/:dm_conversation_id/dm_events";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum EventTypes {
     #[serde(rename = "MessageCreate")]
     #[default]
@@ -37,9 +36,7 @@ impl std::fmt::Display for EventTypes {
     }
 }
 
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "attachments.media_keys")]
     #[default]
@@ -73,7 +70,6 @@ impl std::fmt::Display for Expansions {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {

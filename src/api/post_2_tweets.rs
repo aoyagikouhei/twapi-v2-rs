@@ -33,8 +33,7 @@ pub struct Reply {
     pub in_reply_to_tweet_id: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum ReplySettings {
     #[serde(rename = "mentionedUsers")]
     #[default]
@@ -57,7 +56,6 @@ impl std::fmt::Display for ReplySettings {
         }
     }
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Body {

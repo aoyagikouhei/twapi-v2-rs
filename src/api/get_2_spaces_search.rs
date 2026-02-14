@@ -14,8 +14,7 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/spaces/search";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "invited_user_ids")]
     #[default]
@@ -54,9 +53,7 @@ impl std::fmt::Display for Expansions {
     }
 }
 
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum State {
     #[serde(rename = "all")]
     #[default]
@@ -76,7 +73,6 @@ impl std::fmt::Display for State {
         }
     }
 }
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {

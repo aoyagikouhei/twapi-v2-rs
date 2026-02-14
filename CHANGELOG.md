@@ -1,5 +1,9 @@
 ## Changes
 
+### v0.26.0 (2026/02/14)
+* Add retriable_fn
+* Remove retriable_status_code
+
 ### v0.25.0 (2026/02/14)
 * Remove retry and upload
 * Change default support retry

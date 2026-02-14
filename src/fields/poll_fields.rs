@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum PollFields {
     #[serde(rename = "duration_minutes")]
     #[default]
@@ -40,4 +39,3 @@ impl std::fmt::Display for PollFields {
         }
     }
 }
-

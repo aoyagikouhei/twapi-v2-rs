@@ -22,8 +22,7 @@ impl Subtitles {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
     #[default]
@@ -49,4 +48,3 @@ impl std::fmt::Display for MediaCategory {
         }
     }
 }
-

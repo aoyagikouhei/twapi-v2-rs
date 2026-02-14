@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{RequestBuilder, StatusCode};
+use reqwest::{RequestBuilder, StatusCode, header::HeaderMap};
 use serde::de::DeserializeOwned;
 use tokio::time::sleep;
 
@@ -119,7 +119,7 @@ pub struct TwapiOptions {
     pub timeout: Option<Duration>,
     pub try_count: Option<u32>,
     pub retry_interval_duration: Option<Duration>,
-    pub retryable_status_codes: Option<Vec<u16>>,
+    pub retriable_fn: Option<fn(&StatusCode, &HeaderMap) -> bool>,
 }
 
 pub(crate) fn make_url(twapi_options: &Option<TwapiOptions>, post_url: &str) -> String {
@@ -191,15 +191,14 @@ where
     let mut count = 0;
     #[allow(unused_assignments)]
     let mut last_error: Option<Error> = None;
-    let default_retryable_status_codes: Vec<u16> = vec![StatusCode::INTERNAL_SERVER_ERROR.as_u16()];
-    let retryable_status_codes = twapi_options
-        .as_ref()
-        .and_then(|options| options.retryable_status_codes.as_ref())
-        .unwrap_or(default_retryable_status_codes.as_ref());
-    let retryable_interval_duration = twapi_options
+    let retry_interval_duration = twapi_options
         .as_ref()
         .and_then(|options| options.retry_interval_duration)
         .unwrap_or(Duration::from_millis(100));
+
+    let retriable_fn = twapi_options
+        .as_ref()
+        .and_then(|options| options.retriable_fn);
 
     loop {
         let mut builder = f();
@@ -209,8 +208,8 @@ where
 
         let response = builder.send().await?;
         let status_code = response.status();
-        let header = response.headers();
-        let headers = Headers::new(header);
+        let header = response.headers().clone();
+        let headers = Headers::new(&header);
 
         if status_code.is_success() {
             return Ok((response.json::<T>().await?, headers));
@@ -235,11 +234,15 @@ where
             break;
         }
 
-        if !retryable_status_codes.contains(&status_code.as_u16()) {
+        if let Some(func) = retriable_fn {
+            if !func(&status_code, &header) {
+                break;
+            }
+        } else if !status_code.is_client_error() {
             break;
         }
 
-        sleep(retryable_interval_duration * 2_u32.pow(count)).await;
+        sleep(retry_interval_duration * 2_u32.pow(count)).await;
         count += 1;
     }
 

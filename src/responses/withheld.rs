@@ -22,8 +22,7 @@ impl Withheld {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Scope {
     #[serde(rename = "tweet")]
     #[default]
@@ -40,4 +39,3 @@ impl std::fmt::Display for Scope {
         }
     }
 }
-

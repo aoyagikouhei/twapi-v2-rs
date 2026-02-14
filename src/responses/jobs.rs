@@ -41,8 +41,7 @@ impl Jobs {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Type {
     #[serde(rename = "tweets")]
     #[default]
@@ -60,9 +59,7 @@ impl std::fmt::Display for Type {
     }
 }
 
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum Status {
     #[serde(rename = "created")]
     #[default]
@@ -85,4 +82,3 @@ impl std::fmt::Display for Status {
         }
     }
 }
-

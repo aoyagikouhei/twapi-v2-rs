@@ -8,8 +8,7 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/dm_conversations";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum ConversationType {
     #[serde(rename = "Group")]
     #[default]
@@ -23,7 +22,6 @@ impl std::fmt::Display for ConversationType {
         }
     }
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Attachment {
