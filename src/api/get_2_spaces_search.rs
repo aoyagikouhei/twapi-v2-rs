@@ -14,10 +14,9 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/spaces/search";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     #[serde(rename = "invited_user_ids")]
-    #[default]
     InvitedUserIds,
     #[serde(rename = "speaker_ids")]
     SpeakerIds,
@@ -53,10 +52,15 @@ impl std::fmt::Display for Expansions {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::InvitedUserIds
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum State {
     #[serde(rename = "all")]
-    #[default]
     All,
     #[serde(rename = "live")]
     Live,
@@ -71,6 +75,12 @@ impl std::fmt::Display for State {
             Self::Live => write!(f, "live"),
             Self::Scheduled => write!(f, "scheduled"),
         }
+    }
+}
+
+impl Default for State {
+    fn default() -> Self {
+        Self::All
     }
 }
 

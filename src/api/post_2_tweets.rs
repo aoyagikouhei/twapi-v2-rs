@@ -33,10 +33,9 @@ pub struct Reply {
     pub in_reply_to_tweet_id: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum ReplySettings {
     #[serde(rename = "mentionedUsers")]
-    #[default]
     Mentionedusers,
     #[serde(rename = "following")]
     Following,
@@ -54,6 +53,12 @@ impl std::fmt::Display for ReplySettings {
             Self::Subscribers => write!(f, "subscribers"),
             Self::Verified => write!(f, "verified"),
         }
+    }
+}
+
+impl Default for ReplySettings {
+    fn default() -> Self {
+        Self::Mentionedusers
     }
 }
 

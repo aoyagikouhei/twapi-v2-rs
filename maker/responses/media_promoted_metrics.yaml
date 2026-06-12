@@ -1,0 +1,17 @@
+---
+
+response:
+  type: object
+  properties:
+    view_count:
+      type: integer
+    playback_0_count:
+      type: integer
+    playback_25_count:
+      type: integer
+    playback_50_count:
+      type: integer
+    playback_75_count:
+      type: integer
+    playback_100_count:
+      type: integer

@@ -14,10 +14,9 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/spaces";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     #[serde(rename = "invited_user_ids")]
-    #[default]
     InvitedUserIds,
     #[serde(rename = "speaker_ids")]
     SpeakerIds,
@@ -50,6 +49,12 @@ impl std::fmt::Display for Expansions {
             Self::HostIds => write!(f, "host_ids"),
             Self::TopicsIds => write!(f, "topics_ids"),
         }
+    }
+}
+
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::InvitedUserIds
     }
 }
 

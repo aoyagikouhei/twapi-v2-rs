@@ -22,10 +22,9 @@ impl Withheld {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Scope {
     #[serde(rename = "tweet")]
-    #[default]
     Tweet,
     #[serde(rename = "user")]
     User,
@@ -37,5 +36,11 @@ impl std::fmt::Display for Scope {
             Self::Tweet => write!(f, "tweet"),
             Self::User => write!(f, "user"),
         }
+    }
+}
+
+impl Default for Scope {
+    fn default() -> Self {
+        Self::Tweet
     }
 }

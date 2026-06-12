@@ -41,10 +41,9 @@ impl Jobs {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Type {
     #[serde(rename = "tweets")]
-    #[default]
     Tweets,
     #[serde(rename = "users")]
     Users,
@@ -59,10 +58,15 @@ impl std::fmt::Display for Type {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
+impl Default for Type {
+    fn default() -> Self {
+        Self::Tweets
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Status {
     #[serde(rename = "created")]
-    #[default]
     Created,
     #[serde(rename = "in_progress")]
     InProgress,
@@ -80,5 +84,11 @@ impl std::fmt::Display for Status {
             Self::Failed => write!(f, "failed"),
             Self::Complete => write!(f, "complete"),
         }
+    }
+}
+
+impl Default for Status {
+    fn default() -> Self {
+        Self::Created
     }
 }

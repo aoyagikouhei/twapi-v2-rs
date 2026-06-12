@@ -20,10 +20,9 @@ impl ReferencedTweets {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum Type {
     #[serde(rename = "retweeted")]
-    #[default]
     Retweeted,
     #[serde(rename = "quoted")]
     Quoted,
@@ -38,5 +37,11 @@ impl std::fmt::Display for Type {
             Self::Quoted => write!(f, "quoted"),
             Self::RepliedTo => write!(f, "replied_to"),
         }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Self::Retweeted
     }
 }

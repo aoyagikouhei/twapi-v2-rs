@@ -9,10 +9,9 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/compliance/jobs";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Type {
     #[serde(rename = "tweets")]
-    #[default]
     Tweets,
     #[serde(rename = "users")]
     Users,
@@ -24,6 +23,12 @@ impl std::fmt::Display for Type {
             Self::Tweets => write!(f, "tweets"),
             Self::Users => write!(f, "users"),
         }
+    }
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Self::Tweets
     }
 }
 

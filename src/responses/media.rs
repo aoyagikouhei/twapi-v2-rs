@@ -1,4 +1,8 @@
-use crate::responses::{media_public_metrics::MediaPublicMetrics, variants::Variants};
+use crate::responses::{
+    media_non_public_metrics::MediaNonPublicMetrics, media_organic_metrics::MediaOrganicMetrics,
+    media_promoted_metrics::MediaPromotedMetrics, media_public_metrics::MediaPublicMetrics,
+    variants::Variants,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
@@ -13,6 +17,12 @@ pub struct Media {
     pub alt_text: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub preview_image_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub non_public_metrics: Option<MediaNonPublicMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub organic_metrics: Option<MediaOrganicMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub promoted_metrics: Option<MediaPromotedMetrics>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub public_metrics: Option<MediaPublicMetrics>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -30,6 +40,21 @@ pub struct Media {
 impl Media {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty()
+            && self
+                .non_public_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .organic_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
+            && self
+                .promoted_metrics
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true)
             && self
                 .public_metrics
                 .as_ref()

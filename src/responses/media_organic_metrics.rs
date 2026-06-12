@@ -1,24 +1,28 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default, PartialEq)]
-pub struct NonPublicMetrics {
+pub struct MediaOrganicMetrics {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub engagements: Option<i64>,
+    pub view_count: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub impression_count: Option<i64>,
+    pub playback_0_count: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub url_link_clicks: Option<i64>,
+    pub playback_25_count: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_profile_clicks: Option<i64>,
+    pub playback_50_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub playback_75_count: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub playback_100_count: Option<i64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
-impl NonPublicMetrics {
+impl MediaOrganicMetrics {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("NonPublicMetrics {:?}", self.extra);
+            println!("MediaOrganicMetrics {:?}", self.extra);
         }
         res
     }
