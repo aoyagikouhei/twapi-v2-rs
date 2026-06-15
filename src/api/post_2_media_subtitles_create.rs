@@ -9,10 +9,9 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/media/subtitles/create";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum MediaCategory {
     #[serde(rename = "amplify_video")]
-    #[default]
     AmplifyVideo,
     #[serde(rename = "tweet_gif")]
     TweetGif,
@@ -33,6 +32,12 @@ impl std::fmt::Display for MediaCategory {
             Self::TweetVideo => write!(f, "tweet_video"),
             Self::Subtitles => write!(f, "subtitles"),
         }
+    }
+}
+
+impl Default for MediaCategory {
+    fn default() -> Self {
+        Self::AmplifyVideo
     }
 }
 

@@ -16,10 +16,9 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/tweets/search/recent";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     #[serde(rename = "article.cover_media")]
-    #[default]
     ArticleCoverMedia,
     #[serde(rename = "article.media_entities")]
     ArticleMediaEntities,
@@ -87,10 +86,15 @@ impl std::fmt::Display for Expansions {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::ArticleCoverMedia
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum SortOrder {
     #[serde(rename = "recency")]
-    #[default]
     Recency,
     #[serde(rename = "relevancy")]
     Relevancy,
@@ -102,6 +106,12 @@ impl std::fmt::Display for SortOrder {
             Self::Recency => write!(f, "recency"),
             Self::Relevancy => write!(f, "relevancy"),
         }
+    }
+}
+
+impl Default for SortOrder {
+    fn default() -> Self {
+        Self::Recency
     }
 }
 

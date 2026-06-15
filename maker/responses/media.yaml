@@ -13,6 +13,15 @@ response:
       type: string
     preview_image_url:
       type: string
+    non_public_metrics:
+      type: object
+      ref: media_non_public_metrics
+    organic_metrics:
+      type: object
+      ref: media_organic_metrics
+    promoted_metrics:
+      type: object
+      ref: media_promoted_metrics
     public_metrics:
       type: object
       ref: media_public_metrics

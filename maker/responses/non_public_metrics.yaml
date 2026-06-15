@@ -3,6 +3,8 @@
 response:
   type: object
   properties:
+    engagements:
+      type: integer
     impression_count:
       type: integer
     url_link_clicks:

@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum DmEventFields {
     #[serde(rename = "id")]
-    #[default]
     Id,
     #[serde(rename = "text")]
     Text,
@@ -53,5 +52,11 @@ impl std::fmt::Display for DmEventFields {
             Self::ReferencedTweets => write!(f, "referenced_tweets"),
             Self::Attachments => write!(f, "attachments"),
         }
+    }
+}
+
+impl Default for DmEventFields {
+    fn default() -> Self {
+        Self::Id
     }
 }

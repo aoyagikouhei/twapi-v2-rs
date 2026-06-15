@@ -12,10 +12,9 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/users/:id/pinned_lists";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
 pub enum Expansions {
     #[serde(rename = "owner_id")]
-    #[default]
     OwnerId,
 }
 
@@ -32,6 +31,12 @@ impl std::fmt::Display for Expansions {
         match self {
             Self::OwnerId => write!(f, "owner_id"),
         }
+    }
+}
+
+impl Default for Expansions {
+    fn default() -> Self {
+        Self::OwnerId
     }
 }
 
