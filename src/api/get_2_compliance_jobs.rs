@@ -9,9 +9,10 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/compliance/jobs";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Type {
     #[serde(rename = "tweets")]
+    #[default]
     Tweets,
     #[serde(rename = "users")]
     Users,
@@ -26,15 +27,10 @@ impl std::fmt::Display for Type {
     }
 }
 
-impl Default for Type {
-    fn default() -> Self {
-        Self::Tweets
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Status {
     #[serde(rename = "created")]
+    #[default]
     Created,
     #[serde(rename = "in_progress")]
     InProgress,
@@ -52,12 +48,6 @@ impl std::fmt::Display for Status {
             Self::Failed => write!(f, "failed"),
             Self::Complete => write!(f, "complete"),
         }
-    }
-}
-
-impl Default for Status {
-    fn default() -> Self {
-        Self::Created
     }
 }
 

@@ -1,5 +1,8 @@
 ## Changes
 
+### v0.27.0 (2026/06/15)
+* add engagements field to NonPublicMetrics and media metrics structs
+
 ### v0.26.0 (2026/02/14)
 * Add retriable_fn
 * Remove retriable_status_code

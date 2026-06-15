@@ -432,42 +432,42 @@ fn from_v1_tweets(
 
         let mut referenced_tweets = vec![];
 
-        if src["retweeted_status"].is_object() {
-            if let Some(tweet) = from_v1_tweets(
+        if src["retweeted_status"].is_object()
+            && let Some(tweet) = from_v1_tweets(
                 &src["retweeted_status"],
                 tweet_map,
                 user_map,
                 place_map,
                 media_map,
-            ) {
-                referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
-                    id: Some(tweet.id.clone()),
-                    r#type: Some(crate::responses::referenced_tweets::Type::Retweeted),
-                    ..Default::default()
-                });
-                tweet_map.insert(tweet.id.clone(), tweet);
-            }
+            )
+        {
+            referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
+                id: Some(tweet.id.clone()),
+                r#type: Some(crate::responses::referenced_tweets::Type::Retweeted),
+                ..Default::default()
+            });
+            tweet_map.insert(tweet.id.clone(), tweet);
         }
 
-        if src["quoted_status"].is_object() {
-            if let Some(tweet) = from_v1_tweets(
+        if src["quoted_status"].is_object()
+            && let Some(tweet) = from_v1_tweets(
                 &src["quoted_status"],
                 tweet_map,
                 user_map,
                 place_map,
                 media_map,
-            ) {
-                // 引用をリポストされると、両方入ってくる。しかしこの引用はリポスト元の引用になる。
-                // よって、このポストの関連ポストにしない。
-                if !src["retweeted_status"].is_object() {
-                    referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
-                        id: Some(tweet.id.clone()),
-                        r#type: Some(crate::responses::referenced_tweets::Type::Quoted),
-                        ..Default::default()
-                    });
-                }
-                tweet_map.insert(tweet.id.clone(), tweet);
+            )
+        {
+            // 引用をリポストされると、両方入ってくる。しかしこの引用はリポスト元の引用になる。
+            // よって、このポストの関連ポストにしない。
+            if !src["retweeted_status"].is_object() {
+                referenced_tweets.push(crate::responses::referenced_tweets::ReferencedTweets {
+                    id: Some(tweet.id.clone()),
+                    r#type: Some(crate::responses::referenced_tweets::Type::Quoted),
+                    ..Default::default()
+                });
             }
+            tweet_map.insert(tweet.id.clone(), tweet);
         }
 
         // リプライ

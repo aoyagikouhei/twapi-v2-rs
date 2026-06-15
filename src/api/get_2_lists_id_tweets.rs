@@ -15,9 +15,10 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/lists/:id/tweets";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "article.cover_media")]
+    #[default]
     ArticleCoverMedia,
     #[serde(rename = "article.media_entities")]
     ArticleMediaEntities,
@@ -82,12 +83,6 @@ impl std::fmt::Display for Expansions {
             Self::ReferencedTweetsId => write!(f, "referenced_tweets.id"),
             Self::ReferencedTweetsIdAuthorId => write!(f, "referenced_tweets.id.author_id"),
         }
-    }
-}
-
-impl Default for Expansions {
-    fn default() -> Self {
-        Self::ArticleCoverMedia
     }
 }
 

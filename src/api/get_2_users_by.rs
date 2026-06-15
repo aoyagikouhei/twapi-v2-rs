@@ -12,9 +12,10 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/users/by";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "affiliation.user_id")]
+    #[default]
     AffiliationUserId,
     #[serde(rename = "most_recent_tweet_id")]
     MostRecentTweetId,
@@ -39,12 +40,6 @@ impl std::fmt::Display for Expansions {
             Self::MostRecentTweetId => write!(f, "most_recent_tweet_id"),
             Self::PinnedTweetId => write!(f, "pinned_tweet_id"),
         }
-    }
-}
-
-impl Default for Expansions {
-    fn default() -> Self {
-        Self::AffiliationUserId
     }
 }
 

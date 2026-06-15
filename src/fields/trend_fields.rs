@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum TrendFields {
     #[serde(rename = "trend_name")]
+    #[default]
     TrendName,
     #[serde(rename = "tweet_count")]
     TweetCount,
@@ -24,11 +25,5 @@ impl std::fmt::Display for TrendFields {
             Self::TrendName => write!(f, "trend_name"),
             Self::TweetCount => write!(f, "tweet_count"),
         }
-    }
-}
-
-impl Default for TrendFields {
-    fn default() -> Self {
-        Self::TrendName
     }
 }

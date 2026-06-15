@@ -57,9 +57,10 @@ impl Spaces {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub enum State {
     #[serde(rename = "live")]
+    #[default]
     Live,
     #[serde(rename = "scheduled")]
     Scheduled,
@@ -71,11 +72,5 @@ impl std::fmt::Display for State {
             Self::Live => write!(f, "live"),
             Self::Scheduled => write!(f, "scheduled"),
         }
-    }
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self::Live
     }
 }

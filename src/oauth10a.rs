@@ -1,6 +1,7 @@
 use crate::api::Authentication;
 use base64::{Engine as _, engine::general_purpose};
 use chrono::prelude::*;
+use hmac::KeyInit;
 use hmac::{Hmac, Mac};
 use rand::distr::{Alphanumeric, SampleString};
 use reqwest::RequestBuilder;

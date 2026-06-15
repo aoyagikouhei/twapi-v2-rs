@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum SpaceFields {
     #[serde(rename = "host_ids")]
+    #[default]
     HostIds,
     #[serde(rename = "created_at")]
     CreatedAt,
@@ -84,11 +85,5 @@ impl std::fmt::Display for SpaceFields {
             Self::ScheduledStart => write!(f, "scheduled_start"),
             Self::IsTicketed => write!(f, "is_ticketed"),
         }
-    }
-}
-
-impl Default for SpaceFields {
-    fn default() -> Self {
-        Self::HostIds
     }
 }

@@ -15,9 +15,10 @@ use std::collections::HashSet;
 
 const URL: &str = "/2/dm_events";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum EventTypes {
     #[serde(rename = "MessageCreate")]
+    #[default]
     Messagecreate,
     #[serde(rename = "ParticipantsJoin")]
     Participantsjoin,
@@ -35,15 +36,10 @@ impl std::fmt::Display for EventTypes {
     }
 }
 
-impl Default for EventTypes {
-    fn default() -> Self {
-        Self::Messagecreate
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Expansions {
     #[serde(rename = "attachments.media_keys")]
+    #[default]
     AttachmentsMediaKeys,
     #[serde(rename = "referenced_tweets.id")]
     ReferencedTweetsId,
@@ -72,12 +68,6 @@ impl std::fmt::Display for Expansions {
             Self::SenderId => write!(f, "sender_id"),
             Self::ParticipantIds => write!(f, "participant_ids"),
         }
-    }
-}
-
-impl Default for Expansions {
-    fn default() -> Self {
-        Self::AttachmentsMediaKeys
     }
 }
 

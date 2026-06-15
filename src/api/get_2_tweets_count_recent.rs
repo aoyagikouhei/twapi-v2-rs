@@ -10,9 +10,10 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/2/tweets/counts/recent";
 
-#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Clone, Default)]
 pub enum Granularity {
     #[serde(rename = "minute")]
+    #[default]
     Minute,
     #[serde(rename = "hour")]
     Hour,
@@ -27,12 +28,6 @@ impl std::fmt::Display for Granularity {
             Self::Hour => write!(f, "hour"),
             Self::Day => write!(f, "day"),
         }
-    }
-}
-
-impl Default for Granularity {
-    fn default() -> Self {
-        Self::Minute
     }
 }
 
